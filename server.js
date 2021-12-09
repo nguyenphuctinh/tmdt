@@ -10,11 +10,14 @@ app.get("/user", (req, res) => {
     { name: "Việt Anh", age: 20 },
     { name: "Huyền Anh", age: 18 },
   ]);
-
+  time = new Date();
+  console.log();
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    var sql = "INSERT INTO user VALUES (default,'Tinh', '123',20)";
+    var sql = `INSERT INTO user VALUES (default,'${time
+      .toTimeString()
+      .slice(0, 5)}', '123',20)`;
     con.query(sql, function (err, result) {
       if (err) throw err;
       console.log("1 record inserted");
