@@ -7,6 +7,7 @@ var mysql = require("mysql");
 //   password: "bd6dc0ce",
 //   database: "heroku_fdea9aba84c6f63",
 // };
+
 var db_config = {
   host: "localhost",
   user: "root",

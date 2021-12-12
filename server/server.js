@@ -15,27 +15,32 @@ app.all("/", function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
-app.get("/", (req, res) => {
-  res.send("test deploy nodejs NGuyễn Phsuc Tĩnh");
-});
 
+app.post("/login", (req, res) => {
+  con.query(
+    `SELECT * FROM user where username='${req.body.username}' and
+                password='${req.body.password}'`,
+    function (err, data) {
+      console.log(data);
+      if (err || data.length == 0)
+        res.status(422).send("Tai khoan hoac mat khau khong dung");
+      else res.status(200).send("Đăng nhập thành công!");
+    }
+  );
+});
 app.post("/user/insert", (req, res) => {
-  time = new Date();
-
+  if (req.body.username === "lol") res.send("Error");
   var sql = `INSERT INTO user VALUES (default,'${req.body.username}', '${req.body.password}',20)`;
-  try {
-    con.query(sql, function (err, result) {
-      if (err) res.send(Error);
-      console.log("1 record inserted");
-      // res.send(Success);
-    });
-  } catch (error) {
-    // console.log(error);
-  }
+
+  con.query(sql, function (err, result) {
+    if (err) res.status(422).send("Error");
+    else res.send("ok");
+  });
 });
+
 app.get("/user", (req, res) => {
   con.query("SELECT * FROM user", function (err, result, fields) {
-    if (err) res.send(Error);
+    if (err) res.send("Error");
     res.json(result);
   });
 });
