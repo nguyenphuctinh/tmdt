@@ -1,38 +1,45 @@
 const express = require("express");
+var cors = require("cors");
 const { con } = require("./connection");
 const app = express();
-con.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
+app.use(cors()); // cho phép client access
+app.use(express.json()); // cho cái này mới post dc
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+); // cho cái này mới post dc
+
+app.all("/", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
 });
 app.get("/", (req, res) => {
   res.send("test deploy nodejs NGuyễn Phsuc Tĩnh");
 });
 
-app.get("/user/insert", (req, res) => {
-  res.json([
-    { name: "Tĩnh", age: 20 },
-    { name: "Việt Anh", age: 20 },
-    { name: "Huyền Anh", age: 18 },
-  ]);
+app.post("/user/insert", (req, res) => {
   time = new Date();
-  console.log();
 
-  var sql = `INSERT INTO user VALUES (default,'${time
-    .toTimeString()
-    .slice(0, 5)}', '123',20)`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
+  var sql = `INSERT INTO user VALUES (default,'${req.body.username}', '${req.body.password}',20)`;
+  try {
+    con.query(sql, function (err, result) {
+      if (err) res.send(Error);
+      console.log("1 record inserted");
+      // res.send(Success);
+    });
+  } catch (error) {
+    // console.log(error);
+  }
 });
 app.get("/user", (req, res) => {
   con.query("SELECT * FROM user", function (err, result, fields) {
-    if (err) throw err;
+    if (err) res.send(Error);
     res.json(result);
   });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 app.listen(port);

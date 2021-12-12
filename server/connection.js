@@ -1,21 +1,48 @@
 var mysql = require("mysql");
 
-var con = mysql.createConnection({
-  host: "us-cdbr-east-05.cleardb.net",
-  user: "bcfc9b7ab00c04",
+// var db_config = {
+//   host: "us-cdbr-east-05.cleardb.net",
+//   user: "bcfc9b7ab00c04",
+//   port: "3306",
+//   password: "bd6dc0ce",
+//   database: "heroku_fdea9aba84c6f63",
+// };
+var db_config = {
+  host: "localhost",
+  user: "root",
   port: "3306",
-  password: "bd6dc0ce",
-  database: "heroku_fdea9aba84c6f63",
-});
-// con.connect(function (err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-//   var sql = "INSERT INTO user VALUES (default,'Tinh', '123',20)";
-//   con.query(sql, function (err, result) {
-//     if (err) throw err;
-//     console.log("1 record inserted");
-//   });
-// });
+  password: "abcd",
+  database: "nodejs",
+};
+
+var connection;
+
+function handleDisconnect() {
+  connection = mysql.createConnection(db_config); // Recreate the connection, since
+  // the old one cannot be reused.
+
+  connection.connect(function (err) {
+    // The server is either down
+    if (err) {
+      // or restarting (takes a while sometimes).
+      console.log("error when connecting to db:", err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    } // to avoid a hot loop, and to allow our node script to
+  }); // process asynchronous requests in the meantime.
+  // If you're also serving http, display a 503 error.
+  connection.on("error", function (err) {
+    console.log("db error", err);
+    if (err.code === "PROTOCOL_CONNECTION_LOST") {
+      // Connection to the MySQL server is usually
+      handleDisconnect(); // lost due to either server restart, or a
+    } else {
+      // connnection idle timeout (the wait_timeout
+      throw err; // server variable configures this)
+    }
+  });
+}
+
+handleDisconnect();
 module.exports = {
-  con: con,
+  con: connection,
 };
