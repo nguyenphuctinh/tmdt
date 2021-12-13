@@ -10,7 +10,7 @@ app.use(
   })
 ); // cho cái này mới post dc
 
-app.all("/", function (req, res, next) {
+app.all("/*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
@@ -21,7 +21,6 @@ app.post("/login", (req, res) => {
     `SELECT * FROM user where username='${req.body.username}' and
                 password='${req.body.password}'`,
     function (err, data) {
-      console.log(data);
       if (err || data.length == 0)
         res.status(422).send("Tai khoan hoac mat khau khong dung");
       else res.status(200).send("Đăng nhập thành công!");
@@ -43,6 +42,26 @@ app.get("/user", (req, res) => {
     if (err) res.send("Error");
     res.json(result);
   });
+});
+app.delete("/user/delete/:id", (req, res) => {
+  con.query(
+    `delete FROM user where id=${req.params.id} `,
+    function (err, result) {
+      if (err) res.status(422).send("Lỗi truy vấn");
+      else res.status(200).send("xóa thành công");
+    }
+  );
+});
+app.put("/user/update/:id", (req, res) => {
+  // console.log();
+  con.query(
+    `update user set username='${req.body.username}', password='${req.body.password}' where id=${req.params.id} `,
+    function (err, result) {
+      // console.log(err);
+      if (err) res.status(422).send("Lỗi truy vấn");
+      else res.status(200).send("cap nhat thành công");
+    }
+  );
 });
 
 const port = process.env.PORT || 8080;
