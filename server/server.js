@@ -24,36 +24,34 @@ app.post("/login", (req, res) => {
     res.status(200).send("Đăng nhập thành công!");
   });
 });
-app.post("/api/users", (req, res) => {
+app.post("/api/users", async (req, res) => {
   if (req.body.username === "lol") return res.status(400).send("lol");
   var sql = "select * from user where username=?";
-  new Promise((resolve, reject) => {
-    con.query(sql, [req.body.username], (err, data) => {
-      if (err) {
-        console.log(err);
-        reject("Lỗi truy vấn");
-        return;
-      }
-      if (data.length !== 0) {
-        reject("Tài khoản đã tồn tại");
-        return;
-      }
-      resolve("ok");
-    });
-  })
-    .then((data) => {
-      sql = `INSERT INTO user VALUES (default,?,?,20)`;
-      con.query(sql, [req.body.username, req.body.password], (err, result) => {
+  try {
+    await new Promise((resolve, reject) => {
+      con.query(sql, [req.body.username], (err, data) => {
         if (err) {
-          res.status(422).send("Lỗi truy vấn");
+          console.log(err);
+          reject({ stt: 400, err: "Lỗi truy vấn" });
           return;
         }
-        res.send("Thêm thành công");
+        if (data.length !== 0)
+          return reject({ stt: 400, err: "Tài khoản đã tồn tại" });
+        console.log("lol");
+        resolve("ok");
       });
-    })
-    .catch((err) => {
-      res.status(400).send(err);
     });
+    sql = `INSERT INTO user VALUES (default,?,?,20)`;
+    con.query(sql, [req.body.username, req.body.password], (err, result) => {
+      if (err) {
+        res.status(422).send("Lỗi truy vấn");
+        return;
+      }
+      res.send("Thêm thành công");
+    });
+  } catch ({ stt, err }) {
+    res.status(stt).send(err);
+  }
 });
 
 app.get("/api/users", (req, res) => {
@@ -71,34 +69,33 @@ app.delete("/api/users/:id", (req, res) => {
     }
   );
 });
-app.put("/api/users/:id", (req, res) => {
+app.put("/api/users/:id", async (req, res) => {
   var sql = "select * from user where username=?";
-  new Promise((resolve, reject) => {
-    con.query(sql, [req.body.username], (err, data) => {
-      if (err) {
-        console.log(err);
-        reject({ stt: 400, err: "Lỗi truy vấn" });
-        return;
-      }
-      if (data.length !== 0) {
-        reject({ stt: 400, err: "Tài khoản đã tồn tại" });
-        return;
-      }
-      resolve("ok");
-    });
-  })
-    .then((data) => {
-      con.query(
-        `update user set username='${req.body.username}', password='${req.body.password}' where id=${req.params.id} `,
-        function (err, result) {
-          if (err) return res.status(422).send("Lỗi truy vấn");
-          res.status(200).send("cap nhat thành công");
+  try {
+    await new Promise((resolve, reject) => {
+      con.query(sql, [req.body.username], (err, data) => {
+        if (err) {
+          console.log(err);
+          reject({ stt: 400, err: "Lỗi truy vấn" });
+          return;
         }
-      );
-    })
-    .catch(({ stt, err }) => {
-      res.status(stt).send(err);
+        if (data.length !== 0) {
+          reject({ stt: 400, err: "Tài khoản đã tồn tại" });
+          return;
+        }
+        resolve("ok");
+      });
     });
+    con.query(
+      `update user set username='${req.body.username}', password='${req.body.password}' where id=${req.params.id} `,
+      function (err, result) {
+        if (err) return res.status(422).send("Lỗi truy vấn");
+        res.status(200).send("cap nhat thành công");
+      }
+    );
+  } catch ({ stt, err }) {
+    res.status(stt).send(err);
+  }
 });
 
 const port = process.env.PORT || 8080;
