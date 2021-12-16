@@ -13,7 +13,9 @@ function App() {
   async function getUsers() {
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_SERVER}/user`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER}/api/users`
+      );
       console.log(response);
       setData(response.data);
 
@@ -53,7 +55,7 @@ function App() {
   }
   const deleteUser = (userId) => {
     axios
-      .delete(`${process.env.REACT_APP_SERVER}/user/delete/${userId}`)
+      .delete(`${process.env.REACT_APP_SERVER}/api/users/${userId}`)
       .then((res) => {
         toast(res.data);
       })
@@ -61,18 +63,69 @@ function App() {
         toast(err.response.data);
       });
   };
-  const updateUser = (userId) => {
+  const updateUser = () => {
     axios
-      .put(`${process.env.REACT_APP_SERVER}/user/update/${updatedUserID}`, {
+      .put(`${process.env.REACT_APP_SERVER}/api/users/${updatedUserID}`, {
         username: updatedUsername,
         password: updatedPassword,
       })
-      .then((res) => toast(res.data))
-      .catch((err) => toast(err.response.data));
+      .then((res) => {
+        toast(res.data);
+        let tmp = [...data];
+        tmp.forEach((user) => {
+          if (user.id === updatedUserID) {
+            user.username = updatedUsername;
+            user.password = updatedPassword;
+          }
+        });
+        setData(tmp);
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          // Request made and server responded
+          toast(error.response.data);
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          toast(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          toast("Error", error.message);
+        }
+      });
+  };
+  const insertAUser = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER}/api/users`,
+        {
+          username: username,
+          password: password,
+        }
+      );
+      toast(res.data);
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        // Request made and server responded
+        toast(error.response.data);
+        // console.log(error.response.status);
+        // console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        toast(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        toast("Error", error.message);
+      }
+    }
   };
   useEffect(() => {
     getUsers();
-    console.log(data);
+    // console.log(data);
   }, []);
   return loading ? (
     <p>Loading...</p>
@@ -95,7 +148,7 @@ function App() {
         placeholder="pass"
       />
 
-      <button onClick={login} type="button" className="btn btn-primary">
+      <button onClick={insertAUser} type="button" className="btn btn-primary">
         submit
       </button>
       {data &&
@@ -106,7 +159,14 @@ function App() {
                 {user.username} {user.password}
               </span>
               <button onClick={() => deleteUser(user.id)}>xoa</button>
-              <button onClick={() => setUpdatedUserID(user.id)}>sửa</button>
+              <button
+                onClick={() => {
+                  setUpdatedUserID(user.id);
+                  setUpdatedUsername(user.username);
+                }}
+              >
+                sửa
+              </button>
             </div>
           );
         })}
