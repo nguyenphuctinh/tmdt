@@ -1,0 +1,15 @@
+GET http://localhost:8080/api/users
+Authorization: Beaer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbmgiLCJwYXNzd29yZCI6IjEyMyIsImlhdCI6MTY0MjE2NzA2NCwiZXhwIjoxNjQyNDY3MDY0fQ.sBsAUijUpXl-sF3hXl3MEbu_fB71O-1aQyq96oBi07Q
+###
+GET http://localhost:8080/auth
+Authorization: Beaer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbmgiLCJwYXNzd29yZCI6IjEyMyIsImlhdCI6MTY0MjE2NzA2NCwiZXhwIjoxNjQyNDY3MDY0fQ.sBsAUijUpXl-sF3hXl3MEbu_fB71O-1aQyq96oBi07Q
+
+### 
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+    "username":"tinh",
+    "password":"123"
+}
+

@@ -1,5 +1,4 @@
-var mysql = require("mysql");
-
+import mysql from "mysql";
 var db_config = {
   host: "us-cdbr-east-05.cleardb.net",
   user: "bcfc9b7ab00c04",
@@ -23,6 +22,4 @@ var connection = mysql.createPool({
   database: db_config.database,
 });
 
-module.exports = {
-  con: connection,
-};
+export default connection;
