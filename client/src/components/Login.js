@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../redux/action";
+import { loginAction } from "../redux/slices/userSlice";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +40,6 @@ export default function Login() {
       });
   }
   if (user.username) {
-    console.log(user);
     return <Navigate to="/" />;
   }
   return (

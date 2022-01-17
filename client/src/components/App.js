@@ -10,8 +10,11 @@ import Login from "./Login";
 import Register from "./Register";
 import Home from "./Home";
 import NavBar from "./NavBar";
+import NotFound from "./NotFound";
 import { ToastContainer } from "react-toastify";
-import { fetchUser } from "../redux/action";
+import { fetchUser } from "../redux/slices/userSlice";
+import Loading from "./Loading";
+
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -19,11 +22,11 @@ function App() {
   useEffect(() => {
     setRendered(true);
     dispatch(fetchUser());
-  }, []);
+  }, [dispatch]);
   return (
     <>
       {user.loading || !rendered ? (
-        <h1>loading...</h1>
+        <Loading />
       ) : (
         <Router>
           <ToastContainer />
@@ -35,6 +38,7 @@ function App() {
             ></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
+            <Route path="/*" element={<NotFound />}></Route>
           </Routes>
         </Router>
       )}

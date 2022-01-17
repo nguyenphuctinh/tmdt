@@ -1,18 +1,13 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector, useDispatch } from "react-redux";
-import { Navigate } from "react-router";
-import { logoutAction } from "../redux/action";
+import { useSelector } from "react-redux";
 function Home() {
   // const [data, setData] = useState([]);
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  // const data = useSelector((state) => state);
-  const [updatedUsername, setUpdatedUsername] = useState("");
-  const [updatedPassword, setUpdatedPassword] = useState("");
-  const [updatedUserID, setUpdatedUserID] = useState(-1);
+  // const dispatch = useDispatch();
+  // const [updatedUsername, setUpdatedUsername] = useState("");
+  // const [updatedPassword, setUpdatedPassword] = useState("");
+  // const [updatedUserID, setUpdatedUserID] = useState(-1);
 
   // async function getUsers() {
   //   setLoading(true);
@@ -32,16 +27,16 @@ function Home() {
   //   }
   // }
 
-  const deleteUser = (userId) => {
-    axios
-      .delete(`${process.env.REACT_APP_SERVER}/api/users/${userId}`)
-      .then((res) => {
-        toast(res.data);
-      })
-      .catch((err) => {
-        toast(err.response.data);
-      });
-  };
+  // const deleteUser = (userId) => {
+  //   axios
+  //     .delete(`${process.env.REACT_APP_SERVER}/api/users/${userId}`)
+  //     .then((res) => {
+  //       toast(res.data);
+  //     })
+  //     .catch((err) => {
+  //       toast(err.response.data);
+  //     });
+  // };
   // const updateUser = () => {
   //   axios
   //     .put(`${process.env.REACT_APP_SERVER}/api/users/${updatedUserID}`, {
@@ -119,7 +114,7 @@ function Home() {
       {/* <button onClick={updateUser} type="button" className="btn btn-primary">
         submit
       </button> */}
-      <button onClick={() => dispatch(logoutAction())}>log out</button>
+
       <h1>HOME</h1>
     </div>
   );
