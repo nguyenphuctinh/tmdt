@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../redux/slices/userSlice";
+import { fetchUser } from "../redux/slices/userSlice";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,10 +21,11 @@ export default function Login() {
         console.log(response);
         localStorage.setItem("auth", JSON.stringify(response.data.accessToken));
         toast(response.data.message);
-        dispatch(loginAction(username));
+        dispatch(fetchUser());
       })
       .catch(function (error) {
         // toast(error);
+        console.log(error);
         if (error.response) {
           // Request made and server responded
           toast(error.response.data);

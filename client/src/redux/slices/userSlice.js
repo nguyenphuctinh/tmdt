@@ -1,42 +1,53 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authorization } from "../../auth/auth";
 import axios from "axios";
+export const fetchUser = createAsyncThunk("user/fecthUser", async () => {
+  const user = await new Promise(async (resolve, reject) => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_SERVER}/auth`,
+        authorization()
+      );
+      console.log(res.data);
+      resolve(res.data);
+    } catch (error) {
+      reject(error.response.data);
+    }
+  });
+  // console.log(user);
+  return user;
+});
 const userSlice = createSlice({
   name: "user",
   initialState: {
     loading: false,
     username: null,
+    error: null,
+    role: null,
   },
   reducers: {
-    loginAction(state, action) {
-      state.loading = false;
-      state.username = action.payload;
-    },
     logoutAction(state, action) {
       state.username = null;
+      state.role = null;
     },
-    userLoaded(state, action) {
-      state.loading = false;
-      state.username = action.payload;
-    },
-    userLoading(state, action) {
+  },
+  extraReducers: {
+    [fetchUser.pending]: (state) => {
       state.loading = true;
+    },
+    [fetchUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    },
+    [fetchUser.fulfilled]: (state, action) => {
+      // console.log(action);
+      state.loading = false;
+      state.username = action.payload.username;
+      state.role = action.payload.role;
+      state.error = null;
     },
   },
 });
 const { actions, reducer } = userSlice;
-export const { loginAction, logoutAction, userLoaded, userLoading } = actions;
+export const { logoutAction } = actions;
 export default reducer;
-export const fetchUser = () => async (dispatch) => {
-  dispatch(userLoading());
-  try {
-    const res = await axios.get(
-      `${process.env.REACT_APP_SERVER}/auth`,
-      authorization()
-    );
-    dispatch(userLoaded(res.data));
-  } catch (error) {
-    console.log(error);
-    dispatch(userLoaded(null));
-  }
-};

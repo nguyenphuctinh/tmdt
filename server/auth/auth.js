@@ -8,9 +8,10 @@ function authenToken(req, res, next) {
     if (!token) res.status(401).send("!token");
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, data) => {
       if (err) {
-        res.status(403).send(err);
+        res.status(403).send("invalid token");
       } else {
         req.username = data.username;
+        req.role = data.role;
         next();
       }
     });

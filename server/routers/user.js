@@ -27,14 +27,14 @@ router.post("/", async (req, res) => {
         resolve("ok");
       });
     });
-    sql = `INSERT INTO user VALUES (default,?,?,20)`;
+    sql = `INSERT INTO user VALUES (default,?,?,20,default)`;
     con.query(sql, [req.body.username, req.body.password], (err, result) => {
       if (err) {
         res.status(422).send("Lỗi truy vấn");
-        // console.log(err);
+        console.log(err);
         return;
       }
-      res.send("Thêm thành công");
+      res.send("Đăng ký thành công");
     });
   } catch ({ stt, err }) {
     res.status(stt).send(err);

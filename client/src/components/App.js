@@ -14,6 +14,8 @@ import NotFound from "./NotFound";
 import { ToastContainer } from "react-toastify";
 import { fetchUser } from "../redux/slices/userSlice";
 import Loading from "./Loading";
+import PhoneList from "./phone/PhoneList";
+import Admin from "./admin/Admin";
 
 function App() {
   const [rendered, setRendered] = useState(false);
@@ -22,6 +24,14 @@ function App() {
   useEffect(() => {
     setRendered(true);
     dispatch(fetchUser());
+    // const fetchData = async () => {
+    //   try {
+    //     unwrapResult(await dispatch(fetchUser()));
+    //   } catch (error) {
+    //     toast(error.message);
+    //   }
+    // };
+    // fetchData();
   }, [dispatch]);
   return (
     <>
@@ -35,6 +45,11 @@ function App() {
             <Route
               path="/"
               element={user.username ? <Home /> : <Navigate to="/login" />}
+            ></Route>
+            <Route path="/phone" element={<PhoneList />}></Route>
+            <Route
+              path="/admin"
+              element={user.role === "admin" ? <Admin /> : <Navigate to="/" />}
             ></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
