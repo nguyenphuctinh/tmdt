@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../redux/slices/userSlice";
+import { fetchUser } from "../../redux/slices/userSlice";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,13 +13,16 @@ export default function Login() {
   const dispatch = useDispatch();
   function login() {
     axios
-      .post(`${process.env.REACT_APP_SERVER}/login`, {
+      .post(`${process.env.REACT_APP_API_URL}/login`, {
         username: username,
         password: password,
       })
       .then(function (response) {
         console.log(response);
-        localStorage.setItem("auth", JSON.stringify(response.data.accessToken));
+        localStorage.setItem(
+          "token",
+          JSON.stringify(response.data.accessToken)
+        );
         toast(response.data.message);
         dispatch(fetchUser());
       })

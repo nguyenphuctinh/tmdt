@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import express from "express";
-import con from "./connection.js";
+import con from "./config/connection.js";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRouter from "./routers/user.js";
-import authenToken from "./auth/auth.js";
+import userRouter from "./api/routers/user.js";
+import phoneRouter from "./api/routers/admin/phone.js";
+import authenToken from "./api/middlewares/authenToken.js";
 dotenv.config();
 const app = express();
 app.use(cors()); // cho phép client access
@@ -13,7 +14,7 @@ app.use(
   express.urlencoded({
     extended: true,
   })
-); // for parsing application/x-www-form-urlencoded
+); // for parsing application/x-www-form -urlencoded
 
 app.all("/*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -25,13 +26,9 @@ app.post("/login", (req, res) => {
   con.query(stm, [req.body.username, req.body.password], function (err, data) {
     if (err || data.length == 0)
       return res.status(422).send("Tai khoan hoac mat khau khong dung");
-    // console.log({ ...req.body, role: data[0].role });
     const accessToken = jwt.sign(
       { ...req.body, role: data[0].role },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: "300000s",
-      }
+      process.env.ACCESS_TOKEN_SECRET
     );
     res.status(200).json({ accessToken, message: "Đăng nhập thành công!" });
   });
@@ -43,6 +40,7 @@ app.get("/auth", authenToken, (req, res) => {
 });
 
 app.use("/api/users", userRouter);
+app.use("/api/phones", phoneRouter);
 const port = process.env.PORT || 8080;
 
 app.listen(port);

@@ -13,7 +13,7 @@ function Home() {
   //   setLoading(true);
   //   try {
   //     const response = await axios.get(
-  //       `${process.env.REACT_APP_SERVER}/api/users`
+  //       `${process.env.REACT_APP_API_URL}/api/users`
   //     );
   //     console.log(response);
   //     setData(response.data);
@@ -29,7 +29,7 @@ function Home() {
 
   // const deleteUser = (userId) => {
   //   axios
-  //     .delete(`${process.env.REACT_APP_SERVER}/api/users/${userId}`)
+  //     .delete(`${process.env.REACT_APP_API_URL}/api/users/${userId}`)
   //     .then((res) => {
   //       toast(res.data);
   //     })
@@ -39,7 +39,7 @@ function Home() {
   // };
   // const updateUser = () => {
   //   axios
-  //     .put(`${process.env.REACT_APP_SERVER}/api/users/${updatedUserID}`, {
+  //     .put(`${process.env.REACT_APP_API_URL}/api/users/${updatedUserID}`, {
   //       username: updatedUsername,
   //       password: updatedPassword,
   //     })

@@ -5,7 +5,7 @@ export const fetchUser = createAsyncThunk("user/fecthUser", async () => {
   const user = await new Promise(async (resolve, reject) => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER}/auth`,
+        `${process.env.REACT_APP_API_URL}/auth`,
         authorization()
       );
       console.log(res.data);

@@ -6,16 +6,16 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Login from "./Login";
-import Register from "./Register";
-import Home from "./Home";
-import NavBar from "./NavBar";
-import NotFound from "./NotFound";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import Home from "./pages/home/Home";
+import NavBar from "./components/NavBar";
+import NotFound from "./pages/notfound/NotFound";
 import { ToastContainer } from "react-toastify";
-import { fetchUser } from "../redux/slices/userSlice";
-import Loading from "./Loading";
-import PhoneList from "./phone/PhoneList";
-import Admin from "./admin/Admin";
+import { fetchUser } from "./redux/slices/userSlice";
+import Loading from "./components/Loading";
+import PhoneList from "./pages/phone/PhoneList";
+import PhoneAdmin from "./pages/admin/PhoneAdmin/PhoneAdmin.js";
 
 function App() {
   const [rendered, setRendered] = useState(false);
@@ -48,8 +48,10 @@ function App() {
             ></Route>
             <Route path="/phone" element={<PhoneList />}></Route>
             <Route
-              path="/admin"
-              element={user.role === "admin" ? <Admin /> : <Navigate to="/" />}
+              path="/admin/phone"
+              element={
+                user.role === "admin" ? <PhoneAdmin /> : <Navigate to="/" />
+              }
             ></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>

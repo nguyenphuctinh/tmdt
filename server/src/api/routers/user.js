@@ -1,6 +1,6 @@
 import express from "express";
-import authenToken from "../auth/auth.js";
-import con from "../connection.js";
+import authenToken from "../middlewares/authenToken.js";
+import con from "../../config/connection.js";
 
 const router = express.Router();
 router.get("/", authenToken, (req, res) => {
