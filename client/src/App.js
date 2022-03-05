@@ -15,8 +15,11 @@ import { ToastContainer } from "react-toastify";
 import { fetchUser } from "./redux/slices/userSlice";
 import Loading from "./components/Loading";
 import PhoneList from "./pages/phone/PhoneList";
+import AddPhone from "./pages/admin/PhoneAdmin/AddPhone.js";
+import Account from "./pages/account/Account";
 import PhoneAdmin from "./pages/admin/PhoneAdmin/PhoneAdmin.js";
-
+import { fetchPhone } from "./redux/slices/phoneSlice.js";
+import ProductDetail from "./pages/productDetail/ProductDetail";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -24,14 +27,7 @@ function App() {
   useEffect(() => {
     setRendered(true);
     dispatch(fetchUser());
-    // const fetchData = async () => {
-    //   try {
-    //     unwrapResult(await dispatch(fetchUser()));
-    //   } catch (error) {
-    //     toast(error.message);
-    //   }
-    // };
-    // fetchData();
+    dispatch(fetchPhone());
   }, [dispatch]);
   return (
     <>
@@ -42,11 +38,22 @@ function App() {
           <ToastContainer />
           <NavBar />
           <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/iphone" element={<PhoneList />}></Route>
             <Route
-              path="/"
-              element={user.username ? <Home /> : <Navigate to="/login" />}
+              path="/iphone/:productId"
+              element={<ProductDetail />}
             ></Route>
-            <Route path="/phone" element={<PhoneList />}></Route>
+            <Route
+              path="/account"
+              element={user.username ? <Account /> : <Navigate to="/login" />}
+            ></Route>
+            <Route
+              path="/admin/phone/add"
+              element={
+                user.role === "admin" ? <AddPhone /> : <Navigate to="/" />
+              }
+            ></Route>
             <Route
               path="/admin/phone"
               element={

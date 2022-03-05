@@ -32,25 +32,34 @@ export default function Register() {
     }
   };
   return (
-    <div>
-      <ToastContainer /> <h1>Đăng kys</h1>
-      <input
-        onChange={(event) => setUsername(event.target.value)}
-        value={username}
-        type="text"
-        className="form-control"
-        placeholder="usename"
-      />
-      <input
-        onChange={(event) => setPassword(event.target.value)}
-        value={password}
-        type="text"
-        className="form-control"
-        placeholder="pass"
-      />
-      <button onClick={insertAUser} type="button" className="btn btn-primary">
-        submit
-      </button>
+    <div className="container w-50">
+      <div className="row">
+        <div className="col-12">
+          <ToastContainer /> <h1>Đăng ký</h1>
+          <input
+            onChange={(event) => setUsername(event.target.value)}
+            value={username}
+            type="text"
+            className="form-control"
+            placeholder="usename"
+          />
+          <input
+            onChange={(event) => setPassword(event.target.value)}
+            value={password}
+            type="text"
+            className="form-control"
+            placeholder="pass"
+          />
+          <button
+            onClick={insertAUser}
+            type="button"
+            className="btn btn-primary"
+          >
+            Đăng ký
+          </button>
+          <a href="/login">Đăng nhập</a>
+        </div>
+      </div>
     </div>
   );
 }

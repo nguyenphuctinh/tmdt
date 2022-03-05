@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authorization } from "../../auth/auth";
 import axios from "axios";
-export const fetchPhone = createAsyncThunk("user/fetchPhone", async () => {
+export const fetchPhone = createAsyncThunk("phones/fetchPhone", async () => {
   const phones = await new Promise(async (resolve, reject) => {
     try {
       const res = await axios.get(
@@ -13,7 +13,6 @@ export const fetchPhone = createAsyncThunk("user/fetchPhone", async () => {
       reject(error.response.data);
     }
   });
-  console.log(phones);
   return phones;
 });
 const phoneSlice = createSlice({
@@ -39,5 +38,5 @@ const phoneSlice = createSlice({
     },
   },
 });
-const { actions, reducer } = phoneSlice;
+const { reducer } = phoneSlice;
 export default reducer;

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,18 +26,12 @@ export default function Login() {
         dispatch(fetchUser());
       })
       .catch(function (error) {
-        // toast(error);
         console.log(error);
         if (error.response) {
-          // Request made and server responded
-          toast(error.response.data);
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
+          toast.error(error.response.data.message);
         } else if (error.request) {
-          // The request was made but no response was received
           toast(error.request);
         } else {
-          // Something happened in setting up the request that triggered an Error
           toast("Error", error.message);
         }
       });
@@ -47,25 +40,38 @@ export default function Login() {
     return <Navigate to="/" />;
   }
   return (
-    <div>
-      <h1>Đăng nhập</h1>
-      <input
-        onChange={(event) => setUsername(event.target.value)}
-        value={username}
-        type="text"
-        className="form-control"
-        placeholder="usename"
-      />
-      <input
-        onChange={(event) => setPassword(event.target.value)}
-        value={password}
-        type="text"
-        className="form-control"
-        placeholder="pass"
-      />
-      <button onClick={() => login()} type="button" className="btn btn-primary">
-        submit
-      </button>
+    <div className="container w-50">
+      <div class="row ">
+        <div className="col-12 ">
+          <div className="">
+            <div className="">
+              <h1>Đăng nhập</h1>
+              <input
+                onChange={(event) => setUsername(event.target.value)}
+                value={username}
+                type="text"
+                className="form-control"
+                placeholder="usename"
+              />
+              <input
+                onChange={(event) => setPassword(event.target.value)}
+                value={password}
+                type="password"
+                className="form-control"
+                placeholder="pass"
+              />
+              <button
+                onClick={() => login()}
+                type="button"
+                className="btn btn-primary"
+              >
+                Submit
+              </button>
+              <a href="/register">Đăng ký</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -5,6 +5,8 @@ import App from "./App";
 import rootReducer from "./redux/reducer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
+import "./style/queriess.css";
+
 import { configureStore } from "@reduxjs/toolkit";
 const store = configureStore({ reducer: rootReducer });
 ReactDOM.render(

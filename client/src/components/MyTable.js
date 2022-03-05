@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -85,24 +86,10 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-// function createData(color, capacity, quantity, price) {
-//   return { color, capacity, quantity, price };
-// }
-
-// const rows = [
-//   createData("Red", "32GB", "1", "1.000.000"),
-//   createData("Red", "32GB", "1", "1.000.000"),
-//   createData("Red", "32GB", "1", "1.000.000"),
-//   createData("Red", "32GB", "1", "1.000.000"),
-//   createData("Red", "32GB", "1", "1.000.000"),
-//   createData("Red", "32GB", "1", "1.000.000"),
-// ];
-
-export default function PhoneVariantTable({ rows }) {
+export default function PhoneVariantTable({ rows, type }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -119,29 +106,81 @@ export default function PhoneVariantTable({ rows }) {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableBody>
+          {type === "phoneVariant" ? (
+            <TableRow>
+              <TableCell style={{ width: 160 }} align="center">
+                Màu sắc
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="center">
+                Dung lượng
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="center">
+                Số lượng
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="center">
+                Giá
+              </TableCell>
+              <TableCell style={{ width: 50 }} align="center">
+                Xóa
+              </TableCell>
+            </TableRow>
+          ) : (
+            <TableRow>
+              <TableCell component="th" scope="row">
+                Tên sản phẩm
+              </TableCell>
+              <TableCell component="th" scope="row">
+                Sale
+              </TableCell>
+
+              <TableCell style={{ width: 100 }} align="center"></TableCell>
+            </TableRow>
+          )}
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
-          ).map((row) => (
-            <TableRow key={row.color}>
-              <TableCell component="th" scope="row">
-                {row.color}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.capacity}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.quantity}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.price}
-              </TableCell>
-              <TableCell style={{ width: 50 }} align="right">
-                <DeleteOutlineIcon onClick={() => alert("lol")} />
-              </TableCell>
-            </TableRow>
-          ))}
-
+          ).map((row) => {
+            if (type === "phoneVariant") {
+              return (
+                <TableRow key={row.color + row.capacity}>
+                  <TableCell style={{ width: 160 }} align="center">
+                    {row.color}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="center">
+                    {row.capacity}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="center">
+                    {row.quantity}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="center">
+                    {row.price}
+                  </TableCell>
+                  <TableCell style={{ width: 50 }} align="center">
+                    <DeleteOutlineIcon onClick={() => alert("lol")} />
+                  </TableCell>
+                </TableRow>
+              );
+            }
+            if (type === "product") {
+              return (
+                <TableRow key={row.product_id}>
+                  <TableCell component="th" scope="row">
+                    {row.product_name}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.sale}
+                  </TableCell>
+                  <TableCell style={{ width: 100 }} align="center">
+                    <button type="button" class="btn btn-primary">
+                      Chỉnh sửa
+                    </button>
+                  </TableCell>
+                </TableRow>
+              );
+            } else {
+              return "";
+            }
+          })}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={6} />
