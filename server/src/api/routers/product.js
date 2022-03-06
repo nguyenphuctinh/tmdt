@@ -16,18 +16,19 @@ router.get("/:id", async (req, res) => {
     if (product.length === 0) {
       return res.status(404).send({ err: "Không tìm thấy sản phẩm" });
     }
+    const category = product[0].category;
     data = product[0];
     const tmp = await new Promise((resolve, reject) => {
       const sql = `WITH cte AS
                     (
                       SELECT *,
-                            ROW_NUMBER() OVER (PARTITION BY phone_variant_id ORDER BY date_time DESC) AS rn
-                      FROM phone_variant_price
+                            ROW_NUMBER() OVER (PARTITION BY variant_id ORDER BY date_time DESC) AS rn
+                      FROM ${category}_variant_price
                     )
-                    SELECT pv.phone_variant_id, phone_color, phone_capacity,price,phone_quantity
+                    SELECT pv.variant_id, color, capacity,price,quantity
                     FROM cte
-                    join phone_variant pv
-                    on pv.phone_variant_id = cte.phone_variant_id
+                    join ${category}_variant pv
+                    on pv.variant_id = cte.variant_id
                     join product p
                     on p.product_id = pv.product_id
                     WHERE rn = 1 and p.product_id = ?`;
@@ -37,19 +38,19 @@ router.get("/:id", async (req, res) => {
       });
     });
     // console.log(tmp);
-    data.phone_variants = [...tmp];
-    for (let [j, phone_variant] of data.phone_variants.entries()) {
+    data.variants = [...tmp];
+    for (let [j, variant] of data.variants.entries()) {
       const tmp = await new Promise((resolve, reject) => {
         con.query(
-          "select img from phone_variant_img where phone_variant_id = ?",
-          [phone_variant.phone_variant_id],
+          `select img from ${category}_variant_img where variant_id = ?`,
+          [variant.variant_id],
           (err, result) => {
             if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
             resolve(JSON.parse(JSON.stringify(result)));
           }
         );
       });
-      data.phone_variants[j].imgSrcList = [...tmp];
+      data.variants[j].imgSrcList = [...tmp];
     }
 
     res.status(200).json(data);

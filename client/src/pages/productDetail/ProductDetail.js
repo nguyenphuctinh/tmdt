@@ -7,18 +7,6 @@ export default function ProductDetail() {
   const { productId } = useParams();
   const product = useSelector((state) => state.products.data[0]);
   console.log(product);
-  let variants = [];
-  if (product) {
-    if (product.category === "phone") {
-      variants = [...product.phone_variants];
-    } else if (product.category === "mac") {
-      variants = [...product.mac_variants];
-    } else if (product.category === "watch") {
-      variants = [...product.watch_variants];
-    } else {
-      variants = [...product.tablet_variants];
-    }
-  }
   useEffect(() => {
     dispatch(fetchProductById(productId));
   }, [dispatch]);
@@ -36,15 +24,16 @@ export default function ProductDetail() {
             <p class="productName">{product.product_name}</p>
             <div class="d-flex ">
               <p class="productPrice mr-2">{1223}₫</p>
-              <p class="  productPrice--sale">{112113} ₫</p>
+              <p class="productPrice--sale">{112113} ₫</p>
             </div>
             <p>Dung lượng</p>
-            {variants?.map((variant) => {
+            {product.variants?.map((variant) => {
               return (
-                <div class="d-flex">
-                  <p class="productPrice mr-2">{variant.price}</p>
-                  <p class="  productPrice--sale">{variant.price}</p>
-                </div>
+                <a href="?color={selectedcolor}&capacity=13">
+                  <div class="capacity capacity--active ">
+                    <p class="capacity__name">{variant.capacity}</p>
+                  </div>
+                </a>
               );
             })}
             <a href="?color={selectedcolor}&capacity=13">
@@ -62,7 +51,6 @@ export default function ProductDetail() {
                 ></div>
               </a>
             </div>
-
             <a href="/addtocart/{{product.id}}?color={{selectedcolor}}&capacity={{selectedcapacity}}">
               <div class="addtocart mr-lg-3">Thêm vào giỏ</div>
             </a>

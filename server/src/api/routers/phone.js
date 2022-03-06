@@ -21,36 +21,42 @@ router.get("/", async (req, res) => {
         const sql = `WITH cte AS
                     (
                       SELECT *,
-                            ROW_NUMBER() OVER (PARTITION BY phone_variant_id ORDER BY date_time DESC) AS rn
+                            ROW_NUMBER() OVER (PARTITION BY variant_id ORDER BY date_time DESC) AS rn
                       FROM phone_variant_price
                     )
-                    SELECT pv.phone_variant_id, phone_color, phone_capacity,price,phone_quantity
+                    SELECT pv.variant_id, color, capacity,price,quantity
                     FROM cte
                     join phone_variant pv
-                    on pv.phone_variant_id = cte.phone_variant_id
+                    on pv.variant_id = cte.variant_id
                     join product p
                     on p.product_id = pv.product_id
                     WHERE rn = 1 and p.product_id = ?`;
         con.query(sql, [phone.product_id], function (err, result) {
-          if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
+          if (err) {
+            console.log(err);
+            return reject({ stt: 500, err: "Lỗi truy vấn" });
+          }
           resolve(JSON.parse(JSON.stringify(result)));
         });
       });
-      data[index].phone_variants = [...tmp];
+      data[index].variants = [...tmp];
     }
     for (let [i, phone] of data.entries()) {
-      for (let [j, phone_variant] of phone.phone_variants.entries()) {
+      for (let [j, variant] of phone.variants.entries()) {
         const tmp = await new Promise((resolve, reject) => {
           con.query(
-            "select img from phone_variant_img where phone_variant_id = ?",
-            [phone_variant.phone_variant_id],
+            "select img from phone_variant_img where variant_id = ?",
+            [variant.variant_id],
             (err, result) => {
-              if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
+              if (err) {
+                console.log(err);
+                return reject({ stt: 500, err: "Lỗi truy vấn" });
+              }
               resolve(JSON.parse(JSON.stringify(result)));
             }
           );
         });
-        data[i].phone_variants[j].imgSrcList = [...tmp];
+        data[i].variants[j].imgSrcList = [...tmp];
       }
     }
     res.status(200).json(data);
@@ -78,7 +84,7 @@ router.post("/", authenAdminToken, async (req, res, next) => {
       let newVariantId = null;
       newVariantId = await new Promise((resolve, reject) => {
         con.query(
-          "insert into phone_variant values(default,?,?,?,?)",
+          "insert into variant values(default,?,?,?,?)",
           [newPhoneId, variant.color, variant.capacity, variant.quantity],
           function (err, result) {
             if (err) {
@@ -92,7 +98,7 @@ router.post("/", authenAdminToken, async (req, res, next) => {
       for (const imgSrc of variant.imgSrcList) {
         await new Promise((resolve, reject) => {
           con.query(
-            "insert into phone_variant_img values(?,?,default)",
+            "insert into variant_img values(?,?,default)",
             [newVariantId, imgSrc],
             (err) => {
               if (err) {
@@ -106,7 +112,7 @@ router.post("/", authenAdminToken, async (req, res, next) => {
       }
       await new Promise((resolve, reject) => {
         con.query(
-          "insert into phone_variant_price values(default,?,?,?)",
+          "insert into variant_price values(default,?,?,?)",
           [newVariantId, variant.price, new Date()],
           (err) => {
             if (err) {

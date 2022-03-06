@@ -11,9 +11,7 @@ export default function PhoneList() {
       ) : (
         <div className="row">
           {phones?.data?.map((item) => {
-            return (
-              <Product key={item.product_id} product={item} type="phone" />
-            );
+            return <Product key={item.product_id} product={item} />;
           })}
         </div>
       )}
