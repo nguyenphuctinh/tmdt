@@ -1,8 +1,13 @@
-import { Button } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
 import TextField from "@mui/material/TextField";
-
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
@@ -10,13 +15,15 @@ import Table from "../../../components/MyTable.js";
 import { authorization } from "../../../auth/auth";
 import addImg from "../../../assets/images/addimg.png";
 import isNumber from "../../../helpers/isNumber.js";
-export default function PhoneAdmin() {
+export default function AddProduct() {
   const [ten, setTen] = useState("");
   const [tenError, setTenError] = useState("");
   const [mau, setMau] = useState("");
   const [mauError, setMauError] = useState("");
   const [dungLuong, setDungLuong] = useState("");
   const [dungLuongError, setDungLuongError] = useState("");
+  const [kichThuoc, setKichThuoc] = useState("");
+  const [kichThuocError, setKichThuocError] = useState("");
   const [soLuong, setSoLuong] = useState("");
   const [soLuongError, setSoLuongError] = useState("");
   const [gia, setGia] = useState("");
@@ -24,13 +31,22 @@ export default function PhoneAdmin() {
   const [sale, setSale] = useState("");
   const [saleError, setSaleError] = useState("");
   const [imgList, setImgList] = useState([]);
-  const [variants, setVariants] = useState([]);
+  const [productVariants, setProductVariants] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState("phone");
   const inputEl = useRef(null);
+  const onHandleDelete = (id) => {
+    const newList = productVariants.filter((item) => item.id !== id);
+    setProductVariants(newList);
+  };
   const onHandleSubmit = async () => {
+    if (!ten || !sale || productVariants.length === 0) {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
     setLoading(true);
     let ok = true;
-    for (let [index, variant] of variants.entries()) {
+    for (let [index, variant] of productVariants.entries()) {
       let imgSrcList = [];
       try {
         for (const img of variant.imgList) {
@@ -59,7 +75,7 @@ export default function PhoneAdmin() {
           });
         }
 
-        variants[index].imgSrcList = [...imgSrcList];
+        productVariants[index].imgSrcList = [...imgSrcList];
       } catch (error) {
         setLoading(false);
         ok = false;
@@ -67,13 +83,21 @@ export default function PhoneAdmin() {
       }
     }
     if (ok) {
-      console.log(variants);
+      console.log(productVariants);
+      let variants = [];
+      if (category === "watch") {
+        variants = ["color", "size"];
+      } else {
+        variants = ["color", "capacity"];
+      }
       axios
         .post(
-          `${process.env.REACT_APP_API_URL}/api/phones`,
+          `${process.env.REACT_APP_API_URL}/api/products`,
           {
             name: ten,
             sale,
+            productVariants,
+            category,
             variants,
           },
           authorization()
@@ -92,7 +116,8 @@ export default function PhoneAdmin() {
     if (
       !ten ||
       !mau ||
-      !dungLuong ||
+      (!dungLuong && category !== "watch") ||
+      (!kichThuoc && category === "watch") ||
       !soLuong ||
       !gia ||
       imgList.length === 0 ||
@@ -105,19 +130,41 @@ export default function PhoneAdmin() {
       toast.error("Vui lòng nhập chính xác và đầy đủ thông tin");
       return;
     }
-    setVariants([
-      ...variants,
-      {
-        color: mau,
-        capacity: dungLuong,
-        quantity: parseInt(soLuong),
-        price: gia,
-        imgList,
-      },
-    ]);
+    if (category === "watch") {
+      setProductVariants([
+        ...productVariants,
+        {
+          id: productVariants.length + 1,
+          color: mau,
+          size: kichThuoc,
+          quantity: parseInt(soLuong),
+          price: gia,
+          imgList,
+        },
+      ]);
+    } else {
+      setProductVariants([
+        ...productVariants,
+        {
+          color: mau,
+          id: productVariants.length + 1,
+          capacity: dungLuong,
+          quantity: parseInt(soLuong),
+          price: gia,
+          imgList,
+        },
+      ]);
+    }
     console.log(imgList);
     setImgList([]);
     inputEl.current.value = null;
+  };
+  const handleChangeCategory = (event) => {
+    if (productVariants.length === 0) {
+      setCategory(event.target.value);
+    } else {
+      toast.error("Vui lòng xóa hết sản phẩm trước khi thay đổi danh mục");
+    }
   };
   return (
     <div
@@ -129,7 +176,7 @@ export default function PhoneAdmin() {
           <TextField
             style={{ width: "100%" }}
             required
-            error={tenError}
+            error={tenError === "" ? false : true}
             label="Tên sản phẩm"
             variant="outlined"
             value={ten}
@@ -145,7 +192,7 @@ export default function PhoneAdmin() {
           <TextField
             style={{ width: "100%", marginTop: 30 }}
             required
-            error={saleError}
+            error={saleError === "" ? false : true}
             label="Sale"
             variant="outlined"
             value={sale}
@@ -164,13 +211,28 @@ export default function PhoneAdmin() {
           />
 
           <br />
+          <FormControl className="mt-4" fullWidth>
+            <InputLabel id="demo-simple-select-label">Thể loại</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={category}
+              label="Thể loại"
+              onChange={handleChangeCategory}
+            >
+              <MenuItem value="phone">Phone</MenuItem>
+              <MenuItem value="mac">Mac</MenuItem>
+              <MenuItem value="tablet">Tablet</MenuItem>
+              <MenuItem value="watch">Watch</MenuItem>
+            </Select>
+          </FormControl>
         </div>
         <div className="col-6">
           <h4>Thêm các biến thể</h4>
           <TextField
             style={{ width: "100%", marginBottom: 30 }}
             required
-            error={mauError}
+            error={mauError === "" ? false : true}
             label="Màu sản phẩm"
             variant="outlined"
             value={mau}
@@ -186,24 +248,41 @@ export default function PhoneAdmin() {
           <TextField
             style={{ width: "100%", marginBottom: 30 }}
             required
-            error={dungLuongError}
-            label="Dung lượng sản phẩm"
+            error={
+              category === "watch"
+                ? kichThuocError === ""
+                  ? false
+                  : true
+                : dungLuongError === ""
+                ? false
+                : true
+            }
+            label={category === "watch" ? "Kích thước" : "Dung lượng sản phẩm"}
             variant="outlined"
-            value={dungLuong}
-            helperText={dungLuongError}
+            value={category === "watch" ? kichThuoc : dungLuong}
+            helperText={category === "watch" ? kichThuocError : dungLuongError}
             onBlur={() => {
-              if (dungLuong.length === 0)
-                setDungLuongError("Không được để trống");
-              else setDungLuongError("");
+              if (category === "watch") {
+                if (kichThuoc.length === 0)
+                  setKichThuocError("Không được để trống");
+                else setKichThuocError("");
+              } else {
+                if (dungLuong.length === 0)
+                  setDungLuongError("Không được để trống");
+                else setDungLuongError("");
+              }
             }}
-            onChange={(e) => setDungLuong(e.target.value)}
+            onChange={(e) => {
+              if (category === "watch") setKichThuoc(e.target.value);
+              else setDungLuong(e.target.value);
+            }}
           />
 
           <br />
           <TextField
             style={{ width: "100%", marginBottom: 30 }}
             required
-            error={soLuongError}
+            error={soLuongError === "" ? false : true}
             label="Số lượng sản phẩm"
             variant="outlined"
             value={soLuong}
@@ -220,7 +299,7 @@ export default function PhoneAdmin() {
           <TextField
             style={{ width: "100%", marginBottom: 30 }}
             required
-            error={giaError}
+            error={giaError === "" ? false : true}
             label="Giá sản phẩm"
             variant="outlined"
             value={gia}
@@ -273,7 +352,7 @@ export default function PhoneAdmin() {
           <button
             onClick={onHandleAddVariant}
             type="button"
-            className="mb-3 btn btn-success"
+            className="mb-3 mt-3 btn btn-success"
           >
             Thêm biến thể
           </button>
@@ -282,7 +361,12 @@ export default function PhoneAdmin() {
       </div>
       <div className="row">
         <div className="col-12">
-          <Table rows={variants} type="phoneVariant" />
+          <Table
+            onHandleDelete={onHandleDelete}
+            rows={productVariants}
+            type="variant"
+            category={category}
+          />
         </div>
         <div className="col-12 mb-3 mt-2">
           {!loading ? (

@@ -11,7 +11,7 @@ export const fetchUser = createAsyncThunk("user/fecthUser", async () => {
       console.log(res.data);
       resolve(res.data);
     } catch (error) {
-      reject(error.response.data);
+      reject(null);
     }
   });
   // console.log(user);

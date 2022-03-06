@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 export default function Account() {
   let user = useSelector((state) => state.user);
-  console.log(user);
   const dispatch = useDispatch();
   return (
     <div className="container-fluid">
@@ -14,7 +13,7 @@ export default function Account() {
           style={{ backgroundColor: "#424B54", minHeight: "100vh" }}
           className="col-3"
         >
-          <Link to="/admin/phone">Quản lý điện thoại</Link>
+          <Link to="/admin/product">Quản lý sản phẩm</Link>
           <br />
           <button
             onClick={() => {

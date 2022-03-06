@@ -14,20 +14,21 @@ import NotFound from "./pages/notfound/NotFound";
 import { ToastContainer } from "react-toastify";
 import { fetchUser } from "./redux/slices/userSlice";
 import Loading from "./components/Loading";
-import PhoneList from "./pages/phone/PhoneList";
-import AddPhone from "./pages/admin/PhoneAdmin/AddPhone.js";
+import PhonePage from "./pages/phone/PhonePage";
+import AddProduct from "./pages/admin/product/AddProduct.js";
 import Account from "./pages/account/Account";
-import PhoneAdmin from "./pages/admin/PhoneAdmin/PhoneAdmin.js";
-import { fetchPhone } from "./redux/slices/phoneSlice.js";
+import ProductAdmin from "./pages/admin/product/ProductAdmin.js";
+import { fetchProduct } from "./redux/slices/productSlice.js";
 import ProductDetail from "./pages/productDetail/ProductDetail";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
   let user = useSelector((state) => state.user);
   useEffect(() => {
+    document.title = "TopZone - Cửa hàng Apple chính hãng";
     setRendered(true);
     dispatch(fetchUser());
-    dispatch(fetchPhone());
+    dispatch(fetchProduct());
   }, [dispatch]);
   return (
     <>
@@ -39,7 +40,7 @@ function App() {
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />}></Route>
-            <Route path="/iphone" element={<PhoneList />}></Route>
+            <Route path="/iphone" element={<PhonePage />}></Route>
             <Route
               path="/iphone/:productId"
               element={<ProductDetail />}
@@ -49,15 +50,15 @@ function App() {
               element={user.username ? <Account /> : <Navigate to="/login" />}
             ></Route>
             <Route
-              path="/admin/phone/add"
+              path="/admin/product/add"
               element={
-                user.role === "admin" ? <AddPhone /> : <Navigate to="/" />
+                user.role === "admin" ? <AddProduct /> : <Navigate to="/" />
               }
             ></Route>
             <Route
-              path="/admin/phone"
+              path="/admin/product"
               element={
-                user.role === "admin" ? <PhoneAdmin /> : <Navigate to="/" />
+                user.role === "admin" ? <ProductAdmin /> : <Navigate to="/" />
               }
             ></Route>
             <Route path="/login" element={<Login />}></Route>

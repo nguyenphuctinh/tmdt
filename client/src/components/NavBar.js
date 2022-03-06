@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import logo from "../assets/images/logo.png";
+
 function NavBar() {
+  const navbar = useSelector((state) => state.navbar);
   return (
     <div className="container-fluid">
       <div className="row myNavbar padding-lg">
@@ -32,19 +35,44 @@ function NavBar() {
           </div>
           <div className="main justify-content-center">
             <ul className="d-flex">
-              <li className="d-flex align-items-center">
+              <li
+                style={{
+                  backgroundColor: navbar.value === "home" ? "#2f3033" : "",
+                }}
+                className="d-flex align-items-center"
+              >
                 <Link to="/">Home</Link>
               </li>
-              <li className="d-flex align-items-center">
+              <li
+                style={{
+                  backgroundColor: navbar.value === "iPhone" ? "#2f3033" : "",
+                }}
+                className="d-flex align-items-center"
+              >
                 <Link to="/iphone">iPhone</Link>
               </li>
-              <li className="d-flex align-items-center">
+              <li
+                style={{
+                  backgroundColor: navbar.value === "mac" ? "#2f3033" : "",
+                }}
+                className="d-flex align-items-center"
+              >
                 <Link to="/mac">Mac</Link>
               </li>
-              <li className="d-flex align-items-center">
+              <li
+                style={{
+                  backgroundColor: navbar.value === "iPad" ? "#2f3033" : "",
+                }}
+                className="d-flex align-items-center"
+              >
                 <Link to="/ipad">iPad</Link>
               </li>
-              <li className="d-flex align-items-center">
+              <li
+                style={{
+                  backgroundColor: navbar.value === "watch" ? "#2f3033" : "",
+                }}
+                className="d-flex align-items-center"
+              >
                 <Link to="/watch">Watch</Link>
               </li>
             </ul>

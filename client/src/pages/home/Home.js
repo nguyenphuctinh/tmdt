@@ -1,8 +1,11 @@
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import { changeNavbar } from "../../redux/slices/navbarSlice";
 function Home() {
   // const [data, setData] = useState([]);
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   // const dispatch = useDispatch();
   // const [updatedUsername, setUpdatedUsername] = useState("");
@@ -57,63 +60,21 @@ function Home() {
   //     .catch((error) => {
   //       console.log(error);
   //       if (error.response) {
-  //         // Request made and server responded
   //         toast(error.response.data);
-  //         // console.log(error.response.status);
-  //         // console.log(error.response.headers);
   //       } else if (error.request) {
-  //         // The request was made but no response was received
   //         toast(error.request);
   //       } else {
-  //         // Something happened in setting up the request that triggered an Error
   //         toast("Error", error.message);
   //       }
   //     });
   // };
 
   useEffect(() => {
-    // console.log(data);
+    dispatch(changeNavbar("home"));
   }, []);
   return (
     <div className="App">
       {user && `xin chao ${user.username}`}
-      {/* {data &&
-        data.map((user) => {
-          return (
-            <div key={user.id}>
-              <span>
-                {user.username} {user.password}
-              </span>
-              <button onClick={() => deleteUser(user.id)}>xoa</button>
-              <button
-                onClick={() => {
-                  setUpdatedUserID(user.id);
-                  setUpdatedUsername(user.username);
-                }}
-              >
-                sửa
-              </button>
-            </div>
-          );
-        })} */}
-      {/* <input
-        onChange={(event) => setUpdatedUsername(event.target.value)}
-        value={updatedUsername}
-        type="text"
-        className="form-control"
-        placeholder="usename"
-      />
-
-      <input
-        onChange={(event) => setUpdatedPassword(event.target.value)}
-        value={updatedPassword}
-        type="text"
-        className="form-control"
-        placeholder="pass"
-      /> */}
-      {/* <button onClick={updateUser} type="button" className="btn btn-primary">
-        submit
-      </button> */}
 
       <h1>HOME</h1>
     </div>

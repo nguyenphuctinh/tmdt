@@ -86,7 +86,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function PhoneVariantTable({ rows, type }) {
+export default function MyTable({ rows, type, category, onHandleDelete }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -106,13 +106,13 @@ export default function PhoneVariantTable({ rows, type }) {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableBody>
-          {type === "phoneVariant" ? (
+          {type === "variant" ? (
             <TableRow>
               <TableCell style={{ width: 160 }} align="center">
                 Màu sắc
               </TableCell>
               <TableCell style={{ width: 160 }} align="center">
-                Dung lượng
+                {category !== "watch" ? "Dung lượng" : "Kích thước"}
               </TableCell>
               <TableCell style={{ width: 160 }} align="center">
                 Số lượng
@@ -140,14 +140,14 @@ export default function PhoneVariantTable({ rows, type }) {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => {
-            if (type === "phoneVariant") {
+            if (type === "variant") {
               return (
-                <TableRow key={row.color + row.capacity}>
+                <TableRow key={row.id}>
                   <TableCell style={{ width: 160 }} align="center">
                     {row.color}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="center">
-                    {row.capacity}
+                    {category === "watch" ? row.size : row.capacity}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="center">
                     {row.quantity}
@@ -156,7 +156,7 @@ export default function PhoneVariantTable({ rows, type }) {
                     {row.price}
                   </TableCell>
                   <TableCell style={{ width: 50 }} align="center">
-                    <DeleteOutlineIcon onClick={() => alert("lol")} />
+                    <DeleteOutlineIcon onClick={() => onHandleDelete(row.id)} />
                   </TableCell>
                 </TableRow>
               );

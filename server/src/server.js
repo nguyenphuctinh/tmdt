@@ -4,7 +4,6 @@ import con from "./config/connection.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./api/routers/user.js";
-import phoneRouter from "./api/routers/phone.js";
 import productRouter from "./api/routers/product.js";
 import authenToken from "./api/middlewares/authenToken.js";
 import passwordHash from "password-hash";
@@ -66,7 +65,6 @@ app.get("/auth", authenToken, (req, res) => {
 });
 
 app.use("/api/users", userRouter);
-app.use("/api/phones", phoneRouter);
 app.use("/api/products", productRouter);
 const port = process.env.PORT || 8080;
 

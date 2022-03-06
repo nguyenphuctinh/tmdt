@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import userSlice from "../slices/userSlice";
-import phoneSlice from "../slices/phoneSlice";
+import navbarSlice from "../slices/navbarSlice";
 import productSlice from "../slices/productSlice";
 const allReducers = combineReducers({
   user: userSlice,
-  phones: phoneSlice,
   products: productSlice,
+  navbar: navbarSlice,
 });
 export default allReducers;
