@@ -1,67 +1,145 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
+import getColor, { dict } from "../../helpers/dict";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+
 export default function ProductDetail() {
+  const products = useSelector((state) => state.products);
   const dispatch = useDispatch();
   const { productId } = useParams();
-  const products = useSelector((state) => state.products);
   const product = products?.data.find(
     (product) => product.productId === parseInt(productId)
   );
-  console.log(product);
+  const [selectedProductVariant, setSelectedProductVariant] = useState(null);
+  const [selectedVariantValues, setSelectedVariantValues] = useState({});
   let variantNames = [];
   for (const key in product?.variants) {
     variantNames.push(key);
   }
+  if (product && selectedProductVariant === null) {
+    setSelectedProductVariant(product.productVariants[0]);
+    let tmpVariantValues = {};
+    variantNames.forEach((variantName) => {
+      tmpVariantValues = {
+        ...tmpVariantValues,
+        [variantName]: product.productVariants[0][variantName],
+      };
+    });
+    setSelectedVariantValues(tmpVariantValues);
+  }
+
   return (
-    <div className="container-fluid">
+    <div className="container">
       {product && (
-        <div class="row productDetail pt-5 pb-5">
-          <div class="col-sm-6">
-            <div class="">
-              <img class="productImg" width="100%" src="" alt="" />
+        <div className="row productDetail pt-2 pb-5">
+          <div className="col-sm-6">
+            <Carousel>
+              {selectedProductVariant?.imgSrcList.map(({ img }) => {
+                return (
+                  <img className="productImg" width="100%" src={img} alt="" />
+                );
+              })}
+            </Carousel>
+            <div className="">
+              <img className="productImg" width="100%" src="" alt="" />
             </div>
           </div>
-          <div class="col-sm-6 pt-5">
-            <p class="productName">{product.productName}</p>
-            <div class="d-flex ">
-              <p class="productPrice mr-2">{1223}₫</p>
-              <p class="productPrice--sale">{112113} ₫</p>
+          <div className="col-sm-6 pt-5">
+            <p className="productName">{product.productName}</p>
+            <div className="d-flex ">
+              <p className="productPrice mr-2">
+                {selectedProductVariant &&
+                  parseInt(
+                    selectedProductVariant.price * (1 - product.sale)
+                  ).toLocaleString()}
+                ₫
+              </p>
+              <p className="productPrice--sale">
+                {selectedProductVariant &&
+                  product.sale > 0 &&
+                  selectedProductVariant.price.toLocaleString() + "₫"}
+              </p>
             </div>
 
             {variantNames?.map((variantName) => {
               return (
-                <>
-                  <p>{capitalizeFirstLetter(variantName)}</p>
+                <div key={variantName}>
+                  <p>{capitalizeFirstLetter(dict[variantName])}</p>
                   {product.variants[variantName].map((value) => {
                     if (variantName !== "color") {
-                      console.log(product.variants[variantName]);
                       return (
-                        <a href="?color={selectedcolor}&capacity=13">
-                          <div class="capacity capacity--active ">
-                            <p class="capacity__name">{value.toUpperCase()}</p>
+                        <span
+                          onClick={() => {
+                            setSelectedVariantValues({
+                              ...selectedVariantValues,
+                              [[variantName]]: value,
+                            });
+                            setSelectedProductVariant(
+                              findProductVariant(
+                                product.productVariants,
+                                variantNames,
+                                selectedVariantValues
+                              )
+                            );
+                          }}
+                          key={value}
+                        >
+                          <div
+                            className={`capacity ${
+                              selectedVariantValues[variantName] === value
+                                ? "capacity--active "
+                                : ""
+                            }`}
+                          >
+                            <p className="capacity__name">
+                              {value.toUpperCase()}
+                            </p>
                           </div>
-                        </a>
+                        </span>
                       );
                     } else {
+                      return (
+                        <span
+                          key={value}
+                          onClick={() => {
+                            setSelectedVariantValues({
+                              ...selectedVariantValues,
+                              [[variantName]]: value,
+                            });
+                            setSelectedProductVariant(
+                              findProductVariant(
+                                product.productVariants,
+                                variantNames,
+                                selectedVariantValues
+                              )
+                            );
+                          }}
+                        >
+                          <div
+                            className={`color ${
+                              selectedVariantValues[variantName] === value
+                                ? "color--active "
+                                : ""
+                            }`}
+                            style={{
+                              backgroundColor: getColor(value.toLowerCase()),
+                            }}
+                          ></div>
+                        </span>
+                      );
                     }
                   })}
-                </>
+                </div>
               );
             })}
 
-            <p class="mt-3">Màu</p>
-            <div class="colors mb-5">
-              <a href="?color={{color.color}}&capacity={{selectedcapacity}}">
-                <div
-                  class="color color--active "
-                  style={{ backgroundColor: "red" }}
-                ></div>
-              </a>
-            </div>
+            <p className="mt-3"></p>
+
             <a href="/addtocart/{{product.id}}?color={{selectedcolor}}&capacity={{selectedcapacity}}">
-              <div class="addtocart mr-lg-3">Thêm vào giỏ</div>
+              <div className="addtocart mr-lg-3">Thêm vào giỏ</div>
             </a>
           </div>
         </div>
@@ -69,3 +147,16 @@ export default function ProductDetail() {
     </div>
   );
 }
+const findProductVariant = (productVariants, variantNames, values) => {
+  let productVariant = null;
+  productVariants.forEach((variant) => {
+    variantNames.forEach((variantName) => {
+      console.log(variant[variantName], values[variantName]);
+      if (variant[variantName] === values[variantName]) {
+        productVariant = variant;
+      }
+    });
+  });
+  console.log(productVariant, values);
+  return productVariant;
+};

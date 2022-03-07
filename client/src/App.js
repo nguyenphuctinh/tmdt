@@ -42,7 +42,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/iphone" element={<PhonePage />}></Route>
             <Route
-              path="/iphone/:productId"
+              path="/product/:productId"
               element={<ProductDetail />}
             ></Route>
             <Route

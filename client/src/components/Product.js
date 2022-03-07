@@ -5,7 +5,7 @@ export default function Product({ product }) {
   console.log(product);
   return (
     <div className="col-6  col-sm-4 col-md-3 mt-5">
-      <Link to={`/iphone/${product.productId}`}>
+      <Link to={`/product/${product.productId}`}>
         <div className="product">
           <img
             className="productImg"
