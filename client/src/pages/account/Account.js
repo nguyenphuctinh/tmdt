@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { logoutAction } from "../../redux/slices/userSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Link } from "react-router-dom";
+import { changeNavbar } from "../../redux/slices/navbarSlice.js";
 export default function Account() {
   let user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(changeNavbar("others"));
+  });
   return (
     <div className="container-fluid">
       <div className="row">

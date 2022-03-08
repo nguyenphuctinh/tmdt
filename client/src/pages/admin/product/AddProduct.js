@@ -221,7 +221,7 @@ export default function AddProduct() {
               onChange={handleChangeCategory}
             >
               <MenuItem value="phone">Phone</MenuItem>
-              <MenuItem value="mac">Mac</MenuItem>
+              <MenuItem value="laptop">Laptop</MenuItem>
               <MenuItem value="tablet">Tablet</MenuItem>
               <MenuItem value="watch">Watch</MenuItem>
             </Select>

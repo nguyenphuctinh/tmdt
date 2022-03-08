@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -163,9 +163,11 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
             }
             if (type === "product") {
               return (
-                <TableRow key={row.product_id}>
+                <TableRow key={row.productId}>
                   <TableCell component="th" scope="row">
-                    {row.product_name}
+                    <Link to={`/product/${row.productId}`}>
+                      <p style={{ color: "#0d6efd" }}> {row.productName}</p>
+                    </Link>
                   </TableCell>
                   <TableCell component="th" scope="row">
                     {row.sale}

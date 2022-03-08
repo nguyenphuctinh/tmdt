@@ -39,33 +39,34 @@ function NavBar() {
                 style={{
                   backgroundColor: navbar.value === "home" ? "#2f3033" : "",
                 }}
-                className="d-flex align-items-center"
+                className="d-flex align-items-center "
               >
                 <Link to="/">Home</Link>
               </li>
+
               <li
                 style={{
-                  backgroundColor: navbar.value === "iPhone" ? "#2f3033" : "",
+                  backgroundColor: navbar.value === "phone" ? "#2f3033" : "",
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/iphone">iPhone</Link>
+                <Link to="/category/phone">iPhone</Link>
               </li>
               <li
                 style={{
-                  backgroundColor: navbar.value === "mac" ? "#2f3033" : "",
+                  backgroundColor: navbar.value === "laptop" ? "#2f3033" : "",
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/mac">Mac</Link>
+                <Link to="/category/laptop">Mac</Link>
               </li>
               <li
                 style={{
-                  backgroundColor: navbar.value === "iPad" ? "#2f3033" : "",
+                  backgroundColor: navbar.value === "tablet" ? "#2f3033" : "",
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/ipad">iPad</Link>
+                <Link to="/category/tablet">iPad</Link>
               </li>
               <li
                 style={{
@@ -73,7 +74,7 @@ function NavBar() {
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/watch">Watch</Link>
+                <Link to="/category/watch">Watch</Link>
               </li>
             </ul>
           </div>

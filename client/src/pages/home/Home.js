@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
+import PhoneList from "../category/ProductList";
 function Home() {
   // const [data, setData] = useState([]);
   const dispatch = useDispatch();
@@ -74,9 +75,53 @@ function Home() {
   }, []);
   return (
     <div className="App">
-      {user && `xin chao ${user.username}`}
-
-      <h1>HOME</h1>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-12 policies padding-lg">
+            <div className="row policies ">
+              <div className="col-6 col-sm-3 padding-0">
+                <div className="policy d-flex align-items-center">
+                  <div style={{ width: "100%" }}>
+                    <i className="far fa-check-circle"></i>
+                    <p> Mẫu mã đa dạng, chính hãng.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-6  col-sm-3  padding-0">
+                <div className="policy d-flex align-items-center">
+                  <div style={{ width: "100%" }}>
+                    <i className="fal fa-shipping-fast"></i>
+                    <p>Giao hàng toàn quốc.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-6 col-sm-3 padding-0 ">
+                <div className="policy d-flex align-items-center">
+                  <div style={{ width: "100%" }}>
+                    <i className="fal fa-shield"></i>
+                    <p>Bảo hành tới 36 tháng.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-6 col-sm-3 padding-0 ">
+                <div className="policy d-flex align-items-center">
+                  <div style={{ width: "100%" }}>
+                    <i className="fal fa-undo"></i>
+                    <p>
+                      Có thể đổi trả tại <br />
+                      Thegioididong và DienmayXanh
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <PhoneList category={"phone"} />
+      <PhoneList category={"laptop"} />
+      <PhoneList category={"tablet"} />
+      <PhoneList category={"watch"} />
     </div>
   );
 }

@@ -73,13 +73,13 @@ router.get("/", async (req, res) => {
             }
           );
         });
-        let tmp = {};
+        let tmp = {}; // object chứa các tên variant và giá trị của nó
         for (const valueId of valueIds) {
           const variantValue = await new Promise((resolve, reject) => {
             con.query(
               `select * from variant_value join variant 
               on variant.variant_id = variant_value.variant_id
-              where value_id = ? order by value`,
+              where value_id = ?`,
               [valueId.value_id],
               (err, result) => {
                 if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });

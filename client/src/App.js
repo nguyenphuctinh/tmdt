@@ -14,12 +14,13 @@ import NotFound from "./pages/notfound/NotFound";
 import { ToastContainer } from "react-toastify";
 import { fetchUser } from "./redux/slices/userSlice";
 import Loading from "./components/Loading";
-import PhonePage from "./pages/phone/PhonePage";
+import PhonePage from "./pages/category/CategoryPage";
 import AddProduct from "./pages/admin/product/AddProduct.js";
 import Account from "./pages/account/Account";
 import ProductAdmin from "./pages/admin/product/ProductAdmin.js";
 import { fetchProduct } from "./redux/slices/productSlice.js";
 import ProductDetail from "./pages/productDetail/ProductDetail";
+import ScrollToTop from "./components/ScrollToTop";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -36,11 +37,12 @@ function App() {
         <Loading />
       ) : (
         <Router>
+          <ScrollToTop />
           <ToastContainer />
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />}></Route>
-            <Route path="/iphone" element={<PhonePage />}></Route>
+            <Route path="/category/:category" element={<PhonePage />}></Route>
             <Route
               path="/product/:productId"
               element={<ProductDetail />}

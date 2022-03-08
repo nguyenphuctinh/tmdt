@@ -1,9 +1,10 @@
 export const dict = {
   color: "màu",
   capacity: "dung lượng",
+  size: "kích cỡ",
 };
 export default function getColor(color) {
-  if (color === "vàng đồng") {
+  if (color === "vàng đồng" || color === "vàng") {
     return "#fae7cf";
   }
   if (color === "xám") {
@@ -11,5 +12,8 @@ export default function getColor(color) {
   }
   if (color === "bạc") {
     return "#f1f2ed";
+  }
+  if (color === "đen") {
+    return "#000000";
   }
 }

@@ -14,23 +14,16 @@ export default function ProductDetail() {
     (product) => product.productId === parseInt(productId)
   );
   const [selectedProductVariant, setSelectedProductVariant] = useState(null);
-  const [selectedVariantValues, setSelectedVariantValues] = useState({});
   let variantNames = [];
   for (const key in product?.variants) {
     variantNames.push(key);
   }
   if (product && selectedProductVariant === null) {
     setSelectedProductVariant(product.productVariants[0]);
-    let tmpVariantValues = {};
-    variantNames.forEach((variantName) => {
-      tmpVariantValues = {
-        ...tmpVariantValues,
-        [variantName]: product.productVariants[0][variantName],
-      };
-    });
-    setSelectedVariantValues(tmpVariantValues);
   }
-
+  useEffect(() => {
+    // console.log(selectedProductVariant);
+  });
   return (
     <div className="container">
       {product && (
@@ -39,7 +32,13 @@ export default function ProductDetail() {
             <Carousel>
               {selectedProductVariant?.imgSrcList.map(({ img }) => {
                 return (
-                  <img className="productImg" width="100%" src={img} alt="" />
+                  <img
+                    key={img}
+                    className="productImg"
+                    width="100%"
+                    src={img}
+                    alt=""
+                  />
                 );
               })}
             </Carousel>
@@ -68,20 +67,17 @@ export default function ProductDetail() {
               return (
                 <div key={variantName}>
                   <p>{capitalizeFirstLetter(dict[variantName])}</p>
-                  {product.variants[variantName].map((value) => {
+                  {[...product.variants[variantName]].sort().map((value) => {
                     if (variantName !== "color") {
                       return (
                         <span
                           onClick={() => {
-                            setSelectedVariantValues({
-                              ...selectedVariantValues,
-                              [[variantName]]: value,
-                            });
                             setSelectedProductVariant(
                               findProductVariant(
                                 product.productVariants,
                                 variantNames,
-                                selectedVariantValues
+                                selectedProductVariant,
+                                { [variantName]: value }
                               )
                             );
                           }}
@@ -89,7 +85,8 @@ export default function ProductDetail() {
                         >
                           <div
                             className={`capacity ${
-                              selectedVariantValues[variantName] === value
+                              selectedProductVariant &&
+                              selectedProductVariant[variantName] === value
                                 ? "capacity--active "
                                 : ""
                             }`}
@@ -105,22 +102,20 @@ export default function ProductDetail() {
                         <span
                           key={value}
                           onClick={() => {
-                            setSelectedVariantValues({
-                              ...selectedVariantValues,
-                              [[variantName]]: value,
-                            });
                             setSelectedProductVariant(
                               findProductVariant(
                                 product.productVariants,
                                 variantNames,
-                                selectedVariantValues
+                                selectedProductVariant,
+                                { [variantName]: value }
                               )
                             );
                           }}
                         >
                           <div
                             className={`color ${
-                              selectedVariantValues[variantName] === value
+                              selectedProductVariant &&
+                              selectedProductVariant[variantName] === value
                                 ? "color--active "
                                 : ""
                             }`}
@@ -147,16 +142,28 @@ export default function ProductDetail() {
     </div>
   );
 }
-const findProductVariant = (productVariants, variantNames, values) => {
+const findProductVariant = (
+  productVariants,
+  variantNames,
+  preProductVariant,
+  variantValue
+) => {
   let productVariant = null;
   productVariants.forEach((variant) => {
+    let count = 0;
     variantNames.forEach((variantName) => {
-      console.log(variant[variantName], values[variantName]);
-      if (variant[variantName] === values[variantName]) {
-        productVariant = variant;
+      if (
+        (variant[variantName] === preProductVariant[variantName] &&
+          !variantValue[variantName]) ||
+        (variant[variantName] === variantValue[variantName] &&
+          variantValue[variantName])
+      ) {
+        count++;
       }
     });
+    if (count === variantNames.length) {
+      productVariant = variant;
+    }
   });
-  console.log(productVariant, values);
   return productVariant;
 };
