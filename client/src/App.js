@@ -25,6 +25,8 @@ function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
   let user = useSelector((state) => state.user);
+  let loading = useSelector((state) => state.loading);
+
   useEffect(() => {
     document.title = "TopZone - Cửa hàng Apple chính hãng";
     setRendered(true);
@@ -40,6 +42,7 @@ function App() {
           <ScrollToTop />
           <ToastContainer />
           <NavBar />
+          {loading.value ? <Loading /> : ""}
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/category/:category" element={<PhonePage />}></Route>

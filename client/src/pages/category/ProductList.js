@@ -11,7 +11,7 @@ export default function ProductList({ category }) {
   return (
     <div className="container">
       {products.loading ? (
-        <Loading />
+        ""
       ) : (
         <div className="row pt-4">
           <div class="col-sm-12 sessionTitle">

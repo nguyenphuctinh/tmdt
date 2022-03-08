@@ -5,8 +5,8 @@ import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import getColor, { dict } from "../../helpers/dict";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-
 export default function ProductDetail() {
+  const [imgLoaded, setImgLoaded] = useState(false);
   const products = useSelector((state) => state.products);
   const dispatch = useDispatch();
   const { productId } = useParams();
@@ -18,21 +18,24 @@ export default function ProductDetail() {
   for (const key in product?.variants) {
     variantNames.push(key);
   }
-  if (product && selectedProductVariant === null) {
-    setSelectedProductVariant(product.productVariants[0]);
-  }
+
   useEffect(() => {
-    // console.log(selectedProductVariant);
-  });
+    setSelectedProductVariant(product?.productVariants[0]);
+  }, [product]);
   return (
     <div className="container">
       {product && (
         <div className="row productDetail pt-2 pb-5">
           <div className="col-sm-6">
-            <Carousel>
+            <Carousel
+              showStatus={false}
+              showThumbs={imgLoaded}
+              showIndicators={imgLoaded}
+            >
               {selectedProductVariant?.imgSrcList.map(({ img }) => {
                 return (
                   <img
+                    onLoad={() => setImgLoaded(true)}
                     key={img}
                     className="productImg"
                     width="100%"
@@ -42,9 +45,6 @@ export default function ProductDetail() {
                 );
               })}
             </Carousel>
-            <div className="">
-              <img className="productImg" width="100%" src="" alt="" />
-            </div>
           </div>
           <div className="col-sm-6 pt-5">
             <p className="productName">{product.productName}</p>
@@ -70,20 +70,19 @@ export default function ProductDetail() {
                   {[...product.variants[variantName]].sort().map((value) => {
                     if (variantName !== "color") {
                       return (
-                        <span
-                          onClick={() => {
-                            setSelectedProductVariant(
-                              findProductVariant(
-                                product.productVariants,
-                                variantNames,
-                                selectedProductVariant,
-                                { [variantName]: value }
-                              )
-                            );
-                          }}
-                          key={value}
-                        >
+                        <span key={value}>
                           <div
+                            onClick={() => {
+                              setImgLoaded(false);
+                              setSelectedProductVariant(
+                                findProductVariant(
+                                  product.productVariants,
+                                  variantNames,
+                                  selectedProductVariant,
+                                  { [variantName]: value }
+                                )
+                              );
+                            }}
                             className={`capacity ${
                               selectedProductVariant &&
                               selectedProductVariant[variantName] === value
@@ -99,20 +98,21 @@ export default function ProductDetail() {
                       );
                     } else {
                       return (
-                        <span
-                          key={value}
-                          onClick={() => {
-                            setSelectedProductVariant(
-                              findProductVariant(
-                                product.productVariants,
-                                variantNames,
-                                selectedProductVariant,
-                                { [variantName]: value }
-                              )
-                            );
-                          }}
-                        >
+                        <span>
                           <div
+                            key={value}
+                            onClick={() => {
+                              setImgLoaded(false);
+
+                              setSelectedProductVariant(
+                                findProductVariant(
+                                  product.productVariants,
+                                  variantNames,
+                                  selectedProductVariant,
+                                  { [variantName]: value }
+                                )
+                              );
+                            }}
                             className={`color ${
                               selectedProductVariant &&
                               selectedProductVariant[variantName] === value

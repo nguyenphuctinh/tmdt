@@ -166,7 +166,9 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
                 <TableRow key={row.productId}>
                   <TableCell component="th" scope="row">
                     <Link to={`/product/${row.productId}`}>
-                      <p style={{ color: "#0d6efd" }}> {row.productName}</p>
+                      <span style={{ color: "#0d6efd" }}>
+                        {row.productName}
+                      </span>
                     </Link>
                   </TableCell>
                   <TableCell component="th" scope="row">
@@ -174,7 +176,10 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
                   </TableCell>
                   <TableCell style={{ width: 100 }} align="center">
                     <button type="button" class="btn btn-primary">
-                      Chỉnh sửa
+                      <Link to={`admin/product/update/${row.productId}`}>
+                        {" "}
+                        Chỉnh sửa
+                      </Link>
                     </button>
                   </TableCell>
                 </TableRow>

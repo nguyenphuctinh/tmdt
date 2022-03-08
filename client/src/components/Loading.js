@@ -8,8 +8,26 @@ export default function Loading({
   heightContainer = "100vh",
 }) {
   return (
-    <div style={{ height: heightContainer }} className="grid">
-      <TailSpin type="TailSpin" color="#00BFFF" height={height} width={width} />
+    <div style={{ position: "fixed" }} className="container-fluid">
+      <div className="row">
+        <div className="col-12">
+          <div
+            style={{
+              height: heightContainer,
+              width: "100vw",
+              backgroundColor: "rgba(0,0,0,0.5)",
+            }}
+            className="grid"
+          >
+            <TailSpin
+              type="TailSpin"
+              color="#00BFFF"
+              height={height}
+              width={width}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

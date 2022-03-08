@@ -9,6 +9,7 @@ export default function Account() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(changeNavbar("others"));
+    document.title = "Tài khoản";
   });
   return (
     <div className="container-fluid">

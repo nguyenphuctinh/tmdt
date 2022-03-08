@@ -3,6 +3,7 @@ body {
   padding: 0;
   background-color: #3e3e3f;
   color: white;
+  overflow-y: scroll;
 }
 .grid {
   display: grid;
