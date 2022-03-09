@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { authorization } from "../../auth/auth";
 import axios from "axios";
 
 export const fetchProduct = createAsyncThunk(

@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
 import PhoneList from "../category/ProductList";
 function Home() {
   // const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   // const dispatch = useDispatch();
   // const [updatedUsername, setUpdatedUsername] = useState("");
   // const [updatedPassword, setUpdatedPassword] = useState("");
@@ -72,7 +70,7 @@ function Home() {
 
   useEffect(() => {
     dispatch(changeNavbar("home"));
-  }, []);
+  }, [dispatch]);
   return (
     <div className="App">
       <div className="container-fluid">

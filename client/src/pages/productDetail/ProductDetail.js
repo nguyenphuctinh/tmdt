@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import getColor, { dict } from "../../helpers/dict";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 export default function ProductDetail() {
+  const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const products = useSelector((state) => state.products);
-  const dispatch = useDispatch();
   const { productId } = useParams();
   const product = products?.data.find(
     (product) => product.productId === parseInt(productId)
   );
   const [selectedProductVariant, setSelectedProductVariant] = useState(null);
-  let variantNames = [];
-  for (const key in product?.variants) {
-    variantNames.push(key);
-  }
-
+  const [variantNames, setVariantNames] = useState([]);
   useEffect(() => {
     setSelectedProductVariant(product?.productVariants[0]);
+    if (product) {
+      let tmpVariantValues = [];
+      for (const key in product.variants) {
+        tmpVariantValues.push(key);
+      }
+      setVariantNames([...tmpVariantValues]);
+    }
   }, [product]);
+
+  useEffect(() => {
+    if (product) {
+      const tmp = findVariantValues(
+        product.productVariants,
+        variantNames,
+        selectedProductVariant
+      );
+      setVariantValues({ ...tmp });
+    }
+  }, [product, variantNames, selectedProductVariant]);
+
   return (
     <div className="container">
       {product && (
@@ -67,66 +82,67 @@ export default function ProductDetail() {
               return (
                 <div key={variantName}>
                   <p>{capitalizeFirstLetter(dict[variantName])}</p>
-                  {[...product.variants[variantName]].sort().map((value) => {
-                    if (variantName !== "color") {
-                      return (
-                        <span key={value}>
-                          <div
-                            onClick={() => {
-                              setImgLoaded(false);
-                              setSelectedProductVariant(
-                                findProductVariant(
-                                  product.productVariants,
-                                  variantNames,
-                                  selectedProductVariant,
-                                  { [variantName]: value }
-                                )
-                              );
-                            }}
-                            className={`capacity ${
-                              selectedProductVariant &&
-                              selectedProductVariant[variantName] === value
-                                ? "capacity--active "
-                                : ""
-                            }`}
-                          >
-                            <p className="capacity__name">
-                              {value.toUpperCase()}
-                            </p>
-                          </div>
-                        </span>
-                      );
-                    } else {
-                      return (
-                        <span>
-                          <div
-                            key={value}
-                            onClick={() => {
-                              setImgLoaded(false);
+                  {variantValues[variantName] &&
+                    [...variantValues[variantName]].sort().map((value) => {
+                      if (variantName !== "color") {
+                        return (
+                          <span key={value}>
+                            <div
+                              onClick={() => {
+                                setImgLoaded(false);
+                                setSelectedProductVariant(
+                                  findProductVariant(
+                                    product.productVariants,
+                                    variantNames,
+                                    selectedProductVariant,
+                                    { [variantName]: value }
+                                  )
+                                );
+                              }}
+                              className={`capacity ${
+                                selectedProductVariant &&
+                                selectedProductVariant[variantName] === value
+                                  ? "capacity--active "
+                                  : ""
+                              }`}
+                            >
+                              <p className="capacity__name">
+                                {value.toUpperCase()}
+                              </p>
+                            </div>
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span>
+                            <div
+                              key={value}
+                              onClick={() => {
+                                setImgLoaded(false);
 
-                              setSelectedProductVariant(
-                                findProductVariant(
-                                  product.productVariants,
-                                  variantNames,
-                                  selectedProductVariant,
-                                  { [variantName]: value }
-                                )
-                              );
-                            }}
-                            className={`color ${
-                              selectedProductVariant &&
-                              selectedProductVariant[variantName] === value
-                                ? "color--active "
-                                : ""
-                            }`}
-                            style={{
-                              backgroundColor: getColor(value.toLowerCase()),
-                            }}
-                          ></div>
-                        </span>
-                      );
-                    }
-                  })}
+                                setSelectedProductVariant(
+                                  findProductVariant(
+                                    product.productVariants,
+                                    variantNames,
+                                    selectedProductVariant,
+                                    { [variantName]: value }
+                                  )
+                                );
+                              }}
+                              className={`color ${
+                                selectedProductVariant &&
+                                selectedProductVariant[variantName] === value
+                                  ? "color--active "
+                                  : ""
+                              }`}
+                              style={{
+                                backgroundColor: getColor(value.toLowerCase()),
+                              }}
+                            ></div>
+                          </span>
+                        );
+                      }
+                    })}
                 </div>
               );
             })}
@@ -166,4 +182,31 @@ const findProductVariant = (
     }
   });
   return productVariant;
+};
+const findVariantValues = (productVariants, variantNames, variantValue) => {
+  let variantValues = {};
+  if (!productVariants || !variantNames || !variantValue) {
+    return {};
+  }
+  let productVariantsOk = new Set();
+  variantNames.forEach((variantName) => {
+    productVariants.forEach((productVariant) => {
+      if (productVariant[variantName] === variantValue[variantName]) {
+        productVariantsOk.add(productVariant);
+      }
+    });
+  });
+  for (let item of productVariantsOk.values()) {
+    variantNames.forEach((variantName) => {
+      if (!variantValues[variantName]) {
+        variantValues[variantName] = [item[variantName]];
+      } else if (!variantValues[variantName].includes(item[variantName])) {
+        variantValues[variantName] = [
+          ...variantValues[variantName],
+          item[variantName],
+        ];
+      }
+    });
+  }
+  return variantValues;
 };

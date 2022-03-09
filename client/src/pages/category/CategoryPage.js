@@ -19,7 +19,7 @@ export default function CategoryPage() {
     } else {
       document.title = "Đồng hồ thông minh Apple Watch chính hãng";
     }
-  }, [category]);
+  }, [category, dispatch]);
 
   return (
     <div>

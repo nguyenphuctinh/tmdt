@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Loading from "../../components/Loading";
 import Product from "../../components/Product";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 export default function ProductList({ category }) {

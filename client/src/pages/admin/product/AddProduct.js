@@ -134,7 +134,7 @@ export default function AddProduct() {
       setProductVariants([
         ...productVariants,
         {
-          id: productVariants.length + 1,
+          id: productVariants[productVariants.length - 1] + 1,
           color: mau,
           size: kichThuoc,
           quantity: parseInt(soLuong),

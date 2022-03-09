@@ -21,6 +21,7 @@ import ProductAdmin from "./pages/admin/product/ProductAdmin.js";
 import { fetchProduct } from "./redux/slices/productSlice.js";
 import ProductDetail from "./pages/productDetail/ProductDetail";
 import ScrollToTop from "./components/ScrollToTop";
+import UpdateProduct from "./pages/admin/product/UpdateProduct";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -58,6 +59,12 @@ function App() {
               path="/admin/product/add"
               element={
                 user.role === "admin" ? <AddProduct /> : <Navigate to="/" />
+              }
+            ></Route>
+            <Route
+              path="/admin/product/update/:productId"
+              element={
+                user.role === "admin" ? <UpdateProduct /> : <Navigate to="/" />
               }
             ></Route>
             <Route

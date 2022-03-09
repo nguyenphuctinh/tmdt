@@ -16,4 +16,7 @@ export default function getColor(color) {
   if (color === "đen") {
     return "#000000";
   }
+  if (color === "trắng") {
+    return "#ffffff";
+  }
 }

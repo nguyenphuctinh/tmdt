@@ -86,7 +86,14 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function MyTable({ rows, type, category, onHandleDelete }) {
+export default function MyTable({
+  rows,
+  type,
+  category,
+  onHandleDelete,
+  setUpdateFromOpened,
+  setProductVariantUpdated,
+}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -106,7 +113,7 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableBody>
-          {type === "variant" ? (
+          {type === "variant" || type === "updateVariant" ? (
             <TableRow>
               <TableCell style={{ width: 160 }} align="center">
                 Màu sắc
@@ -121,7 +128,7 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
                 Giá
               </TableCell>
               <TableCell style={{ width: 50 }} align="center">
-                Xóa
+                {type === "variant" ? "Xóa" : "Cập nhật"}
               </TableCell>
             </TableRow>
           ) : (
@@ -140,9 +147,9 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => {
-            if (type === "variant") {
+            if (type === "variant" || type === "updateVariant") {
               return (
-                <TableRow key={row.id}>
+                <TableRow key={row.id || row.productVariantId}>
                   <TableCell style={{ width: 160 }} align="center">
                     {row.color}
                   </TableCell>
@@ -156,7 +163,22 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
                     {row.price}
                   </TableCell>
                   <TableCell style={{ width: 50 }} align="center">
-                    <DeleteOutlineIcon onClick={() => onHandleDelete(row.id)} />
+                    {type === "variant" ? (
+                      <DeleteOutlineIcon
+                        onClick={() => onHandleDelete(row.id)}
+                      />
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setUpdateFromOpened(true);
+                          setProductVariantUpdated(row);
+                        }}
+                        type="button"
+                        class="btn btn-primary"
+                      >
+                        Chỉnh sửa
+                      </button>
+                    )}
                   </TableCell>
                 </TableRow>
               );
@@ -175,12 +197,11 @@ export default function MyTable({ rows, type, category, onHandleDelete }) {
                     {row.sale}
                   </TableCell>
                   <TableCell style={{ width: 100 }} align="center">
-                    <button type="button" class="btn btn-primary">
-                      <Link to={`admin/product/update/${row.productId}`}>
-                        {" "}
+                    <Link to={`/admin/product/update/${row.productId}`}>
+                      <button type="button" class="btn btn-primary">
                         Chỉnh sửa
-                      </Link>
-                    </button>
+                      </button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               );
