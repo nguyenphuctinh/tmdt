@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Navigate } from "react-router-dom";
 import MyTable from "../../../components/MyTable";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
@@ -12,11 +13,14 @@ import isNumber from "../../../helpers/isNumber.js";
 import UpdateForm from "./UpdateForm";
 import axios from "axios";
 import { authorization } from "../../../auth/auth";
+import { deleteProduct } from "../../../redux/slices/productSlice.js";
 export default function UpdateProduct() {
   const products = useSelector((state) => state.products);
+  const dispatch = useDispatch();
   const [updateFromOpened, setUpdateFromOpened] = useState(false);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   const productId = useParams().productId;
   const [ten, setTen] = useState("");
   const [tenError, setTenError] = useState("");
@@ -80,7 +84,7 @@ export default function UpdateProduct() {
     }
     setLoading(false);
   };
-  const onHandleAddVariant = () => {
+  const onHandleAddVariant = async () => {
     if (
       (!dungLuong && category !== "watch") ||
       (!kichThuoc && category === "watch") ||
@@ -93,37 +97,94 @@ export default function UpdateProduct() {
       toast.error("Vui lòng nhập chính xác và đầy đủ thông tin");
       return;
     }
-    if (category === "watch") {
-      setProductVariants([
-        ...productVariants,
-        {
-          id: productVariants[productVariants.length - 1] + 1,
-          color: mau,
-          size: kichThuoc,
-          quantity: parseInt(soLuong),
-          price: gia,
-          imgList,
-        },
-      ]);
-    } else {
-      setProductVariants([
-        ...productVariants,
-        {
-          color: mau,
-          id: productVariants.length + 1,
-          capacity: dungLuong,
-          quantity: parseInt(soLuong),
-          price: gia,
-          imgList,
-        },
-      ]);
+    try {
+      let imgSrcList = [];
+      for (const img of imgList) {
+        await new Promise((resolve, reject) => {
+          const formData = new FormData();
+          formData.append("file", img);
+          formData.append("upload_preset", process.env.REACT_APP_CLOUD_PRESET);
+          axios
+            .post(
+              "https://api.cloudinary.com/v1_1/nguyenphuctinh/image/upload",
+              formData
+            )
+            .then((res) => {
+              imgSrcList = [...imgSrcList, res.data.secure_url];
+              console.log(imgSrcList);
+              resolve();
+            })
+            .catch((err) => {
+              console.log(err);
+              reject();
+            });
+        });
+      }
+      if (category === "watch") {
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/api/products/${productId}`,
+          {
+            type: "addProductVariant",
+            productVariant: {
+              color: mau,
+              size: kichThuoc,
+              quantity: parseInt(soLuong),
+              price: gia,
+              imgSrcList,
+            },
+            variantNames: ["color", "size"],
+          },
+          authorization()
+        );
+      } else {
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/api/products/${productId}`,
+          {
+            type: "addProductVariant",
+            productVariant: {
+              color: mau,
+              capacity: dungLuong,
+              quantity: parseInt(soLuong),
+              price: gia,
+              imgSrcList,
+            },
+            variantNames: ["color", "capacity"],
+          },
+          authorization()
+        );
+      }
+      toast.success("Thêm mới thành công!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Thêm mới thất bại!");
     }
-    console.log(imgList);
+
     setImgList([]);
     inputEl.current.value = null;
   };
+  const onHandleDelete = async () => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/products/${productId}`,
+        authorization()
+      );
+      toast.success("Xóa thành công!");
+
+      dispatch(deleteProduct(parseInt(productId)));
+      setDeleted(true);
+    } catch (error) {
+      console.log(error);
+      toast.error("Xóa sản phẩm thất bại!");
+    }
+  };
+  if (deleted) {
+    return <Navigate to="/admin/product" />;
+  }
   return (
-    <div className="container">
+    <div
+      style={{ backgroundColor: "white", color: "black" }}
+      className="container p-0"
+    >
       {product && (
         <>
           {updateFromOpened ? (
@@ -182,20 +243,10 @@ export default function UpdateProduct() {
 
                 <br />
                 <br />
-                {!loading ? (
-                  <Button onClick={onHandleSubmit} variant="contained">
-                    Cập nhật tên và sale
-                  </Button>
-                ) : (
-                  <LoadingButton
-                    loading
-                    loadingPosition="start"
-                    startIcon={<SaveIcon />}
-                    variant="outlined"
-                  >
-                    Cập nhật tên và sale
-                  </LoadingButton>
-                )}
+
+                <Button onClick={onHandleSubmit} variant="contained">
+                  Cập nhật tên và sale
+                </Button>
               </div>
               <div className="col-6">
                 <h4>Thêm các biến thể</h4>
@@ -323,13 +374,28 @@ export default function UpdateProduct() {
                     );
                   })}
                 <br />
-                <button
-                  onClick={onHandleAddVariant}
-                  type="button"
-                  className="mb-3 mt-3 btn btn-success"
-                >
-                  Thêm biến thể
-                </button>
+                <div className="mt-2"></div>
+                {!loading ? (
+                  <Button
+                    color="success"
+                    onClick={onHandleAddVariant}
+                    variant="contained"
+                  >
+                    Thêm biến thể
+                  </Button>
+                ) : (
+                  <LoadingButton
+                    color="success"
+                    loading
+                    loadingPosition="start"
+                    startIcon={<SaveIcon />}
+                    variant="outlined"
+                  >
+                    Thêm biến thể
+                  </LoadingButton>
+                )}
+
+                <br />
                 <br />
               </div>
             </div>
@@ -341,6 +407,14 @@ export default function UpdateProduct() {
             category={product.category}
             setUpdateFromOpened={setUpdateFromOpened}
           />
+          <Button
+            variant="contained"
+            color="error"
+            style={{ margin: 10 }}
+            onClick={onHandleDelete}
+          >
+            Xóa sản phẩm
+          </Button>
         </>
       )}
     </div>

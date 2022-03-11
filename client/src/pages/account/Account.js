@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { logoutAction } from "../../redux/slices/userSlice.js";
 import { useDispatch } from "react-redux";
-
 import { Link } from "react-router-dom";
 import { changeNavbar } from "../../redux/slices/navbarSlice.js";
 export default function Account() {

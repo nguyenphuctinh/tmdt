@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import getColor, { dict } from "../../helpers/dict";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import sortByIntValues from "../../helpers/sortByIntValues";
 export default function ProductDetail() {
   const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [changed, setChanged] = useState(false);
   const products = useSelector((state) => state.products);
   const { productId } = useParams();
   const product = products?.data.find(
@@ -28,14 +31,22 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (product) {
-      const tmp = findVariantValues(
-        product.productVariants,
-        variantNames,
-        selectedProductVariant
-      );
-      setVariantValues({ ...tmp });
+      if (changed) {
+        const tmp = findVariantValues(
+          product.productVariants,
+          variantNames,
+          selectedProductVariant
+        );
+        setVariantValues({ ...tmp });
+      } else {
+        let tmp = {};
+        variantNames.forEach((variantName) => {
+          tmp = { ...tmp, [variantName]: [...product.variants[variantName]] };
+        });
+        setVariantValues({ ...tmp });
+      }
     }
-  }, [product, variantNames, selectedProductVariant]);
+  }, [product, variantNames, selectedProductVariant, changed]);
 
   return (
     <div className="container">
@@ -83,66 +94,71 @@ export default function ProductDetail() {
                 <div key={variantName}>
                   <p>{capitalizeFirstLetter(dict[variantName])}</p>
                   {variantValues[variantName] &&
-                    [...variantValues[variantName]].sort().map((value) => {
-                      if (variantName !== "color") {
-                        return (
-                          <span key={value}>
-                            <div
-                              onClick={() => {
-                                setImgLoaded(false);
-                                setSelectedProductVariant(
-                                  findProductVariant(
-                                    product.productVariants,
-                                    variantNames,
-                                    selectedProductVariant,
-                                    { [variantName]: value }
-                                  )
-                                );
-                              }}
-                              className={`capacity ${
-                                selectedProductVariant &&
-                                selectedProductVariant[variantName] === value
-                                  ? "capacity--active "
-                                  : ""
-                              }`}
-                            >
-                              <p className="capacity__name">
-                                {value.toUpperCase()}
-                              </p>
-                            </div>
-                          </span>
-                        );
-                      } else {
-                        return (
-                          <span>
-                            <div
-                              key={value}
-                              onClick={() => {
-                                setImgLoaded(false);
-
-                                setSelectedProductVariant(
-                                  findProductVariant(
-                                    product.productVariants,
-                                    variantNames,
-                                    selectedProductVariant,
-                                    { [variantName]: value }
-                                  )
-                                );
-                              }}
-                              className={`color ${
-                                selectedProductVariant &&
-                                selectedProductVariant[variantName] === value
-                                  ? "color--active "
-                                  : ""
-                              }`}
-                              style={{
-                                backgroundColor: getColor(value.toLowerCase()),
-                              }}
-                            ></div>
-                          </span>
-                        );
+                    [...sortByIntValues(variantValues[variantName])].map(
+                      (value) => {
+                        if (variantName !== "color") {
+                          return (
+                            <span key={value}>
+                              <div
+                                onClick={() => {
+                                  setImgLoaded(false);
+                                  setChanged(true);
+                                  setSelectedProductVariant(
+                                    findProductVariant(
+                                      product.productVariants,
+                                      variantNames,
+                                      selectedProductVariant,
+                                      { [variantName]: value }
+                                    )
+                                  );
+                                }}
+                                className={`capacity ${
+                                  selectedProductVariant &&
+                                  selectedProductVariant[variantName] === value
+                                    ? "capacity--active "
+                                    : ""
+                                }`}
+                              >
+                                <p className="capacity__name">
+                                  {value.toUpperCase()}
+                                </p>
+                              </div>
+                            </span>
+                          );
+                        } else {
+                          return (
+                            <span>
+                              <div
+                                key={value}
+                                onClick={() => {
+                                  setImgLoaded(false);
+                                  setChanged(true);
+                                  setSelectedProductVariant(
+                                    findProductVariant(
+                                      product.productVariants,
+                                      variantNames,
+                                      selectedProductVariant,
+                                      { [variantName]: value }
+                                    )
+                                  );
+                                }}
+                                className={`color ${
+                                  selectedProductVariant &&
+                                  selectedProductVariant[variantName] === value
+                                    ? "color--active "
+                                    : ""
+                                }`}
+                                style={{
+                                  backgroundColor: getColor(
+                                    value.toLowerCase()
+                                  ),
+                                }}
+                              ></div>
+                            </span>
+                          );
+                        }
                       }
-                    })}
+                    )}
                 </div>
               );
             })}
@@ -181,6 +197,33 @@ const findProductVariant = (
       productVariant = variant;
     }
   });
+  if (!productVariant) {
+    let mess = "";
+    variantNames.forEach((variantName) => {
+      if (!variantValue[variantName]) {
+        mess += `${capitalizeFirstLetter(dict[variantName])}:${
+          preProductVariant[variantName]
+        } `;
+      } else {
+        mess += `${capitalizeFirstLetter(dict[variantName])}:${
+          variantValue[variantName]
+        } `;
+      }
+    });
+    toast.info(`Sản phẩm không có lựa chọn ${mess} !`);
+    productVariants.forEach((variant) => {
+      variantNames.forEach((variantName) => {
+        if (
+          (variant[variantName] === preProductVariant[variantName] &&
+            !variantValue[variantName]) ||
+          (variant[variantName] === variantValue[variantName] &&
+            variantValue[variantName])
+        ) {
+          productVariant = variant;
+        }
+      });
+    });
+  }
   return productVariant;
 };
 const findVariantValues = (productVariants, variantNames, variantValue) => {
@@ -188,6 +231,7 @@ const findVariantValues = (productVariants, variantNames, variantValue) => {
   if (!productVariants || !variantNames || !variantValue) {
     return {};
   }
+
   let productVariantsOk = new Set();
   variantNames.forEach((variantName) => {
     productVariants.forEach((productVariant) => {

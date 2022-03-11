@@ -24,6 +24,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "react-toastify": "^8.1.0",
+    "react-wheel-of-prizes": "^1.0.9",
     "reactstrap": "^9.0.1",
     "redux": "^4.1.2",
     "redux-saga": "^1.1.3",

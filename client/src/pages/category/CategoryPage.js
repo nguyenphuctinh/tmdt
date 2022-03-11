@@ -5,7 +5,6 @@ import { changeNavbar } from "../../redux/slices/navbarSlice";
 import ProductList from "./ProductList";
 export default function CategoryPage() {
   const category = useParams().category;
-  console.log(category);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(changeNavbar(category));

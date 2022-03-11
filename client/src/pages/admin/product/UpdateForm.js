@@ -53,6 +53,20 @@ export default function UpdateForm({
       console.log(error);
     }
   };
+  const onHandleDelete = () => {
+    axios
+      .delete(
+        `${process.env.REACT_APP_API_URL}/api/products/${productId}/productVariants/${productVariant.productVariantId}`,
+        authorization()
+      )
+      .then((res) => {
+        toast.success("Xóa thành công!");
+      })
+      .catch((err) => {
+        toast.error("Xóa không thành công!");
+        console.log(err);
+      });
+  };
   return (
     <div
       style={{
@@ -192,6 +206,14 @@ export default function UpdateForm({
                 Lưu
               </LoadingButton>
             )}
+            <Button
+              variant="contained"
+              color="warning"
+              style={{ marginLeft: 10 }}
+              onClick={onHandleDelete}
+            >
+              Xóa
+            </Button>
             <Button
               onClick={() => {
                 setUpdateFromOpened(false);

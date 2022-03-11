@@ -19,4 +19,16 @@ export default function getColor(color) {
   if (color === "trắng") {
     return "#ffffff";
   }
+  if (color === "xanh dương") {
+    return "#a7c1d9";
+  }
+  if (color === "xanh lá") {
+    return "#cbdec7";
+  }
+  if (color === "đỏ") {
+    return "#b90b2d";
+  }
+  if (color === "tím") {
+    return "#b7afe6";
+  }
 }

@@ -25,7 +25,14 @@ const productSlice = createSlice({
     data: [],
     error: null,
   },
-  reducers: {},
+  reducers: {
+    deleteProduct: (state, action) => {
+      const newData = state.data.filter(
+        (product) => product.productId !== action.payload
+      );
+      state.data = [...newData];
+    },
+  },
   extraReducers: {
     [fetchProduct.pending]: (state) => {
       state.loading = true;
@@ -42,4 +49,6 @@ const productSlice = createSlice({
   },
 });
 const { reducer } = productSlice;
+export const { deleteProduct } = productSlice.actions;
+
 export default reducer;

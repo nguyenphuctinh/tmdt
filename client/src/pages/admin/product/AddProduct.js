@@ -84,11 +84,11 @@ export default function AddProduct() {
     }
     if (ok) {
       console.log(productVariants);
-      let variants = [];
+      let variantNames = [];
       if (category === "watch") {
-        variants = ["color", "size"];
+        variantNames = ["color", "size"];
       } else {
-        variants = ["color", "capacity"];
+        variantNames = ["color", "capacity"];
       }
       axios
         .post(
@@ -98,7 +98,7 @@ export default function AddProduct() {
             sale,
             productVariants,
             category,
-            variants,
+            variantNames,
           },
           authorization()
         )
