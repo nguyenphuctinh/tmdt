@@ -22,6 +22,7 @@ import { fetchProduct } from "./redux/slices/productSlice.js";
 import ProductDetail from "./pages/productDetail/ProductDetail";
 import ScrollToTop from "./components/ScrollToTop";
 import UpdateProduct from "./pages/admin/product/UpdateProduct";
+import Search from "./pages/search/Search";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/category/:category" element={<PhonePage />}></Route>
+            <Route path="/search" element={<Search />}></Route>
             <Route
               path="/product/:productId"
               element={<ProductDetail />}

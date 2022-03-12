@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
-import PhoneList from "../category/ProductList";
+import ProductList from "../category/ProductList";
 function Home() {
   // const [data, setData] = useState([]);
   const dispatch = useDispatch();
@@ -76,10 +76,10 @@ function Home() {
       <div className="container-fluid">
         <div className="row"></div>
       </div>
-      <PhoneList category={"phone"} />
-      <PhoneList category={"laptop"} />
-      <PhoneList category={"tablet"} />
-      <PhoneList category={"watch"} />
+      <ProductList displayType="3" category={"phone"} />
+      <ProductList displayType="3" category={"laptop"} />
+      <ProductList displayType="3" category={"tablet"} />
+      <ProductList displayType="3" category={"watch"} />
     </div>
   );
 }

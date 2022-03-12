@@ -26,6 +26,7 @@ export default function ProductDetail() {
         tmpVariantValues.push(key);
       }
       setVariantNames([...tmpVariantValues]);
+      document.title = `${product.productName}`;
     }
   }, [product]);
 

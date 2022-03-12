@@ -8,13 +8,15 @@ import isNumber from "../../../helpers/isNumber";
 import { toast } from "react-toastify";
 import { authorization } from "../../../auth/auth";
 export default function UpdateForm({
+  type,
   setUpdateFromOpened,
   productVariantUpdated,
   category,
   productId,
   variantNames,
+  setProductVariants,
+  productVariants,
 }) {
-  console.log(variantNames);
   const [productVariant, setProductVariant] = useState(productVariantUpdated);
   const [mau, setMau] = useState(productVariantUpdated.color);
   const [mauError, setMauError] = useState("");
@@ -29,6 +31,48 @@ export default function UpdateForm({
   const [loading, setLoading] = useState(false);
   const [imgList, setImgList] = useState([]);
   const onHandleUpdate = async () => {
+    if (
+      !mau ||
+      (!dungLuong && category !== "watch") ||
+      (!kichThuoc && category === "watch") ||
+      !soLuong ||
+      !gia ||
+      isNumber(gia) === false ||
+      isNumber(soLuong) === false
+    ) {
+      toast.error("Vui lòng nhập chính xác và đầy đủ thông tin");
+      return;
+    }
+    if (type === "updateWhenAdding") {
+      console.log(productVariants, productVariantUpdated);
+      let newProductVariants = [];
+      productVariants.forEach((productVariant) => {
+        if (productVariant.id === productVariantUpdated.id) {
+          if (category === "watch") {
+            newProductVariants.push({
+              ...productVariant,
+              color: mau,
+              size: kichThuoc,
+              quantity: soLuong,
+              price: gia,
+            });
+          } else {
+            newProductVariants.push({
+              ...productVariant,
+              color: mau,
+              capacity: dungLuong,
+              quantity: soLuong,
+              price: gia,
+            });
+          }
+        } else {
+          newProductVariants.push(productVariant);
+        }
+      });
+      setProductVariants([...newProductVariants]);
+      setUpdateFromOpened(false);
+      return;
+    }
     try {
       await axios.put(
         `${process.env.REACT_APP_API_URL}/api/products/${productId}`,
@@ -54,6 +98,15 @@ export default function UpdateForm({
     }
   };
   const onHandleDelete = () => {
+    if (type === "updateWhenAdding") {
+      setProductVariants(
+        productVariants.filter((productVariant) => {
+          return productVariant.id !== productVariantUpdated.id;
+        })
+      );
+      setUpdateFromOpened(false);
+      return;
+    }
     axios
       .delete(
         `${process.env.REACT_APP_API_URL}/api/products/${productId}/productVariants/${productVariant.productVariantId}`,
@@ -70,7 +123,7 @@ export default function UpdateForm({
   return (
     <div
       style={{
-        width: "100%",
+        width: "100vw",
         height: "100vh",
         position: "fixed",
         zIndex: "2",
@@ -176,20 +229,31 @@ export default function UpdateForm({
               }}
             />
 
-            {productVariantUpdated.imgSrcList.map((img, index) => {
-              return (
-                <div
-                  style={{ display: "inline-block" }}
-                  key={img.product_variant_img_id}
-                >
-                  <img
-                    src={img.img}
-                    style={{ width: "100px", marginBottom: 30 }}
-                    alt="img"
-                  />
-                </div>
-              );
-            })}
+            {productVariantUpdated.imgSrcList?.length > 0
+              ? productVariantUpdated.imgSrcList.map((img, index) => {
+                  return (
+                    <div
+                      style={{ display: "inline-block" }}
+                      key={img.product_variant_img_id}
+                    >
+                      <img
+                        src={img.img}
+                        style={{ width: "100px", marginBottom: 30 }}
+                        alt="img"
+                      />
+                    </div>
+                  );
+                })
+              : productVariantUpdated.imgList.map((img, index) => {
+                  return (
+                    <img
+                      style={{ width: "100px", marginBottom: 30 }}
+                      key={img.id}
+                      src={window.URL.createObjectURL(img.img)}
+                      alt=""
+                    />
+                  );
+                })}
             <br />
 
             {!loading ? (

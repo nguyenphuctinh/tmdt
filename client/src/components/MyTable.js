@@ -128,7 +128,7 @@ export default function MyTable({
                 Giá
               </TableCell>
               <TableCell style={{ width: 50 }} align="center">
-                {type === "variant" ? "Xóa" : "Cập nhật"}
+                Cập nhật
               </TableCell>
             </TableRow>
           ) : (
@@ -163,22 +163,16 @@ export default function MyTable({
                     {row.price}
                   </TableCell>
                   <TableCell style={{ width: 50 }} align="center">
-                    {type === "variant" ? (
-                      <DeleteOutlineIcon
-                        onClick={() => onHandleDelete(row.id)}
-                      />
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setUpdateFromOpened(true);
-                          setProductVariantUpdated(row);
-                        }}
-                        type="button"
-                        class="btn btn-primary"
-                      >
-                        Chỉnh sửa
-                      </button>
-                    )}
+                    <button
+                      onClick={() => {
+                        setUpdateFromOpened(true);
+                        setProductVariantUpdated(row);
+                      }}
+                      type="button"
+                      className="btn btn-primary"
+                    >
+                      Chỉnh sửa
+                    </button>
                   </TableCell>
                 </TableRow>
               );
@@ -198,7 +192,7 @@ export default function MyTable({
                   </TableCell>
                   <TableCell style={{ width: 100 }} align="center">
                     <Link to={`/admin/product/update/${row.productId}`}>
-                      <button type="button" class="btn btn-primary">
+                      <button type="button" className="btn btn-primary">
                         Chỉnh sửa
                       </button>
                     </Link>

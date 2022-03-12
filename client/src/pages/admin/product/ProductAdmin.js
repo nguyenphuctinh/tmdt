@@ -2,42 +2,72 @@ import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MyTable from "../../../components/MyTable";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputBase,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import searchProductFilter from "../../../helpers/searchProductFilter";
 
 export default function ProductAdmin() {
   const [category, setCategory] = useState("all");
+  const [searchValue, setSearchValue] = useState("");
   const products = useSelector((state) => state.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [productSearched, setProductSearched] = useState([]);
   useEffect(() => {
     document.title = "Quản lý sản phẩm";
     setFilteredProducts([...products?.data]);
-    console.log(products);
+    setProductSearched([...products?.data]);
   }, [products]);
+  const onHandleSearch = () => {
+    if (category === "all") {
+      setFilteredProducts(searchProductFilter(products.data, searchValue));
+      setProductSearched(searchProductFilter(products.data, searchValue));
+    } else {
+      setFilteredProducts(
+        searchProductFilter(
+          products?.data.filter((product) => product.category === category),
+          searchValue
+        )
+      );
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      onHandleSearch();
+    }
+  };
 
   const handleChangeCategory = (event) => {
     setCategory(event.target.value);
     if (event.target.value === "all") {
-      setFilteredProducts([...products?.data]);
+      setFilteredProducts([...productSearched]);
     } else if (event.target.value === "watch") {
       setFilteredProducts(
-        products?.data.filter((product) => product.category === "watch")
+        productSearched.filter((product) => product.category === "watch")
       );
     } else if (event.target.value === "phone") {
       setFilteredProducts(
-        products?.data.filter((product) => product.category === "phone")
+        productSearched.filter((product) => product.category === "phone")
       );
     } else if (event.target.value === "laptop") {
       setFilteredProducts(
-        products?.data.filter((product) => product.category === "laptop")
+        productSearched.filter((product) => product.category === "laptop")
       );
     } else {
       setFilteredProducts(
-        products?.data.filter((product) => product.category === "tablet")
+        productSearched.filter((product) => product.category === "tablet")
       );
     }
   };
   return (
-    <div className="container-fluid">
+    <div className="container-fluid pb-3">
       <div className="row">
         <div class="row pt-5 pb-5">
           <div class="col-sm-12 sessionTitle">
@@ -48,15 +78,36 @@ export default function ProductAdmin() {
         <div className="col-12">
           <div className="container-fluid">
             <div className="row">
-              <div className="col-5 col-sm-3">
+              <div className="col-12 col-sm-3">
                 <Link to="/admin/product/add">
                   <button type="button" class="btn btn-primary">
                     Đăng sản phẩm
                   </button>
                 </Link>
               </div>
-              <div className="col-2 col-sm-6"></div>
-              <div className="col-5 col-sm-3">
+              <div className="col-12 col-sm-6 mb-3 mt-3 mt-sm-0">
+                <Paper
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <InputBase
+                    onKeyDown={handleKeyDown}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder="Tìm kiếm sản phẩm..."
+                    inputProps={{ "aria-label": "search products" }}
+                  />
+                  <IconButton type="submit" sx={{}} aria-label="search">
+                    <SearchIcon onClick={onHandleSearch} />
+                  </IconButton>
+                </Paper>
+              </div>
+              <div className="col-12 col-sm-3">
                 <FormControl className="" fullWidth>
                   <InputLabel
                     style={{ color: "#0d6efd" }}
@@ -83,7 +134,6 @@ export default function ProductAdmin() {
             </div>
           </div>
           <h6 style={{ textAlign: "center" }}>Danh sách sản phẩm</h6>
-          {console.log(filteredProducts)}
           <MyTable rows={filteredProducts} type="product" />
         </div>
       </div>

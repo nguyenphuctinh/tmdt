@@ -31,4 +31,7 @@ export default function getColor(color) {
   if (color === "tím") {
     return "#b7afe6";
   }
+  if (color === "hồng") {
+    return "#faddd7";
+  }
 }

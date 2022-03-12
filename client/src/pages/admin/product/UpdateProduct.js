@@ -98,6 +98,7 @@ export default function UpdateProduct() {
       return;
     }
     try {
+      setLoading(true);
       let imgSrcList = [];
       for (const img of imgList) {
         await new Promise((resolve, reject) => {
@@ -161,6 +162,7 @@ export default function UpdateProduct() {
 
     setImgList([]);
     inputEl.current.value = null;
+    setLoading(false);
   };
   const onHandleDelete = async () => {
     try {
@@ -189,6 +191,7 @@ export default function UpdateProduct() {
         <>
           {updateFromOpened ? (
             <UpdateForm
+              type="updateWhenUpdatingProduct"
               productVariantUpdated={productVariantUpdated}
               setUpdateFromOpened={setUpdateFromOpened}
               category={category}

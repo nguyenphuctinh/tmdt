@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Product from "../../components/Product";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
-export default function ProductList({ category }) {
+export default function ProductList({ category, displayType }) {
   const products = useSelector((state) => state.products);
   const filteredProducts = products?.data.filter(
     (product) => product.category === category
@@ -18,7 +18,13 @@ export default function ProductList({ category }) {
             <span>{capitalizeFirstLetter(category)}</span>
           </div>
           {filteredProducts?.map((item) => {
-            return <Product key={item.productId} product={item} />;
+            return (
+              <Product
+                displayType={displayType}
+                key={item.productId}
+                product={item}
+              />
+            );
           })}
         </div>
       )}

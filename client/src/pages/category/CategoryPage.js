@@ -22,7 +22,7 @@ export default function CategoryPage() {
 
   return (
     <div>
-      <ProductList category={category} />
+      <ProductList displayType="4" category={category} />
     </div>
   );
 }
