@@ -19,6 +19,7 @@ router.get("/", async (req, res) => {
         productId: product.product_id,
         productName: product.product_name,
         sale: product.sale,
+        description: product.description,
         category: product.category,
         productVariants: [],
         variants: {},
@@ -123,10 +124,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const newProductId = await new Promise((resolve, reject) => {
-      const sql = "insert into product values(default, ?,?,?)";
+      const sql = "insert into product values(default, ?,?,?,?)";
       con.query(
         sql,
-        [req.body.name, req.body.sale, req.body.category],
+        [req.body.name, req.body.sale, req.body.category, req.body.description],
         (err, result) => {
           if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
           resolve(JSON.parse(JSON.stringify(result)).insertId);
@@ -300,13 +301,19 @@ router.put("/:productId", async (req, res) => {
       console.log(error);
       res.status(500).send("error");
     }
-  } else if (req.body.type === "updateProductNameAndSale") {
+  } else if (req.body.type === "updateProduct") {
     try {
       await new Promise((resolve, reject) => {
-        const sql = `update product set product_name = ?, sale = ? where product_id = ?`;
+        const sql = `update product set product_name = ?, sale = ?, description=?, category=? where product_id = ?`;
         con.query(
           sql,
-          [req.body.productName, req.body.sale, req.params.productId],
+          [
+            req.body.productName,
+            req.body.sale,
+            req.body.description,
+            req.body.category,
+            req.params.productId,
+          ],
           (err, result) => {
             if (err) {
               console.log(err);

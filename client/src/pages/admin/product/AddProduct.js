@@ -39,6 +39,7 @@ export default function AddProduct() {
   const [productVariants, setProductVariants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("phone");
+  const [description, setDescription] = useState("");
   const inputEl = useRef(null);
   const onHandleDelete = (id) => {
     const newList = productVariants.filter((item) => item.id !== id);
@@ -100,6 +101,7 @@ export default function AddProduct() {
           `${process.env.REACT_APP_API_URL}/api/products`,
           {
             name: ten,
+            description,
             sale,
             productVariants,
             category,
@@ -244,6 +246,14 @@ export default function AddProduct() {
                 <MenuItem value="watch">Watch</MenuItem>
               </Select>
             </FormControl>
+            <textarea
+              placeholder="Mô tả sản phẩm *"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              name=""
+              id=""
+              className="setDescription"
+            ></textarea>
           </div>
           <div className="col-6">
             <h4>Thêm các biến thể</h4>

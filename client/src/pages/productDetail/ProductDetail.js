@@ -49,9 +49,9 @@ export default function ProductDetail() {
     }
   }, [product, variantNames, selectedProductVariant, changed]);
 
-  return (
-    <div className="container">
-      {product && (
+  return product ? (
+    <>
+      <div className="container">
         <div className="row productDetail pt-2 pb-5">
           <div className="col-sm-6">
             <Carousel
@@ -163,7 +163,15 @@ export default function ProductDetail() {
                 </div>
               );
             })}
-
+            <p>Mô tả</p>
+            <textarea
+              disabled
+              className="productDetailDescription"
+              name=""
+              id=""
+              value={product.description}
+              spellcheck="false"
+            ></textarea>
             <p className="mt-3"></p>
 
             <a href="/addtocart/{{product.id}}?color={{selectedcolor}}&capacity={{selectedcapacity}}">
@@ -171,8 +179,10 @@ export default function ProductDetail() {
             </a>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    </>
+  ) : (
+    ""
   );
 }
 const findProductVariant = (

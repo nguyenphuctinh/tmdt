@@ -3,7 +3,13 @@ import { Navigate } from "react-router-dom";
 import MyTable from "../../../components/MyTable";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
-import { Button } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
 import TextField from "@mui/material/TextField";
@@ -39,6 +45,8 @@ export default function UpdateProduct() {
   const [imgList, setImgList] = useState([]);
   const [productVariants, setProductVariants] = useState([]);
   const [category, setCategory] = useState("phone");
+  const [description, setDescription] = useState("");
+
   const [productVariantUpdated, setProductVariantUpdated] = useState(null);
   const inputEl = useRef(null);
   let variantNames = [];
@@ -55,7 +63,11 @@ export default function UpdateProduct() {
     setTen(pro?.productName);
     setSale(pro?.sale);
     setCategory(pro?.category);
+    setDescription(pro?.description);
   }, [products, productId]);
+  const handleChangeCategory = (event) => {
+    setCategory(event.target.value);
+  };
   const onHandleSubmit = async () => {
     if (
       ten === "" ||
@@ -72,8 +84,10 @@ export default function UpdateProduct() {
       await axios.put(
         `${process.env.REACT_APP_API_URL}/api/products/${productId}`,
         {
-          type: "updateProductNameAndSale",
+          type: "updateProduct",
           productName: ten,
+          description,
+          category,
           sale,
         },
         authorization()
@@ -243,12 +257,33 @@ export default function UpdateProduct() {
                     else setSaleError("");
                   }}
                 />
-
-                <br />
-                <br />
-
+                <FormControl className="mt-4" fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Thể loại
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={category}
+                    label="Thể loại"
+                    onChange={handleChangeCategory}
+                  >
+                    <MenuItem value="phone">Phone</MenuItem>
+                    <MenuItem value="laptop">Laptop</MenuItem>
+                    <MenuItem value="tablet">Tablet</MenuItem>
+                    <MenuItem value="watch">Watch</MenuItem>
+                  </Select>
+                </FormControl>
+                <textarea
+                  placeholder="Mô tả sản phẩm *"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  name=""
+                  id=""
+                  className="setDescription"
+                ></textarea>
                 <Button onClick={onHandleSubmit} variant="contained">
-                  Cập nhật tên và sale
+                  Cập nhật thông tin chung
                 </Button>
               </div>
               <div className="col-6">

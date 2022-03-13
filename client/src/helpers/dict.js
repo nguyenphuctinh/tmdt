@@ -8,7 +8,7 @@ export default function getColor(color) {
     return "#fae7cf";
   }
   if (color === "xám") {
-    return "#54524f";
+    return "#AAAEB0";
   }
   if (color === "bạc") {
     return "#f1f2ed";

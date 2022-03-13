@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Product from "../../components/Product";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
-export default function ProductList({ category, displayType }) {
+export default function ProductList({ category, displayType, limit = "all" }) {
   const products = useSelector((state) => state.products);
-  const filteredProducts = products?.data.filter(
-    (product) => product.category === category
-  );
+
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  useEffect(() => {
+    let tmpProducts = products?.data.filter(
+      (product) => product.category === category
+    );
+    if (limit !== "all") {
+      tmpProducts = tmpProducts.slice(0, limit);
+    }
+    setFilteredProducts(tmpProducts);
+  }, [products]);
   return (
-    <div className="container">
+    <div className="container pb-3">
       {products.loading ? (
         ""
       ) : (
