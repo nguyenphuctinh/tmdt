@@ -138,57 +138,33 @@ async function handlePostback(sender_psid, received_postback) {
       const category = payload.split("newArrival")[1].toLowerCase();
       const products = await getAllProducts();
       let newArrivals = [];
+
       products.forEach((product) => {
         if (product.category === category) {
+          if (newArrivals.length === 5) return;
           newArrivals = [
             ...newArrivals,
             {
               title: product.productName,
               subtitle: "Tap a button to answer.",
-              image_url: product.productVariants[0].imgSrcList[0],
+              image_url: product.productVariants[0].imgSrcList[0].img,
               buttons: [
                 {
                   type: "web_url",
                   title: "Xem chi tiết",
                   url: `https://ttcs-npt.web.app/product/${product.productName}`,
                 },
-                {
-                  type: "postback",
-                  title: "Xem sản phẩm bán chạy nhất",
-                  payload: "bestSellerIPhone",
-                },
               ],
             },
           ];
         }
       });
-
       response = {
         attachment: {
           type: "template",
           payload: {
             template_type: "generic",
-            elements: [
-              ...newArrivals,
-              {
-                title: "Test ?",
-                subtitle: "Tap a button to answer.",
-                image_url:
-                  "https://ttcs-npt.web.app/static/media/logo.b2a56a22.png",
-                buttons: [
-                  {
-                    type: "postback",
-                    title: "Yes!",
-                    payload: "yes",
-                  },
-                  {
-                    type: "postback",
-                    title: "No!",
-                    payload: "no",
-                  },
-                ],
-              },
-            ],
+            elements: [...newArrivals],
           },
         },
       };
