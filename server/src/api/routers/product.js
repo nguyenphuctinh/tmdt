@@ -4,117 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let data = [];
-    const products = await new Promise((resolve, reject) => {
-      con.query(
-        `SELECT * FROM product order by product_id desc`,
-        function (err, result) {
-          if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-          resolve(JSON.parse(JSON.stringify(result)));
-        }
-      );
-    });
-    for (const [i, product] of products.entries()) {
-      data.push({
-        productId: product.product_id,
-        productName: product.product_name,
-        sale: product.sale,
-        description: product.description,
-        category: product.category,
-        productVariants: [],
-        variants: {},
-      });
-      const productVariants = await new Promise((resolve, reject) => {
-        con.query(
-          `select * from product_variant where product_id = ?`,
-          [product.product_id],
-          (err, result) => {
-            if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-            resolve(JSON.parse(JSON.stringify(result)));
-          }
-        );
-      });
-      for (const productVariant of productVariants) {
-        const price = await new Promise((resolve, reject) => {
-          const sql = `WITH cte AS
-                    (
-                      SELECT *,
-                            ROW_NUMBER() OVER (PARTITION BY product_variant_id ORDER BY date_time DESC) AS rn
-                      FROM product_variant_price
-                    )
-                    SELECT price
-                    FROM cte
-                    join product_variant pv
-                    on pv.product_variant_id = cte.product_variant_id
-                    WHERE rn = 1 and pv.product_variant_id = ?`;
-          con.query(
-            sql,
-            [productVariant.product_variant_id],
-            function (err, result) {
-              if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-              resolve(JSON.parse(JSON.stringify(result))[0].price);
-            }
-          );
-        });
-        const imgSrcList = await new Promise((resolve, reject) => {
-          con.query(
-            `select * from product_variant_img where product_variant_id = ?`,
-            [productVariant.product_variant_id],
-            (err, result) => {
-              if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-
-              resolve(JSON.parse(JSON.stringify(result)));
-            }
-          );
-        });
-        const valueIds = await new Promise((resolve, reject) => {
-          con.query(
-            `select value_id from product_detail where product_variant_id = ? `,
-            [productVariant.product_variant_id],
-            (err, result) => {
-              if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-              resolve(JSON.parse(JSON.stringify(result)));
-            }
-          );
-        });
-        let tmp = {}; // object chứa các tên variant và giá trị của nó
-        for (const valueId of valueIds) {
-          const variantValue = await new Promise((resolve, reject) => {
-            con.query(
-              `select * from variant_value join variant 
-              on variant.variant_id = variant_value.variant_id
-              where value_id = ?`,
-              [valueId.value_id],
-              (err, result) => {
-                if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-                resolve(JSON.parse(JSON.stringify(result))[0]);
-              }
-            );
-          });
-          if (!data[i]["variants"][variantValue.variant_name]) {
-            data[i]["variants"][variantValue.variant_name] = [
-              variantValue.value,
-            ];
-          } else if (
-            !data[i]["variants"][variantValue.variant_name].includes(
-              variantValue.value
-            )
-          ) {
-            data[i]["variants"][variantValue.variant_name].push(
-              variantValue.value
-            );
-          }
-          tmp = { ...tmp, [variantValue.variant_name]: variantValue.value };
-        }
-        data[i]["productVariants"].push({
-          ...tmp,
-          imgSrcList,
-          price,
-          quantity: productVariant.quantity,
-          productVariantId: productVariant.product_variant_id,
-        });
-      }
-    }
+    const data = await getAllProducts();
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -337,6 +227,49 @@ router.put("/:productId", async (req, res) => {
     res.send("Cập nhật thành công!");
   }
 });
+router.delete(
+  "/:productId/productVariants/:productVariantId",
+  async (req, res) => {
+    try {
+      await new Promise((resolve, reject) => {
+        const sql = `DELETE FROM product_variant WHERE product_variant_id = ?`;
+        con.query(
+          sql,
+          [parseInt(req.params.productVariantId)],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve();
+          }
+        );
+      });
+      res.send("Xóa thành công!");
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("error");
+    }
+  }
+);
+router.delete("/:productId", async (req, res) => {
+  try {
+    await new Promise((resolve, reject) => {
+      const sql = `DELETE FROM product WHERE product_id = ?`;
+      con.query(sql, [parseInt(req.params.productId)], (err, result) => {
+        if (err) {
+          console.log(err);
+          return reject({ stt: 500, err: "Lỗi truy vấn" });
+        }
+        resolve();
+      });
+    });
+    res.send("Xóa thành công!");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("error");
+  }
+});
 const addProductVariant = async (productId, productVariant, variantNames) => {
   const newProductVariantId = await new Promise((resolve, reject) => {
     const sql = "insert into product_variant values(default,?,?)";
@@ -431,47 +364,133 @@ const addProductVariant = async (productId, productVariant, variantNames) => {
     });
   }
 };
-router.delete(
-  "/:productId/productVariants/:productVariantId",
-  async (req, res) => {
-    try {
-      await new Promise((resolve, reject) => {
-        const sql = `DELETE FROM product_variant WHERE product_variant_id = ?`;
+export const getAllProducts = async () => {
+  let data = [];
+  const products = await new Promise((resolve, reject) => {
+    con.getConnection((err, connection) => {
+      if (err) {
+        console.log(err);
+        return reject({ stt: 500, err: "Lỗi truy vấn" });
+      }
+      connection.query(
+        `SELECT * FROM product order by product_id desc`,
+        function (err, result) {
+          if (err) {
+            console.log(err);
+            return reject({ stt: 500, err: "Lỗi truy vấn" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        }
+      );
+    });
+  });
+  for (const [i, product] of products.entries()) {
+    data.push({
+      productId: product.product_id,
+      productName: product.product_name,
+      sale: product.sale,
+      description: product.description,
+      category: product.category,
+      productVariants: [],
+      variants: {},
+    });
+    const productVariants = await new Promise((resolve, reject) => {
+      con.query(
+        `select * from product_variant where product_id = ?`,
+        [product.product_id],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return reject({ stt: 500, err: "Lỗi truy vấn" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        }
+      );
+    });
+    for (const productVariant of productVariants) {
+      const price = await new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM product_variant_price
+              where product_variant_id = ?
+              order by date_time desc
+              limit 1`;
         con.query(
           sql,
-          [parseInt(req.params.productVariantId)],
+          [productVariant.product_variant_id],
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve(JSON.parse(JSON.stringify(result))[0].price);
+          }
+        );
+      });
+      const imgSrcList = await new Promise((resolve, reject) => {
+        con.query(
+          `select * from product_variant_img where product_variant_id = ?`,
+          [productVariant.product_variant_id],
           (err, result) => {
             if (err) {
               console.log(err);
               return reject({ stt: 500, err: "Lỗi truy vấn" });
             }
-            resolve();
+
+            resolve(JSON.parse(JSON.stringify(result)));
           }
         );
       });
-      res.send("Xóa thành công!");
-    } catch (error) {
-      console.log(error);
-      res.status(500).send("error");
+      const valueIds = await new Promise((resolve, reject) => {
+        con.query(
+          `select value_id from product_detail where product_variant_id = ? `,
+          [productVariant.product_variant_id],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve(JSON.parse(JSON.stringify(result)));
+          }
+        );
+      });
+      let tmp = {}; // object chứa các tên variant và giá trị của nó
+      for (const valueId of valueIds) {
+        const variantValue = await new Promise((resolve, reject) => {
+          con.query(
+            `select * from variant_value join variant 
+              on variant.variant_id = variant_value.variant_id
+              where value_id = ?`,
+            [valueId.value_id],
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                return reject({ stt: 500, err: "Lỗi truy vấn" });
+              }
+              resolve(JSON.parse(JSON.stringify(result))[0]);
+            }
+          );
+        });
+        if (!data[i]["variants"][variantValue.variant_name]) {
+          data[i]["variants"][variantValue.variant_name] = [variantValue.value];
+        } else if (
+          !data[i]["variants"][variantValue.variant_name].includes(
+            variantValue.value
+          )
+        ) {
+          data[i]["variants"][variantValue.variant_name].push(
+            variantValue.value
+          );
+        }
+        tmp = { ...tmp, [variantValue.variant_name]: variantValue.value };
+      }
+      data[i]["productVariants"].push({
+        ...tmp,
+        imgSrcList,
+        price,
+        quantity: productVariant.quantity,
+        productVariantId: productVariant.product_variant_id,
+      });
     }
   }
-);
-router.delete("/:productId", async (req, res) => {
-  try {
-    await new Promise((resolve, reject) => {
-      const sql = `DELETE FROM product WHERE product_id = ?`;
-      con.query(sql, [parseInt(req.params.productId)], (err, result) => {
-        if (err) {
-          console.log(err);
-          return reject({ stt: 500, err: "Lỗi truy vấn" });
-        }
-        resolve();
-      });
-    });
-    res.send("Xóa thành công!");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("error");
-  }
-});
+  return data;
+};
 export default router;
