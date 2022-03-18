@@ -10,7 +10,7 @@ export default function Loading({
   return (
     <div style={{ position: "fixed" }} className="container-fluid">
       <div className="row">
-        <div className="col-12">
+        <div className="col-12 p-0">
           <div
             style={{
               height: heightContainer,

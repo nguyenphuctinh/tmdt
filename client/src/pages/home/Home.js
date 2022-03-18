@@ -1,18 +1,36 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
-import ProductList from "../category/ProductList";
+import { useSelector } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import sliderImg1 from "../../assets/images/top-mac-2880-800-1920x533-2.png";
 import sliderImg2 from "../../assets/images/2880-800-1920x533-2.png";
 import sliderImg3 from "../../assets/images/2880-800-1920x533-6.png";
+import Product from "../../components/Product";
 function Home() {
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.products);
+  const [phones, setPhones] = useState([]);
+  const [laptops, setLaptops] = useState([]);
+  const [tablets, setTablets] = useState([]);
+  const [watches, setWatches] = useState([]);
 
   useEffect(() => {
     dispatch(changeNavbar("home"));
-  }, [dispatch]);
+    setWatches(
+      products.data.filter((item) => item.category === "watch").slice(0, 8)
+    );
+    setPhones(
+      products.data.filter((item) => item.category === "phone").slice(0, 8)
+    );
+    setLaptops(
+      products.data.filter((item) => item.category === "laptop").slice(0, 8)
+    );
+    setTablets(
+      products.data.filter((item) => item.category === "tablet").slice(0, 8)
+    );
+  }, [dispatch, products]);
   return (
     <div className="App">
       <div className="container-fluid ">
@@ -31,10 +49,62 @@ function Home() {
           </div>
         </div>
       </div>
-      <ProductList limit={8} displayType="3" category={"phone"} />
-      <ProductList limit={8} displayType="3" category={"laptop"} />
-      <ProductList limit={8} displayType="3" category={"tablet"} />
-      <ProductList limit={8} displayType="3" category={"watch"} />
+      {products.data.length > 0 ? (
+        <div className="container pb-4">
+          <div className="row p-0">
+            <div className="col-sm-12 sessionTitle">
+              <i className="fab fa-apple"></i> <span>{"iPhone"}</span>
+            </div>
+            {phones?.map((item) => {
+              return (
+                <Product
+                  displayedAt="home"
+                  key={item.productId}
+                  product={item}
+                />
+              );
+            })}
+            <div className="col-sm-12 sessionTitle">
+              <i className="fab fa-apple"></i> <span>{"Mac"}</span>
+            </div>
+            {laptops?.map((item) => {
+              return (
+                <Product
+                  displayedAt="home"
+                  key={item.productId}
+                  product={item}
+                />
+              );
+            })}
+            <div className="col-sm-12 sessionTitle">
+              <i className="fab fa-apple"></i> <span>{"iPad"}</span>
+            </div>
+            {tablets?.map((item) => {
+              return (
+                <Product
+                  displayedAt="home"
+                  key={item.productId}
+                  product={item}
+                />
+              );
+            })}
+            <div className="col-sm-12 sessionTitle">
+              <i className="fab fa-apple"></i> <span>{"Watch"}</span>
+            </div>
+            {watches?.map((item) => {
+              return (
+                <Product
+                  displayedAt="home"
+                  key={item.productId}
+                  product={item}
+                />
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

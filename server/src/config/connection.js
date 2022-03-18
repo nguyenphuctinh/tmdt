@@ -7,6 +7,8 @@ import mysql from "mysql";
 //   database: "heroku_fdea9aba84c6f63",
 // };
 
+// heroku logs --tail
+
 var db_config = {
   host: "localhost",
   user: "root",

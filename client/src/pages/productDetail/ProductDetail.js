@@ -7,17 +7,24 @@ import getColor, { dict } from "../../helpers/dict";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import sortByIntValues from "../../helpers/sortByIntValues";
+import NotFound from "../notfound/NotFound";
 export default function ProductDetail() {
   const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [changed, setChanged] = useState(false);
   const products = useSelector((state) => state.products);
-  const { productId } = useParams();
-  const product = products?.data.find(
-    (product) => product.productId === parseInt(productId)
-  );
+  const { productName } = useParams();
+  const [product, setProduct] = useState(null);
   const [selectedProductVariant, setSelectedProductVariant] = useState(null);
   const [variantNames, setVariantNames] = useState([]);
+  useEffect(() => {
+    console.log(productName);
+    setProduct(
+      products?.data.find((item) => {
+        return item.productName === productName;
+      })
+    );
+  }, [products]);
   useEffect(() => {
     setSelectedProductVariant(product?.productVariants[0]);
     if (product) {
@@ -48,7 +55,9 @@ export default function ProductDetail() {
       }
     }
   }, [product, variantNames, selectedProductVariant, changed]);
-
+  if (product === undefined) {
+    return <NotFound />;
+  }
   return product ? (
     <>
       <div className="container">
@@ -128,9 +137,8 @@ export default function ProductDetail() {
                           );
                         } else {
                           return (
-                            <span>
+                            <span key={value}>
                               <div
-                                key={value}
                                 onClick={() => {
                                   setImgLoaded(false);
                                   setChanged(true);
@@ -170,7 +178,7 @@ export default function ProductDetail() {
               name=""
               id=""
               value={product.description}
-              spellcheck="false"
+              spellCheck="false"
             ></textarea>
             <p className="mt-3"></p>
 

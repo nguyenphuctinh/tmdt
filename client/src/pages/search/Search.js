@@ -15,8 +15,8 @@ export default function Search() {
   }, [products, q]);
   return (
     <div className="container pb-3">
-      <div class="row pt-5">
-        <div class="col-sm-12 d-flex ">
+      <div className="row pt-5">
+        <div className="col-sm-12 d-flex ">
           <p>
             Kết quả tìm kiếm cho: <strong>{q}</strong>
           </p>
@@ -26,16 +26,19 @@ export default function Search() {
         <div className="row">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => {
-              return <Product product={product} />;
+              return <Product key={product.productId} product={product} />;
             })
           ) : (
             <>
-              <div class="col-12">
-                <p style={{ textAlign: "center" }} class="notfound text-danger">
+              <div className="col-12">
+                <p
+                  style={{ textAlign: "center" }}
+                  className="notfound text-danger"
+                >
                   Không tìm thấy sản phẩm nào
                 </p>
               </div>
-              <div class="col-12 hint">
+              <div className="col-12 hint">
                 <strong>
                   {" "}
                   Để tìm được kết quả chính xác hơn, bạn vui lòng:

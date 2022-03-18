@@ -100,7 +100,7 @@ export default function AddProduct() {
         .post(
           `${process.env.REACT_APP_API_URL}/api/products`,
           {
-            name: ten,
+            name: ten.trim(),
             description,
             sale,
             productVariants,

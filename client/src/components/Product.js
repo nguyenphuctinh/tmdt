@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Product({ product, displayType = "4" }) {
+export default function Product({ product, displayedAt }) {
   return (
     <div
-      className={`col-6 productContainer  col-sm-4 col-md-${displayType} mt-5`}
+      className={`col-6 productContainer  ${
+        displayedAt === "home" ? "col-sm-4 col-md-3" : "col-sm-4"
+      } mt-5`}
     >
-      <Link to={`/product/${product.productId}`}>
+      <Link to={`/product/${product.productName}`}>
         <div className="product">
           <img
             className="productImg"

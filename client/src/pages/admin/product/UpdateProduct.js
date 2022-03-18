@@ -85,7 +85,7 @@ export default function UpdateProduct() {
         `${process.env.REACT_APP_API_URL}/api/products/${productId}`,
         {
           type: "updateProduct",
-          productName: ten,
+          productName: ten.trim(),
           description,
           category,
           sale,

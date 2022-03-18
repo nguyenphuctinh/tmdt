@@ -28,6 +28,7 @@ function App() {
   const dispatch = useDispatch();
   let user = useSelector((state) => state.user);
   let loading = useSelector((state) => state.loading);
+  const products = useSelector((state) => state.products);
 
   useEffect(() => {
     document.title = "TopZone - Cửa hàng Apple chính hãng";
@@ -37,7 +38,7 @@ function App() {
   }, [dispatch]);
   return (
     <>
-      {user.loading || !rendered ? (
+      {user.loading || products.loading || !rendered ? (
         <Loading />
       ) : (
         <Router>
@@ -50,7 +51,7 @@ function App() {
             <Route path="/category/:category" element={<PhonePage />}></Route>
             <Route path="/search" element={<Search />}></Route>
             <Route
-              path="/product/:productId"
+              path="/product/:productName"
               element={<ProductDetail />}
             ></Route>
             <Route
