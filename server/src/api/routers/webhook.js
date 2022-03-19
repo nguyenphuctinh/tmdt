@@ -1,5 +1,7 @@
 import express from "express";
 import request from "request";
+import pkg from "node-wit";
+const { log, Wit } = pkg;
 
 import { getAllProducts } from "./product.js";
 const router = express.Router();
@@ -176,47 +178,29 @@ async function handlePostback(sender_psid, received_postback) {
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
 }
-function handleMessage(sender_psid, received_message) {
+async function handleMessage(sender_psid, received_message) {
   let response;
 
   // Checks if the message contains text
   if (received_message.text) {
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
+
+    const client = new Wit({
+      accessToken: process.env.WIT_AI_ACCESS_TOKEN,
+      logger: new log.Logger(log.DEBUG), // optional
+    });
+    var msg = received_message.text;
+    var wit = await client.message(msg);
+    console.log("wit reply", JSON.stringify(wit));
+    var reply = await nlp.handleMessage(wit.entities, wit.traits);
+    console.log(reply);
     response = {
-      text: `You sent the message: "${received_message.text}". Now send me an attachment!`,
+      text: reply,
     };
   }
   // Get the URL of the message attachment
-  response = {
-    attachment: {
-      type: "template",
-      payload: {
-        template_type: "generic",
-        elements: [
-          {
-            title: "Test gửi ảnh?",
-            subtitle: "Tap a button to answer.",
-            image_url:
-              "https://ttcs-npt.web.app/static/media/logo.b2a56a22.png",
-            buttons: [
-              {
-                type: "postback",
-                title: "Yes!",
-                payload: "yes",
-              },
-              {
-                type: "postback",
-                title: "No!",
-                payload: "no",
-              },
-            ],
-          },
-        ],
-      },
-    },
-  };
-
+  console.log(response);
   // Send the response message
   callSendAPI(sender_psid, response);
 }
@@ -269,4 +253,46 @@ router.get("/", (req, res) => {
     }
   }
 });
+
+const responses = {
+  greetings: [
+    "Chào bạn, bạn đang muốn tìm kiếm sản phẩm nào?",
+    "Xin chào! Bạn cần mình giúp gì?",
+    "Chào bạn!",
+  ],
+  thanks: ["Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi!"],
+};
+
+const firstValue = (obj, key) => {
+  const val =
+    obj &&
+    obj[key] &&
+    Array.isArray(obj[key]) &&
+    obj[key].length > 0 &&
+    obj[key][0].value;
+  if (!val) {
+    return null;
+  }
+  return val;
+};
+
+export var nlp = {
+  handleMessage: async (entities, traits) => {
+    console.log({ entities, traits });
+
+    // làm vòng forr check các key trong response hợp lý hơn
+    if (firstValue(traits, "greetings")) {
+      return responses["greetings"][
+        Math.floor(Math.random() * responses["greetings"].length)
+      ];
+    } else if (firstValue(traits, "thanks")) {
+      return responses["thanks"][
+        Math.floor(Math.random() * responses["thanks"].length)
+      ];
+    } else {
+      return "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001";
+    }
+  },
+};
+
 export default router;

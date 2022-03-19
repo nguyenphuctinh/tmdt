@@ -24,7 +24,6 @@ app.all("/*", function (req, res, next) {
   next();
 });
 app.post("/login", async (req, res) => {
-  // console.log(passwordHash.verify("password123", hashedPassword));
   try {
     const user = await new Promise((resolve, reject) => {
       const stm = "SELECT * FROM user where username=?";
