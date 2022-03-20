@@ -5,7 +5,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const data = await getAllProducts();
-    console.log(data);
+    console.log("data");
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -368,22 +368,16 @@ const addProductVariant = async (productId, productVariant, variantNames) => {
 export const getAllProducts = async () => {
   let data = [];
   const products = await new Promise((resolve, reject) => {
-    con.getConnection((err, connection) => {
-      if (err) {
-        console.log(err);
-        return reject({ stt: 500, err: "Lỗi truy vấn" });
-      }
-      connection.query(
-        `SELECT * FROM product order by product_id desc`,
-        function (err, result) {
-          if (err) {
-            console.log(err);
-            return reject({ stt: 500, err: "Lỗi truy vấn" });
-          }
-          resolve(JSON.parse(JSON.stringify(result)));
+    con.query(
+      `SELECT * FROM product order by product_id desc`,
+      function (err, result) {
+        if (err) {
+          console.log(err);
+          return reject({ stt: 500, err: "Lỗi truy vấn" });
         }
-      );
-    });
+        resolve(JSON.parse(JSON.stringify(result)));
+      }
+    );
   });
   for (const [i, product] of products.entries()) {
     data.push({
@@ -492,7 +486,6 @@ export const getAllProducts = async () => {
       });
     }
   }
-  console.log(data);
   return data;
 };
 export default router;

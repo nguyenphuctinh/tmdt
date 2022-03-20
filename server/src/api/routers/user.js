@@ -54,32 +54,48 @@ router.delete("/:id", (req, res) => {
   );
 });
 router.put("/:id", async (req, res) => {
-  var sql = "select * from user where username=?";
-  try {
-    await new Promise((resolve, reject) => {
-      con.query(sql, [req.body.username], (err, data) => {
-        if (err) {
-          console.log(err);
-          reject({ stt: 500, err: "Lỗi SQL" });
-          return;
-        }
-        if (data.length !== 0) {
-          reject({ stt: 400, err: "Tài khoản đã tồn tại" });
-          return;
-        }
-        resolve("ok");
-      });
-    });
-  } catch ({ stt, err }) {
-    return res.status(stt).send(err);
-  }
-  con.query(
-    `update user set username='${req.body.username}', password='${req.body.password}' where id=${req.params.id} `,
-    function (err, result) {
-      if (err) return res.status(500).send("Lỗi SQL");
-      res.status(200).send("cap nhat thành công");
+  if (req.body.type === "updatePassword") {
+    if (req.body.password.length === 0) {
+      return res.status(400).send("Không được để trống");
     }
-  );
+    try {
+      var sql = "select * from user where username=?";
+      const user = await new Promise((resolve, reject) => {
+        con.query(sql, [req.params.id], (err, data) => {
+          if (err) {
+            console.log(err);
+            reject({ stt: 500, err: "Lỗi SQL" });
+            return;
+          }
+          if (data.length === 0) {
+            return reject({ stt: 400, err: "Tài khoản không tồn tại" });
+          }
+          resolve(JSON.parse(JSON.stringify(data)));
+        });
+      });
+      console.log(req.body.password, user[0].password);
+      if (!passwordHash.verify(req.body.password, user[0].password)) {
+        return res.status(400).send("Mật khẩu không đúng");
+      }
+      await new Promise((resolve, reject) => {
+        con.query(
+          `update user set  password='${passwordHash.generate(
+            req.body.newPassword
+          )}' where username='${req.params.id}' `,
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve();
+          }
+        );
+      });
+      res.status(200).send("cập nhật thành công");
+    } catch ({ stt, err }) {
+      return res.status(stt).send(err);
+    }
+  }
 });
 
 export default router;

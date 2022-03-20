@@ -159,10 +159,9 @@ async function handleMessage(sender_psid, received_message) {
     var reply;
     if (intents.includes("see_product_list")) {
       callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
-      reply = await productTemplateList(
-        wit.entities["product:category"][0].value.toLowerCase() ||
-          wit.entities["product:name"][0].value.toLowerCase()
-      );
+      const categories =
+        wit.entities["product:category"] || wit.entities["product:name"];
+      reply = await productTemplateList(categories[0].value.toLowerCase());
     } else {
       reply = {
         text: await nlp.handleMessage(wit.entities, wit.traits),

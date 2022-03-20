@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,11 +15,11 @@ export default function Register() {
           password: password,
         }
       );
-      toast(res.data);
+      toast.success(res.data);
     } catch (error) {
       console.log(error);
       if (error.response) {
-        toast(error.response.data);
+        toast.error(error.response.data);
       } else if (error.request) {
         toast(error.request);
       } else {
@@ -52,7 +53,9 @@ export default function Register() {
           >
             Đăng ký
           </button>
-          <a href="/login">Đăng nhập</a>
+          <Link className="text-success" to="/login">
+            Đăng nhập
+          </Link>
         </div>
       </div>
     </div>

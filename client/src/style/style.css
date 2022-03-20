@@ -239,9 +239,9 @@ input:focus {
   font-weight: 400;
 }
 .productDetail .capacity {
-  background-color: #4f5155;
+  /* background-color: #4f5155; */
   /* width: 3rem; */
-  color: #e5e5e5;
+  border: 1px solid #4f5155;
   text-align: center;
   padding: 0.5rem 1rem;
   display: inline;
@@ -253,6 +253,7 @@ input:focus {
   display: inline-block;
 }
 .productDetail .capacity--active {
+  color: #e5e5e5;
   background-color: rgb(26, 26, 26);
 }
 

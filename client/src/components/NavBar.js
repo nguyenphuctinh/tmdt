@@ -165,7 +165,7 @@ function NavBar() {
                 onClick={() => setFinding(false)}
                 className="d-flex align-items-center"
               >
-                <Link to="/account">
+                <Link to="/account?tab=info">
                   <div className="bg">
                     <i className="far fa-user"></i>
                   </div>

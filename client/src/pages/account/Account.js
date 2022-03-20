@@ -20,7 +20,7 @@ export default function Account() {
   useEffect(() => {
     dispatch(changeNavbar("others"));
     document.title = "Tài khoản";
-    navigate("/account?tab=info");
+    navigate("/account?tab=" + tab);
   }, []);
   useEffect(() => {}, [tab]);
   return (
@@ -35,14 +35,18 @@ export default function Account() {
               <>
                 <Link to="/admin/product">Quản lý sản phẩm</Link>
                 <br />
-                <Link to="/admin/user">Quản lý nguoi dung</Link>
+                <Link to="/admin/user">Quản lý người dùng</Link>
               </>
             ) : (
               ""
             )}
           </div>
-          <Link to="/account?tab=info"> Cập nhật thông tin</Link>
-          <Link to="/account?tab=security"> Đổi mật khẩu</Link>
+          <p>
+            <Link to="/account?tab=info"> Cập nhật thông tin</Link>
+          </p>
+          <p>
+            <Link to="/account?tab=security"> Đổi mật khẩu</Link>
+          </p>
 
           <button
             type="button"
