@@ -1,13 +1,19 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #3e3e3f;
-  color: white;
+  /* background-color: #3e3e3f; */
+  /* color: w */
   overflow-y: scroll;
 }
 .grid {
   display: grid;
   place-items: center;
+}
+.carousel .control-next.control-arrow:before {
+  border-left: 8px solid rgb(158, 158, 158);
+}
+.carousel .control-prev.control-arrow:before {
+  border-right: 8px solid rgb(158, 158, 158);
 }
 #demo-simple-select {
   padding: 0.5rem 0.5rem;
@@ -52,6 +58,7 @@ ul {
 .menu {
   height: 100%;
 }
+
 .myNavbar a {
   color: white;
   font-size: 1rem;
@@ -65,7 +72,7 @@ a:hover {
 }
 
 .myNavbar img {
-  width: 70%;
+  width: 60%;
 }
 .menu .bg {
   height: 2.5rem;
@@ -123,7 +130,6 @@ input:focus {
   cursor: pointer;
   font-size: 1.3rem;
 }
-
 /* policies */
 .policies {
   background-color: #2f3033;
@@ -172,18 +178,20 @@ input:focus {
 .sessionTitle i,
 .sessionTitle span {
   font-size: 2.5rem;
+  font-weight: 600;
 }
 .sessionTitle {
   text-align: center;
   margin-top: 2rem;
 }
 .product {
-  background-color: #2f3033;
+  /* background-color: #2f3033; */
+  color: #0071e3;
   border-radius: 0.8rem;
   padding: 1.5rem 1rem;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+  /* box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
     rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
-    rgba(116, 116, 116, 0.08) 0px 1px 0px inset;
+    rgba(116, 116, 116, 0.08) 0px 1px 0px inset; */
   min-height: 100%;
   position: relative;
 }
@@ -233,6 +241,7 @@ input:focus {
 .productDetail .capacity {
   background-color: #4f5155;
   /* width: 3rem; */
+  color: #e5e5e5;
   text-align: center;
   padding: 0.5rem 1rem;
   display: inline;
@@ -257,10 +266,10 @@ input:focus {
 }
 .productDetail .color--active {
   border: 3px solid #e5e5e5;
-  box-shadow: #0071e3 0px 2px 4px 0px, #0071e3 0px 0px 0px 2px;
+  box-shadow: #00e366 0px 3px 4px 0px, #2200e3a6 0px 0px 0px 2px;
 }
 .addtocart {
-  background-color: #0071e3;
+  background-color: #00e3d0;
   text-align: center;
   width: 100%;
   padding: 1.2rem 4rem;
@@ -288,7 +297,7 @@ input:focus {
 .productDetailDescription {
   border: unset;
   width: 100%;
-  background-color: #2f3033;
+  background-color: #2f3333;
   padding: 10px 20px;
   color: white;
   height: 7rem;
@@ -375,4 +384,8 @@ td {
 /* admin */
 .addImg {
   cursor: pointer;
+}
+.productAdmin {
+  background-color: #2f3033;
+  color: #e5e5e5;
 }

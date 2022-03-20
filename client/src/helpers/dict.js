@@ -11,13 +11,13 @@ export default function getColor(color) {
     return "#AAAEB0";
   }
   if (color === "bạc") {
-    return "#f1f2ed";
+    return "#e9e9e9";
   }
   if (color === "đen") {
     return "#000000";
   }
   if (color === "trắng") {
-    return "#ffffff";
+    return "#f1f2ed";
   }
   if (color === "xanh dương") {
     return "#a7c1d9";

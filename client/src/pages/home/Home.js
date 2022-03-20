@@ -32,10 +32,10 @@ function Home() {
     );
   }, [dispatch, products]);
   return (
-    <div className="App">
+    <div className="App home">
       <div className="container-fluid ">
         <div className="row p-0">
-          <div className="p-0 col-12">
+          <div className="p-0 col-12 slider">
             <Carousel
               infiniteLoop={true}
               autoPlay={true}
@@ -53,7 +53,7 @@ function Home() {
         <div className="container pb-4">
           <div className="row p-0">
             <div className="col-sm-12 sessionTitle">
-              <span>{"iPhone"}</span>
+              <span>{"Phone"}</span>
             </div>
             {phones?.map((item) => {
               return (
@@ -65,7 +65,7 @@ function Home() {
               );
             })}
             <div className="col-sm-12 sessionTitle">
-              <span>{"Mac"}</span>
+              <span>{"Laptop"}</span>
             </div>
             {laptops?.map((item) => {
               return (
@@ -77,7 +77,7 @@ function Home() {
               );
             })}
             <div className="col-sm-12 sessionTitle">
-              <span>{"iPad"}</span>
+              <span>{"Tablet"}</span>
             </div>
             {tablets?.map((item) => {
               return (

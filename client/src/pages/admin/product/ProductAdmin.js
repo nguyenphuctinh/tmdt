@@ -67,7 +67,7 @@ export default function ProductAdmin() {
     }
   };
   return (
-    <div className="container-fluid pb-3">
+    <div className="container-fluid pb-3 productAdmin">
       <div className="row">
         <div class="row pt-5 pb-5">
           <div class="col-sm-12 sessionTitle">

@@ -29,15 +29,16 @@ function NavBar() {
   return (
     <div className="container-fluid">
       <div className="row myNavbar padding-lg">
-        <div className="col-3 d-flex align-items-center navLogo">
+        <div className="col-4 d-block d-sm-none d-flex align-items-center navLogo">
           <div onClick={() => setFinding(false)} className="">
             <Link to="/">
               <img src={logo} alt="" />
             </Link>
           </div>
         </div>
+
         <div
-          className="col-9 col-sm-6 padding-0"
+          className="col-8 col-sm-5 padding-0"
           style={{ textAlign: "center" }}
         >
           <div
@@ -80,7 +81,7 @@ function NavBar() {
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/category/phone">iPhone</Link>
+                <Link to="/category/phone">Phone</Link>
               </li>
               <li
                 style={{
@@ -88,7 +89,7 @@ function NavBar() {
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/category/laptop">Mac</Link>
+                <Link to="/category/laptop">Laptop</Link>
               </li>
               <li
                 style={{
@@ -96,7 +97,7 @@ function NavBar() {
                 }}
                 className="d-flex align-items-center"
               >
-                <Link to="/category/tablet">iPad</Link>
+                <Link to="/category/tablet">Tablet</Link>
               </li>
               <li
                 style={{
@@ -109,6 +110,14 @@ function NavBar() {
             </ul>
           </div>
         </div>
+        <div className="col-4 d-none  d-sm-flex align-items-center navLogo">
+          <div onClick={() => setFinding(false)} className="">
+            <Link to="/">
+              <img src={logo} alt="" />
+            </Link>
+          </div>
+        </div>
+
         <div className="col-sm-3 padding-0">
           <div className="menu pl-5 pr-5">
             <ul className="d-flex justify-content-between">
@@ -131,9 +140,9 @@ function NavBar() {
                     <div
                       className="grid"
                       style={{
-                        backgroundColor: "brown",
+                        backgroundColor: "#00e366",
                         borderRadius: "50%",
-
+                        color: "#2f3033",
                         width: "1.3rem",
                         height: "1.3rem",
                         zIndex: "2",

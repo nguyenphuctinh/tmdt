@@ -43,7 +43,6 @@ export default function CategoryPage() {
     <div className="container pb-3">
       <div className="row">
         <div className="col-sm-12 sessionTitle">
-          <i className="fab fa-apple"></i>
           <span>{capitalizeFirstLetter(category)}</span>
         </div>
       </div>

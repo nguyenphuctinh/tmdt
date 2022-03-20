@@ -5,6 +5,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const data = await getAllProducts();
+    console.log(data);
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -491,6 +492,7 @@ export const getAllProducts = async () => {
       });
     }
   }
+  console.log(data);
   return data;
 };
 export default router;
