@@ -53,7 +53,7 @@ function Home() {
         <div className="container pb-4">
           <div className="row p-0">
             <div className="col-sm-12 sessionTitle">
-              <i className="fab fa-apple"></i> <span>{"iPhone"}</span>
+              <span>{"iPhone"}</span>
             </div>
             {phones?.map((item) => {
               return (
@@ -65,7 +65,7 @@ function Home() {
               );
             })}
             <div className="col-sm-12 sessionTitle">
-              <i className="fab fa-apple"></i> <span>{"Mac"}</span>
+              <span>{"Mac"}</span>
             </div>
             {laptops?.map((item) => {
               return (
@@ -77,7 +77,7 @@ function Home() {
               );
             })}
             <div className="col-sm-12 sessionTitle">
-              <i className="fab fa-apple"></i> <span>{"iPad"}</span>
+              <span>{"iPad"}</span>
             </div>
             {tablets?.map((item) => {
               return (
@@ -89,7 +89,7 @@ function Home() {
               );
             })}
             <div className="col-sm-12 sessionTitle">
-              <i className="fab fa-apple"></i> <span>{"Watch"}</span>
+              <span>{"Watch"}</span>
             </div>
             {watches?.map((item) => {
               return (

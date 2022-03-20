@@ -138,46 +138,39 @@ async function handlePostback(sender_psid, received_postback) {
   ) {
     const category = payload.split("newArrival")[1].toLowerCase();
 
-    const newArrivals = await categoryListRes(category);
+    const newProductTemplateList = await productTemplateList(category);
     response = {
-      ...newArrivals,
+      ...newProductTemplateList,
     };
   }
   // console.log(response.attachment.payload.elements);
-  // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
 }
 async function handleMessage(sender_psid, received_message) {
   let response;
 
-  // Checks if the message contains text
   if (received_message.text) {
-    // Create the payload for a basic text message, which
-    // will be added to the body of our request to the Send API
-
     const client = new Wit({
       accessToken: process.env.WIT_AI_ACCESS_TOKEN,
-      logger: new log.Logger(log.DEBUG), // optional
     });
     var msg = received_message.text;
     var wit = await client.message(msg);
-    console.log("wit reply", JSON.stringify(wit));
-    const data = JSON.stringify(wit);
-    const intents = data["intents"].map((intent) => intent["name"]);
+    const intents = wit.intents.map((intent) => intent["name"]);
     var reply;
     if (intents.includes("see_product_list")) {
-      reply = await categoryListRes("phone");
+      callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
+      reply = await productTemplateList(
+        wit.entities["product:category"][0].value.toLowerCase() ||
+          wit.entities["product:name"][0].value.toLowerCase()
+      );
     } else {
       reply = {
         text: await nlp.handleMessage(wit.entities, wit.traits),
       };
     }
-    // console.log(reply);
     response = { ...reply };
   }
-  // Get the URL of the message attachment
-  // console.log(response);
-  // Send the response message
+  console.log(response);
   callSendAPI(sender_psid, response);
 }
 
@@ -268,7 +261,7 @@ export var nlp = {
     }
   },
 };
-const categoryListRes = async (category) => {
+const productTemplateList = async (category) => {
   try {
     const products = await getAllProducts();
     let newArrivals = {
@@ -301,6 +294,11 @@ const categoryListRes = async (category) => {
         ];
       }
     });
+    if (newArrivals.attachment.payload.elements.length === 0) {
+      return {
+        text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
+      };
+    }
     return newArrivals;
   } catch (error) {
     console.log(error);
