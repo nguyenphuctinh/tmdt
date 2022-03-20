@@ -136,45 +136,14 @@ async function handlePostback(sender_psid, received_postback) {
     payload === "newArrivalLaptop" ||
     payload === "newArrivalWatch"
   ) {
-    try {
-      const category = payload.split("newArrival")[1].toLowerCase();
-      const products = await getAllProducts();
-      let newArrivals = [];
+    const category = payload.split("newArrival")[1].toLowerCase();
 
-      products.forEach((product) => {
-        if (product.category === category) {
-          if (newArrivals.length === 5) return;
-          newArrivals = [
-            ...newArrivals,
-            {
-              title: product.productName,
-              subtitle: "Tap a button to answer.",
-              image_url: product.productVariants[0].imgSrcList[0].img,
-              buttons: [
-                {
-                  type: "web_url",
-                  title: "Xem chi tiết",
-                  url: `https://ttcs-npt.web.app/product/${product.productName}`,
-                },
-              ],
-            },
-          ];
-        }
-      });
-      response = {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "generic",
-            elements: [...newArrivals],
-          },
-        },
-      };
-    } catch (error) {
-      console.log(error);
-    }
+    const newArrivals = await categoryListRes(category);
+    response = {
+      ...newArrivals,
+    };
   }
-  console.log(response.attachment.payload.elements);
+  // console.log(response.attachment.payload.elements);
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
 }
@@ -193,14 +162,21 @@ async function handleMessage(sender_psid, received_message) {
     var msg = received_message.text;
     var wit = await client.message(msg);
     console.log("wit reply", JSON.stringify(wit));
-    var reply = await nlp.handleMessage(wit.entities, wit.traits);
-    console.log(reply);
-    response = {
-      text: reply,
-    };
+    const data = JSON.stringify(wit);
+    const intents = data["intents"].map((intent) => intent["name"]);
+    var reply;
+    if (intents.includes("see_product_list")) {
+      reply = await categoryListRes("phone");
+    } else {
+      reply = {
+        text: await nlp.handleMessage(wit.entities, wit.traits),
+      };
+    }
+    // console.log(reply);
+    response = { ...reply };
   }
   // Get the URL of the message attachment
-  console.log(response);
+  // console.log(response);
   // Send the response message
   callSendAPI(sender_psid, response);
 }
@@ -278,8 +254,6 @@ const firstValue = (obj, key) => {
 
 export var nlp = {
   handleMessage: async (entities, traits) => {
-    console.log({ entities, traits });
-
     // làm vòng forr check các key trong response hợp lý hơn
     if (firstValue(traits, "greetings")) {
       return responses["greetings"][
@@ -294,5 +268,42 @@ export var nlp = {
     }
   },
 };
+const categoryListRes = async (category) => {
+  try {
+    const products = await getAllProducts();
+    let newArrivals = {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [],
+        },
+      },
+    };
 
+    products.forEach((product) => {
+      if (product.category === category) {
+        if (newArrivals.attachment.payload.elements.length === 5) return;
+        newArrivals.attachment.payload.elements = [
+          ...newArrivals.attachment.payload.elements,
+          {
+            title: product.productName,
+            subtitle: "Tap a button to answer.",
+            image_url: product.productVariants[0].imgSrcList[0].img,
+            buttons: [
+              {
+                type: "web_url",
+                title: "Xem chi tiết",
+                url: `https://ttcs-npt.web.app/product/${product.productName}`,
+              },
+            ],
+          },
+        ];
+      }
+    });
+    return newArrivals;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export default router;
