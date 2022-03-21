@@ -5,6 +5,7 @@ const { log, Wit } = pkg;
 
 import { getAllProducts } from "./product.js";
 const router = express.Router();
+
 router.post("/", (req, res) => {
   let body = req.body;
 
@@ -39,10 +40,8 @@ router.post("/", (req, res) => {
 async function handlePostback(sender_psid, received_postback) {
   let response;
 
-  // Get the payload for the postback
   let payload = received_postback.payload;
   console.log(payload);
-  // Set the response based on the postback payload
   if (payload === "yes") {
     response = { text: "Thanks!" };
   } else if (payload === "no") {
@@ -161,28 +160,32 @@ async function handleMessage(sender_psid, received_message) {
       callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
       const categories =
         wit.entities["product:category"] || wit.entities["product:name"];
+      console.log(wit.entities);
       reply = await productTemplateList(categories[0].value.toLowerCase());
+      console.log("reply", reply);
+      if (reply.attachment.payload.elements.length === 0) {
+        callSendAPI(sender_psid, {
+          text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
+        });
+      } else {
+        console.log(reply);
+        callSendAPI(sender_psid, { ...reply });
+      }
     } else {
-      reply = {
+      callSendAPI(sender_psid, {
         text: await nlp.handleMessage(wit.entities, wit.traits),
-      };
+      });
     }
-    response = { ...reply };
   }
-  console.log(response);
-  callSendAPI(sender_psid, response);
 }
 
 function callSendAPI(sender_psid, response) {
-  // Construct the message body
   let request_body = {
     recipient: {
       id: sender_psid,
     },
     message: response,
   };
-
-  // Send the HTTP request to the Messenger Platform
   request(
     {
       uri: "https://graph.facebook.com/v2.6/me/messages",
@@ -244,7 +247,7 @@ const firstValue = (obj, key) => {
   return val;
 };
 
-export var nlp = {
+var nlp = {
   handleMessage: async (entities, traits) => {
     // làm vòng forr check các key trong response hợp lý hơn
     if (firstValue(traits, "greetings")) {
@@ -261,21 +264,23 @@ export var nlp = {
   },
 };
 const productTemplateList = async (category) => {
+  let newArrivals = {
+    attachment: {
+      type: "template",
+      payload: {
+        template_type: "generic",
+        elements: [],
+      },
+    },
+  };
   try {
     const products = await getAllProducts();
-    let newArrivals = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [],
-        },
-      },
-    };
-
-    products.forEach((product) => {
+    for (let index = 0; index < products.length; index++) {
+      const product = { ...products[index] };
       if (product.category === category) {
-        if (newArrivals.attachment.payload.elements.length === 5) return;
+        if (newArrivals.attachment.payload.elements.length === 3) {
+          break;
+        }
         newArrivals.attachment.payload.elements = [
           ...newArrivals.attachment.payload.elements,
           {
@@ -292,15 +297,10 @@ const productTemplateList = async (category) => {
           },
         ];
       }
-    });
-    if (newArrivals.attachment.payload.elements.length === 0) {
-      return {
-        text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
-      };
     }
-    return newArrivals;
   } catch (error) {
     console.log(error);
   }
+  return newArrivals;
 };
 export default router;
