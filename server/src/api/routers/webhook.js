@@ -4,6 +4,7 @@ import pkg from "node-wit";
 const { log, Wit } = pkg;
 
 import { getAllProducts } from "./product.js";
+import { transfer } from "../helpers/transfer.js";
 const router = express.Router();
 
 router.post("/", (req, res) => {
@@ -157,12 +158,25 @@ async function handleMessage(sender_psid, received_message) {
     const intents = wit.intents.map((intent) => intent["name"]);
     var reply;
     if (intents.includes("see_product_list")) {
+      const products = await getAllProducts();
       callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
-      const categories =
-        wit.entities["product:category"] || wit.entities["product:name"];
-      console.log(wit.entities);
-      reply = await productTemplateList(categories[0].value.toLowerCase());
-      console.log("reply", reply);
+      if (wit.entities["product:name"]) {
+        const names = wit.entities["product:name"];
+        reply = await productTemplateList(
+          products,
+          transfer(names[0].value.toLowerCase()),
+          "name"
+        );
+      } else {
+        const categories =
+          wit.entities["product:category"] || wit.entities["product:name"];
+        console.log(wit.entities);
+        reply = await productTemplateList(
+          products,
+          transfer(categories[0].value.toLowerCase()),
+          "category"
+        );
+      }
       if (reply.attachment.payload.elements.length === 0) {
         callSendAPI(sender_psid, {
           text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
@@ -171,6 +185,10 @@ async function handleMessage(sender_psid, received_message) {
         console.log(reply);
         callSendAPI(sender_psid, { ...reply });
       }
+    } else if (intents.includes("see_other_products")) {
+      callSendAPI(sender_psid, {
+        text: "Bạn cho mình thêm thông tin để mình tìm sản phẩm cụ thể hơn (VD: loại sản phẩm, khoảng giá, màu sắc...)",
+      });
     } else {
       callSendAPI(sender_psid, {
         text: await nlp.handleMessage(wit.entities, wit.traits),
@@ -229,9 +247,15 @@ const responses = {
   greetings: [
     "Chào bạn, bạn đang muốn tìm kiếm sản phẩm nào?",
     "Xin chào! Bạn cần mình giúp gì?",
-    "Chào bạn!",
+    "Chào bạn! Mình có thể giúp gì cho bạn?",
   ],
   thanks: ["Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi!"],
+  intro: [
+    "Bạn có thể tìm kiếm sản phẩm theo các danh mục sau: điện thoại, máy tính bảng, laptop, đồng hồ. Bạn muốn tham khảo sản phẩm nào?",
+  ],
+  policy: [
+    "Cửa hàng mình bảo hàng cho toàn bộ sản phẩm trong 2 năm, không áp dụng trả góp, thanh toán khi nhận hàng. Nếu có bất kỳ vấn đề gì về sản phẩm, bạn có thể liên hệ với chúng tôi qua số điện thoại:123456789",
+  ],
 };
 
 const firstValue = (obj, key) => {
@@ -249,21 +273,20 @@ const firstValue = (obj, key) => {
 
 var nlp = {
   handleMessage: async (entities, traits) => {
-    // làm vòng forr check các key trong response hợp lý hơn
-    if (firstValue(traits, "greetings")) {
-      return responses["greetings"][
-        Math.floor(Math.random() * responses["greetings"].length)
-      ];
-    } else if (firstValue(traits, "thanks")) {
-      return responses["thanks"][
-        Math.floor(Math.random() * responses["thanks"].length)
-      ];
-    } else {
-      return "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001";
+    let ok = 0;
+    for (const key in responses) {
+      if (Object.hasOwnProperty.call(responses, key)) {
+        if (firstValue(traits, key)) {
+          return responses[key][
+            Math.floor(Math.random() * responses[key].length)
+          ];
+        }
+      }
     }
+    return "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001";
   },
 };
-const productTemplateList = async (category) => {
+const productTemplateList = async (products, filterValue, type) => {
   let newArrivals = {
     attachment: {
       type: "template",
@@ -273,11 +296,12 @@ const productTemplateList = async (category) => {
       },
     },
   };
-  try {
-    const products = await getAllProducts();
+  if (type === "name") {
     for (let index = 0; index < products.length; index++) {
       const product = { ...products[index] };
-      if (product.category === category) {
+      if (
+        product.productName.toLowerCase().includes(filterValue.toLowerCase())
+      ) {
         if (newArrivals.attachment.payload.elements.length === 3) {
           break;
         }
@@ -298,8 +322,31 @@ const productTemplateList = async (category) => {
         ];
       }
     }
-  } catch (error) {
-    console.log(error);
+  }
+  if ((type = "category")) {
+    for (let index = 0; index < products.length; index++) {
+      const product = { ...products[index] };
+      if (product.category === filterValue) {
+        if (newArrivals.attachment.payload.elements.length === 3) {
+          break;
+        }
+        newArrivals.attachment.payload.elements = [
+          ...newArrivals.attachment.payload.elements,
+          {
+            title: product.productName,
+            subtitle: "Tap a button to answer.",
+            image_url: product.productVariants[0].imgSrcList[0].img,
+            buttons: [
+              {
+                type: "web_url",
+                title: "Xem chi tiết",
+                url: `https://ttcs-npt.web.app/product/${product.productName}`,
+              },
+            ],
+          },
+        ];
+      }
+    }
   }
   return newArrivals;
 };

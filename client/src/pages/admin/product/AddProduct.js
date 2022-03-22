@@ -174,7 +174,7 @@ export default function AddProduct() {
     }
   };
   return (
-    <>
+    <div style={{ backgroundColor: "#2f3033" }}>
       {updateFromOpened ? (
         <UpdateForm
           type="updateWhenAdding"
@@ -427,6 +427,6 @@ export default function AddProduct() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
