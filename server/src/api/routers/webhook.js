@@ -156,7 +156,7 @@ async function handleMessage(sender_psid, received_message) {
     var msg = received_message.text;
     var wit = await client.message(msg);
     const intents = wit.intents.map((intent) => intent["name"]);
-    var reply;
+    var reply = null;
     if (intents.includes("see_product_list")) {
       const products = await getAllProducts();
       callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
@@ -171,13 +171,17 @@ async function handleMessage(sender_psid, received_message) {
         const categories =
           wit.entities["product:category"] || wit.entities["product:name"];
         console.log(wit.entities);
-        reply = await productTemplateList(
-          products,
-          transfer(categories[0].value.toLowerCase()),
-          "category"
-        );
+        if (!categories) {
+          reply = { text: "Xin lỗi bạn, hiện tại không có sản phẩm nào" };
+        } else {
+          reply = await productTemplateList(
+            products,
+            transfer(categories[0].value.toLowerCase()),
+            "category"
+          );
+        }
       }
-      if (reply.attachment.payload.elements.length === 0) {
+      if (!reply || reply.attachment.payload.elements.length === 0) {
         callSendAPI(sender_psid, {
           text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
         });
@@ -254,36 +258,27 @@ const responses = {
     "Bạn có thể tìm kiếm sản phẩm theo các danh mục sau: điện thoại, máy tính bảng, laptop, đồng hồ. Bạn muốn tham khảo sản phẩm nào?",
   ],
   policy: [
-    "Cửa hàng mình bảo hàng cho toàn bộ sản phẩm trong 2 năm, không áp dụng trả góp, thanh toán khi nhận hàng. Nếu có bất kỳ vấn đề gì về sản phẩm, bạn có thể liên hệ với chúng tôi qua số điện thoại:123456789",
+    "Cửa hàng mình bảo hàng cho toàn bộ sản phẩm trong 2 năm, không áp dụng trả góp, đổi trả trong vòng 5 ngày, thanh toán khi nhận hàng. Nếu có bất kỳ vấn đề gì về sản phẩm, bạn có thể liên hệ với chúng tôi qua số điện thoại:123456789",
   ],
-};
-
-const firstValue = (obj, key) => {
-  const val =
-    obj &&
-    obj[key] &&
-    Array.isArray(obj[key]) &&
-    obj[key].length > 0 &&
-    obj[key][0].value;
-  if (!val) {
-    return null;
-  }
-  return val;
 };
 
 var nlp = {
   handleMessage: async (entities, traits) => {
-    let ok = 0;
     for (const key in responses) {
       if (Object.hasOwnProperty.call(responses, key)) {
-        if (firstValue(traits, key)) {
+        if (
+          traits &&
+          traits[key] &&
+          traits[key].length > 0 &&
+          traits[key][0].value
+        ) {
           return responses[key][
             Math.floor(Math.random() * responses[key].length)
           ];
         }
       }
     }
-    return "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001";
+    return "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001 để được hỗ trợ nhé!";
   },
 };
 const productTemplateList = async (products, filterValue, type) => {
@@ -302,9 +297,6 @@ const productTemplateList = async (products, filterValue, type) => {
       if (
         product.productName.toLowerCase().includes(filterValue.toLowerCase())
       ) {
-        if (newArrivals.attachment.payload.elements.length === 3) {
-          break;
-        }
         newArrivals.attachment.payload.elements = [
           ...newArrivals.attachment.payload.elements,
           {
@@ -322,8 +314,7 @@ const productTemplateList = async (products, filterValue, type) => {
         ];
       }
     }
-  }
-  if ((type = "category")) {
+  } else if (type === "category") {
     for (let index = 0; index < products.length; index++) {
       const product = { ...products[index] };
       if (product.category === filterValue) {
