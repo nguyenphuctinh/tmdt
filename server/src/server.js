@@ -59,9 +59,24 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/auth", authenToken, (req, res) => {
-  // console.log(req.role);
-  res.json({ username: req.username, role: req.role });
+app.get("/auth", authenToken, async (req, res) => {
+  try {
+    const user = await new Promise((resolve, reject) => {
+      const stm = "SELECT * FROM user where username=?";
+      con.query(stm, [req.body.username], function (err, result) {
+        if (err) {
+          console.log(err);
+          reject({ stt: 500, err: "SQL error" });
+        }
+        resolve(JSON.parse(JSON.stringify(result)));
+      });
+    });
+    delete user[0].password;
+    res.status(200).json({ user: user[0] });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err });
+  }
 });
 
 app.use("/api/users", userRouter);
