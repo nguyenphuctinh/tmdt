@@ -194,8 +194,26 @@ async function handleMessage(sender_psid, received_message) {
         text: "Bạn cho mình thêm thông tin để mình tìm sản phẩm cụ thể hơn (VD: loại sản phẩm, khoảng giá, màu sắc...)",
       });
     } else {
+      let res = null;
+      for (const key in responses) {
+        if (Object.hasOwnProperty.call(responses, key)) {
+          if (
+            wit.traits &&
+            wit.traits[key] &&
+            wit.traits[key].length > 0 &&
+            wit.traits[key][0].value
+          ) {
+            res =
+              responses[key][Math.floor(Math.random() * responses[key].length)];
+          }
+        }
+      }
+      if (!res) {
+        res =
+          "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001 để được hỗ trợ nhé!";
+      }
       callSendAPI(sender_psid, {
-        text: await nlp.handleMessage(wit.entities, wit.traits),
+        text: res,
       });
     }
   }
@@ -262,25 +280,6 @@ const responses = {
   ],
 };
 
-var nlp = {
-  handleMessage: async (entities, traits) => {
-    for (const key in responses) {
-      if (Object.hasOwnProperty.call(responses, key)) {
-        if (
-          traits &&
-          traits[key] &&
-          traits[key].length > 0 &&
-          traits[key][0].value
-        ) {
-          return responses[key][
-            Math.floor(Math.random() * responses[key].length)
-          ];
-        }
-      }
-    }
-    return "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001 để được hỗ trợ nhé!";
-  },
-};
 const productTemplateList = async (products, filterValue, type) => {
   let newArrivals = {
     attachment: {
