@@ -2,6 +2,7 @@ import express from "express";
 import authenToken from "../middlewares/authenToken.js";
 import con from "../../config/connection.js";
 import passwordHash from "password-hash";
+import authenAdminToken from "../middlewares/authenAdminToken.js";
 const router = express.Router();
 router.get("/", authenToken, (req, res) => {
   con.query("SELECT * FROM user", function (err, result) {
@@ -9,7 +10,7 @@ router.get("/", authenToken, (req, res) => {
     res.send(result);
   });
 });
-router.post("/", async (req, res) => {
+router.post("/", authenToken, async (req, res) => {
   var sql = "select * from user where username=?";
   try {
     await new Promise((resolve, reject) => {
@@ -44,7 +45,7 @@ router.post("/", async (req, res) => {
     return res.status(stt).send(err);
   }
 });
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authenAdminToken, (req, res) => {
   con.query(
     `delete FROM user where id=${req.params.id} `,
     function (err, result) {
@@ -53,7 +54,7 @@ router.delete("/:id", (req, res) => {
     }
   );
 });
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenAdminToken, async (req, res) => {
   if (req.body.type === "updatePassword") {
     if (req.body.password.length === 0) {
       return res.status(400).send("Không được để trống");

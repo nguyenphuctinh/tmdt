@@ -36,7 +36,7 @@ export default function Login() {
         }
       });
   }
-  if (user.username) {
+  if (user.data) {
     return <Navigate to="/" />;
   }
   return (

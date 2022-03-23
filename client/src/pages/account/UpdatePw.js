@@ -21,7 +21,7 @@ export default function UpdatePw() {
 
     try {
       const res = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/users/${user.username}`,
+        `${process.env.REACT_APP_API_URL}/api/users/${user.data.username}`,
         {
           password,
           newPassword,

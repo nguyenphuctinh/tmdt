@@ -28,7 +28,7 @@ export default function Account() {
       <div className="row">
         <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-3">
           <div>
-            {user.role === "admin" ? (
+            {user.data.role === "admin" ? (
               <>
                 <Link to="/admin/product">Quản lý sản phẩm</Link>
                 <br />
@@ -47,7 +47,7 @@ export default function Account() {
 
           <button
             type="button"
-            class="btn btn-warning"
+            className="btn btn-warning"
             onClick={() => {
               dispatch(logoutAction());
               localStorage.removeItem("token");

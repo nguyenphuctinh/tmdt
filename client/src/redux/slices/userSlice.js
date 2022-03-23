@@ -21,14 +21,12 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     loading: false,
-    username: null,
+    data: null,
     error: null,
-    role: null,
   },
   reducers: {
     logoutAction(state, action) {
-      state.username = null;
-      state.role = null;
+      state.data = null;
     },
   },
   extraReducers: {
@@ -42,8 +40,7 @@ const userSlice = createSlice({
     [fetchUser.fulfilled]: (state, action) => {
       // console.log(action);
       state.loading = false;
-      state.username = action.payload.username;
-      state.role = action.payload.role;
+      state.data = action.payload;
       state.error = null;
     },
   },

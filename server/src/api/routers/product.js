@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import con from "../../config/connection.js";
+import authenAdminToken from "../middlewares/authenAdminToken.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -11,7 +12,7 @@ router.get("/", async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.post("/", async (req, res) => {
+router.post("/", authenAdminToken, async (req, res) => {
   try {
     const newProductId = await new Promise((resolve, reject) => {
       const sql = "insert into product values(default, ?,?,?,?)";
@@ -33,7 +34,7 @@ router.post("/", async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.put("/:productId", async (req, res) => {
+router.put("/:productId", authenAdminToken, async (req, res) => {
   console.log(req.body, req.params.productId);
   const productId = parseInt(req.params.productId);
   const productVariant = req.body.productVariant;
@@ -215,6 +216,7 @@ router.put("/:productId", async (req, res) => {
 });
 router.delete(
   "/:productId/productVariants/:productVariantId",
+  authenAdminToken,
   async (req, res) => {
     try {
       await new Promise((resolve, reject) => {
@@ -238,7 +240,7 @@ router.delete(
     }
   }
 );
-router.delete("/:productId", async (req, res) => {
+router.delete("/:productId", authenAdminToken, async (req, res) => {
   try {
     await new Promise((resolve, reject) => {
       const sql = `DELETE FROM product WHERE product_id = ?`;
