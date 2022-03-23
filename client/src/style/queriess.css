@@ -18,6 +18,9 @@
   .product .productPrice--sale {
     font-size: 0.8rem;
   }
+  .updateForm {
+    width: 75%;
+  }
 }
 @media (min-width: 350px) and (max-width: 575.99px) {
   html {
@@ -35,6 +38,9 @@
   }
   .product .productPrice--sale {
     font-size: 0.8rem;
+  }
+  .updateForm {
+    width: 75%;
   }
 }
 

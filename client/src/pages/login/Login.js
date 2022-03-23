@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../redux/slices/userSlice";
 export default function Login() {
@@ -67,7 +67,9 @@ export default function Login() {
               >
                 Submit
               </button>
-              <a href="/register">Đăng ký</a>
+              <Link className="text-success" to="/register">
+                Đăng ký
+              </Link>
             </div>
           </div>
         </div>

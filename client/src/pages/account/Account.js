@@ -26,10 +26,7 @@ export default function Account() {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div
-          style={{ backgroundColor: "#424B54", minHeight: "100vh" }}
-          className="col-12 col-sm-3"
-        >
+        <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-3">
           <div>
             {user.role === "admin" ? (
               <>
@@ -56,10 +53,10 @@ export default function Account() {
               localStorage.removeItem("token");
             }}
           >
-            dang xuat
+            Đăng xuất
           </button>
         </div>
-        <div className="col-9">
+        <div style={{ minHeight: "100vh" }} className="col-9">
           {tab === "security" ? <UpdatePw /> : tab === "info" ? <Info /> : ""}
         </div>
       </div>

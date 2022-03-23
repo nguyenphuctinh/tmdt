@@ -45,7 +45,7 @@ export default function UpdatePw() {
     }
   };
   return (
-    <div className="container">
+    <div className="container updatePw">
       <div className="row">
         <div className="col-12">
           <p className="sessionTitle">

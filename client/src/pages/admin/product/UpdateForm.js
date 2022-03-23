@@ -123,21 +123,21 @@ export default function UpdateForm({
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
         position: "fixed",
+        top: 0,
+        left: 0,
         zIndex: "2",
         backgroundColor: "rgba(0,0,0,0.4)",
       }}
+      className="grid"
     >
-      <div
-        style={{
-          backgroundColor: "white",
-          color: "black",
-        }}
-        className="container w-50 pb-3"
-      >
-        <div style={{ overflowY: "auto", height: 400 }} className="row pt-4">
+      <div className="container  updateForm  pb-3 ">
+        <div
+          style={{ overflowY: "auto", height: 400 }}
+          className="row pt-4 updateForm__content"
+        >
           <div className="col-12">
             <h4>Cập nhật biến thể</h4>
             <TextField

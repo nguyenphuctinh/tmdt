@@ -42,7 +42,7 @@ export default function Register() {
           <input
             onChange={(event) => setPassword(event.target.value)}
             value={password}
-            type="text"
+            type="password"
             className="form-control"
             placeholder="pass"
           />

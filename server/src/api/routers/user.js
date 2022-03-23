@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
       });
     });
     await new Promise((resolve, reject) => {
-      sql = `INSERT INTO user VALUES (default,?,?,20,default)`;
+      sql = `INSERT INTO user(username, password,role) VALUES (?,?,default)`;
       con.query(
         sql,
         [req.body.username, passwordHash.generate(req.body.password)],

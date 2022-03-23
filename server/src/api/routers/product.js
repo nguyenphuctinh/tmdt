@@ -5,7 +5,6 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const data = await getAllProducts();
-    console.log("data");
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -41,28 +40,14 @@ router.put("/:productId", async (req, res) => {
   if (req.body.type === "updateProductVariant") {
     try {
       await new Promise((resolve, reject) => {
-        const sql = `insert into product_variant_price values(default,?,?,?)`;
+        const sql = `update product_variant set quantity = ?,price=? where product_variant_id = ?`;
         con.query(
           sql,
           [
-            productVariant.productVariantId,
+            parseInt(productVariant.quantity),
             parseInt(productVariant.price),
-            new Date(),
+            productVariant.productVariantId,
           ],
-          (err, result) => {
-            if (err) {
-              console.log(err);
-              return reject({ stt: 500, err: "Lỗi truy vấn" });
-            }
-            resolve();
-          }
-        );
-      });
-      await new Promise((resolve, reject) => {
-        const sql = `update product_variant set quantity = ? where product_variant_id = ?`;
-        con.query(
-          sql,
-          [parseInt(productVariant.quantity), productVariant.productVariantId],
           (err, result) => {
             if (err) {
               console.log(err);
@@ -273,23 +258,17 @@ router.delete("/:productId", async (req, res) => {
 });
 const addProductVariant = async (productId, productVariant, variantNames) => {
   const newProductVariantId = await new Promise((resolve, reject) => {
-    const sql = "insert into product_variant values(default,?,?)";
-    con.query(sql, [productId, productVariant.quantity], (err, result) => {
-      if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-      resolve(JSON.parse(JSON.stringify(result)).insertId);
-    });
-  });
-  await new Promise((resolve, reject) => {
-    const sql = "insert into product_variant_price values(default,?,?,?)";
+    const sql = "insert into product_variant values(default,?,?,?)";
     con.query(
       sql,
-      [newProductVariantId, productVariant.price, new Date()],
+      [productId, productVariant.quantity, productVariant.price],
       (err, result) => {
         if (err) return reject({ stt: 500, err: "Lỗi truy vấn" });
-        resolve();
+        resolve(JSON.parse(JSON.stringify(result)).insertId);
       }
     );
   });
+
   for (const img of productVariant.imgSrcList) {
     await new Promise((resolve, reject) => {
       const sql = "insert into product_variant_img values(default,?,?)";
@@ -403,23 +382,6 @@ export const getAllProducts = async () => {
       );
     });
     for (const productVariant of productVariants) {
-      const price = await new Promise((resolve, reject) => {
-        const sql = `SELECT * FROM product_variant_price
-              where product_variant_id = ?
-              order by date_time desc
-              limit 1`;
-        con.query(
-          sql,
-          [productVariant.product_variant_id],
-          function (err, result) {
-            if (err) {
-              console.log(err);
-              return reject({ stt: 500, err: "Lỗi truy vấn" });
-            }
-            resolve(JSON.parse(JSON.stringify(result))[0].price);
-          }
-        );
-      });
       const imgSrcList = await new Promise((resolve, reject) => {
         con.query(
           `select * from product_variant_img where product_variant_id = ?`,
@@ -480,7 +442,7 @@ export const getAllProducts = async () => {
       data[i]["productVariants"].push({
         ...tmp,
         imgSrcList,
-        price,
+        price: productVariant.price,
         quantity: productVariant.quantity,
         productVariantId: productVariant.product_variant_id,
       });
