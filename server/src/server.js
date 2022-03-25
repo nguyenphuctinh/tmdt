@@ -71,8 +71,16 @@ app.get("/auth", authenToken, async (req, res) => {
         resolve(JSON.parse(JSON.stringify(result)));
       });
     });
-    delete user[0].password;
-    res.status(200).json({ user: user[0] });
+    res.status(200).json({
+      id: user[0].id,
+      username: user[0].username,
+      firstName: user[0].first_name,
+      lastName: user[0].last_name,
+      phone: user[0].phone,
+      dob: user[0].dob,
+      address: user[0].address,
+      role: user[0].role,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err });

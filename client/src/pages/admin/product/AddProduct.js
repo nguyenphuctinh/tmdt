@@ -208,9 +208,8 @@ export default function AddProduct() {
               }}
             />
 
-            <br />
             <TextField
-              style={{ width: "100%", marginTop: 30 }}
+              style={{ width: "100%" }}
               required
               error={saleError === "" ? false : true}
               label="Sale"
@@ -230,8 +229,7 @@ export default function AddProduct() {
               }}
             />
 
-            <br />
-            <FormControl className="mt-4" fullWidth>
+            <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Thể loại</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -258,7 +256,7 @@ export default function AddProduct() {
           <div className="col-6">
             <h4>Thêm các biến thể</h4>
             <TextField
-              style={{ width: "100%", marginBottom: 30 }}
+              style={{ width: "100%" }}
               required
               error={mauError === "" ? false : true}
               label="Màu sản phẩm"
@@ -274,7 +272,7 @@ export default function AddProduct() {
 
             <br />
             <TextField
-              style={{ width: "100%", marginBottom: 30 }}
+              style={{ width: "100%" }}
               required
               error={
                 category === "watch"
@@ -312,7 +310,7 @@ export default function AddProduct() {
 
             <br />
             <TextField
-              style={{ width: "100%", marginBottom: 30 }}
+              style={{ width: "100%" }}
               required
               error={soLuongError === "" ? false : true}
               label="Số lượng sản phẩm"
@@ -329,7 +327,7 @@ export default function AddProduct() {
 
             <br />
             <TextField
-              style={{ width: "100%", marginBottom: 30 }}
+              style={{ width: "100%" }}
               required
               error={giaError === "" ? false : true}
               label="Giá sản phẩm"

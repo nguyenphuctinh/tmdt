@@ -10,7 +10,6 @@ function authenToken(req, res, next) {
       if (err) {
         res.status(403).send("invalid token");
       } else {
-        console.log(data);
         req.body.username = data.username;
         next();
       }

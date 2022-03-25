@@ -10,7 +10,7 @@ router.get("/", authenToken, (req, res) => {
     res.send(result);
   });
 });
-router.post("/", authenToken, async (req, res) => {
+router.post("/", async (req, res) => {
   var sql = "select * from user where username=?";
   try {
     await new Promise((resolve, reject) => {
@@ -27,10 +27,15 @@ router.post("/", authenToken, async (req, res) => {
       });
     });
     await new Promise((resolve, reject) => {
-      sql = `INSERT INTO user(username, password,role) VALUES (?,?,default)`;
+      sql = `INSERT INTO user(username, password,first_name, last_name, role) VALUES (?,?,?,?,default)`;
       con.query(
         sql,
-        [req.body.username, passwordHash.generate(req.body.password)],
+        [
+          req.body.username,
+          passwordHash.generate(req.body.password),
+          req.body.firstName,
+          req.body.lastName,
+        ],
         (err, result) => {
           if (err) {
             console.log(err);
