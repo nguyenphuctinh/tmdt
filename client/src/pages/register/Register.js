@@ -3,7 +3,10 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
-import { TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 export default function Register() {
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -13,8 +16,11 @@ export default function Register() {
   const [firstNameError, setFirstNameError] = useState("");
   const [lastName, setLastName] = useState("");
   const [lastNameError, setLastNameError] = useState("");
-  const insertAUser = async () => {
-    if (usernameError || passwordError || firstNameError || lastNameError) {
+  const [dob, setDob] = useState(null);
+  const [dobError, setDobError] = useState("");
+  const register = async () => {
+    if (!username || !password || !firstName || !lastName || dobError !== "") {
+      toast.error("Vui lòng nhập đầy đủ  và chính xác thông tin");
       return;
     }
     try {
@@ -25,13 +31,19 @@ export default function Register() {
           password,
           firstName,
           lastName,
+          dob:
+            dob.getFullYear() +
+            "-" +
+            (dob.getMonth() + 1) +
+            "-" +
+            dob.getDate(),
         }
       );
       setFirstName("");
       setLastName("");
       setUsername("");
       setPassword("");
-
+      setDob(null);
       toast.success(res.data);
     } catch (error) {
       console.log(error);
@@ -110,11 +122,33 @@ export default function Register() {
               else setLastNameError("");
             }}
           />
-          <button
-            onClick={insertAUser}
-            type="button"
-            className="btn btn-primary"
-          >
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Stack spacing={3}>
+              <DatePicker
+                disableFuture
+                label="Ngày sinh"
+                openTo="year"
+                views={["year", "month", "day"]}
+                value={dob}
+                onChange={(newValue) => {
+                  if (
+                    newValue === null ||
+                    newValue.toString() === "Invalid Date"
+                  ) {
+                    console.log("invalid");
+                    setDobError("Ngày sinh không hợp lệ");
+                  } else {
+                    setDob(newValue);
+                    setDobError("");
+                  }
+                }}
+                renderInput={(params) => {
+                  return <TextField required {...params} />;
+                }}
+              />
+            </Stack>
+          </LocalizationProvider>
+          <button onClick={register} type="button" className="btn btn-primary">
             Đăng ký
           </button>
           <Link className="text-success" to="/login">

@@ -46,7 +46,7 @@ ul {
   margin: 0;
 }
 .myNavbar {
-  background-color: black;
+  background-color: #0d0d0d;
   position: fixed;
   z-index: 3;
   width: 100%;
@@ -196,8 +196,6 @@ input:focus {
   font-weight: 400;
 }
 .productDetail .capacity {
-  /* background-color: #4f5155; */
-  /* width: 3rem; */
   border: 1px solid #4f5155;
   text-align: center;
   padding: 0.5rem 1rem;

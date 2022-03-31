@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { authorization } from "../../auth/auth";
 
 export default function Info() {
   const user = useSelector((state) => state.user);
@@ -14,11 +15,40 @@ export default function Info() {
   const [firstNameError, setFirstNameError] = useState("");
   const [lastName, setLastName] = useState(user.data.lastName);
   const [lastNameError, setLastNameError] = useState("");
-  const [phone, setPhone] = useState(user.data.phone);
-  const [dob, setDob] = useState(user.data.dob);
-  const [address, setAddress] = useState(user.data.address);
-  const onHandleClick = () => {
-    console.log(firstName, lastName, phone, dob, address);
+  const [phone, setPhone] = useState(user.data.phone || "");
+  const [dob, setDob] = useState(new Date(user.data.dob));
+  const [dobError, setDobError] = useState("");
+  const [address, setAddress] = useState(user.data.address || "");
+  const onHandleClick = async () => {
+    console.log(firstNameError, lastNameError, dobError);
+    if (!firstName || !lastName || dobError !== "") {
+      toast.error("Vui lòng nhập đầy đủ và chính xác thông tin");
+      return;
+    }
+    console.log(firstName, lastName, phone, typeof dob, address);
+    try {
+      const res = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/users/${user.data.id}`,
+        {
+          firstName,
+          lastName,
+          phone,
+          dob:
+            dob.getFullYear() +
+            "-" +
+            (dob.getMonth() + 1) +
+            "-" +
+            dob.getDate(),
+          address,
+          type: "updateInfo",
+        },
+        authorization()
+      );
+      toast.success("Cập nhật thành công!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Cập nhật thất bại!");
+    }
   };
   return (
     <div className="container updatePw">
@@ -75,9 +105,20 @@ export default function Info() {
                 views={["year", "month", "day"]}
                 value={dob}
                 onChange={(newValue) => {
-                  setDob(newValue);
+                  if (
+                    newValue === null ||
+                    newValue.toString() === "Invalid Date"
+                  ) {
+                    console.log("invalid");
+                    setDobError("Ngày sinh không hợp lệ");
+                  } else {
+                    setDob(newValue);
+                    setDobError("");
+                  }
                 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => {
+                  return <TextField required {...params} />;
+                }}
               />
             </Stack>
           </LocalizationProvider>

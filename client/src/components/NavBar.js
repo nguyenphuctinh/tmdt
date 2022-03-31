@@ -28,7 +28,7 @@ function NavBar() {
 
   return (
     <div className="container-fluid">
-      <div className="row myNavbar padding-lg">
+      <div className="row myNavbar">
         <div className="col-4 d-block d-sm-none d-flex align-items-center navLogo">
           <div onClick={() => setFinding(false)} className="">
             <Link to="/">

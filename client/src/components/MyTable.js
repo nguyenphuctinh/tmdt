@@ -181,7 +181,7 @@ export default function MyTable({
               return (
                 <TableRow key={row.productId}>
                   <TableCell component="th" scope="row">
-                    <Link to={`/product/${row.productId}`}>
+                    <Link to={`/product/${row.productName}`}>
                       <span style={{ color: "#0d6efd" }}>
                         {row.productName}
                       </span>

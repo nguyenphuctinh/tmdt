@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-
+import { authorization } from "../../auth/auth";
 export default function UpdatePw() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -26,7 +26,8 @@ export default function UpdatePw() {
           password,
           newPassword,
           type: "updatePassword",
-        }
+        },
+        authorization()
       );
       console.log(res);
       toast.success("Đổi mật khẩu thành công");
