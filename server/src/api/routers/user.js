@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
       });
     });
     await new Promise((resolve, reject) => {
-      sql = `INSERT INTO user(username, password,first_name, last_name, role) VALUES (?,?,?,?,default)`;
+      sql = `INSERT INTO user(username, password,first_name, last_name, dob, role) VALUES (?,?,?,?,?,default)`;
       con.query(
         sql,
         [
@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
           passwordHash.generate(req.body.password),
           req.body.firstName,
           req.body.lastName,
+          req.body.dob,
         ],
         (err, result) => {
           if (err) {
@@ -59,7 +60,7 @@ router.delete("/:id", authenAdminToken, (req, res) => {
     }
   );
 });
-router.put("/:id", authenAdminToken, async (req, res) => {
+router.put("/:id", authenToken, async (req, res) => {
   if (req.body.type === "updatePassword") {
     if (req.body.password.length === 0) {
       return res.status(400).send("Không được để trống");
@@ -100,6 +101,34 @@ router.put("/:id", authenAdminToken, async (req, res) => {
       res.status(200).send("cập nhật thành công");
     } catch ({ stt, err }) {
       return res.status(stt).send(err);
+    }
+  }
+  if (req.body.type === "updateInfo") {
+    try {
+      await new Promise((resolve, reject) => {
+        con.query(
+          "update user set first_name=?,last_name=?,phone=?, dob=?,address=? where id =?",
+          [
+            req.body.firstName,
+            req.body.lastName,
+            req.body.phone,
+            req.body.dob,
+            req.body.address,
+            req.params.id,
+          ],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve();
+          }
+        );
+      });
+      res.send("cập nhật thành công");
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("error");
     }
   }
 });
