@@ -255,6 +255,7 @@ export default function AddProduct() {
           </div>
           <div className="col-6">
             <h4>Thêm các biến thể</h4>
+
             <TextField
               style={{ width: "100%" }}
               required
@@ -269,7 +270,6 @@ export default function AddProduct() {
                 else setMauError("");
               }}
             />
-
             <br />
             <TextField
               style={{ width: "100%" }}
@@ -307,7 +307,6 @@ export default function AddProduct() {
                 else setDungLuong(e.target.value);
               }}
             />
-
             <br />
             <TextField
               style={{ width: "100%" }}
@@ -324,7 +323,6 @@ export default function AddProduct() {
                 else setSoLuongError("");
               }}
             />
-
             <br />
             <TextField
               style={{ width: "100%" }}
@@ -343,7 +341,6 @@ export default function AddProduct() {
                 }
               }}
             />
-
             <br />
             <label>Thêm ảnh:</label>
             <br />
@@ -373,7 +370,6 @@ export default function AddProduct() {
               }}
             ></input>
             <br />
-
             {imgList &&
               imgList.map((img, index) => {
                 return (

@@ -147,75 +147,82 @@ async function handlePostback(sender_psid, received_postback) {
   callSendAPI(sender_psid, response);
 }
 async function handleMessage(sender_psid, received_message) {
-  let response;
+  try {
+    let response;
 
-  if (received_message.text) {
-    const client = new Wit({
-      accessToken: process.env.WIT_AI_ACCESS_TOKEN,
-    });
-    var msg = received_message.text;
-    var wit = await client.message(msg);
-    const intents = wit.intents.map((intent) => intent["name"]);
-    var reply = null;
-    if (intents.includes("see_product_list")) {
-      const products = await getAllProducts();
-      callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
-      if (wit.entities["product:name"]) {
-        const names = wit.entities["product:name"];
-        reply = await productTemplateList(
-          products,
-          transfer(names[0].value.toLowerCase()),
-          "name"
-        );
-      } else {
-        const categories =
-          wit.entities["product:category"] || wit.entities["product:name"];
-        console.log(wit.entities);
-        if (!categories) {
-          reply = { text: "Xin lỗi bạn, hiện tại không có sản phẩm nào" };
-        } else {
+    if (received_message.text) {
+      const client = new Wit({
+        accessToken: process.env.WIT_AI_ACCESS_TOKEN,
+      });
+      var msg = received_message.text;
+      var wit = await client.message(msg);
+      const intents = wit.intents.map((intent) => intent["name"]);
+      var reply = null;
+      if (intents.includes("see_product_list")) {
+        const products = await getAllProducts();
+        callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
+        if (wit.entities["product:name"]) {
+          const names = wit.entities["product:name"];
           reply = await productTemplateList(
             products,
-            transfer(categories[0].value.toLowerCase()),
-            "category"
+            transfer(names[0].value.toLowerCase()),
+            "name"
           );
-        }
-      }
-      if (!reply || reply.attachment.payload.elements.length === 0) {
-        callSendAPI(sender_psid, {
-          text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
-        });
-      } else {
-        console.log(reply);
-        callSendAPI(sender_psid, { ...reply });
-      }
-    } else if (intents.includes("see_other_products")) {
-      callSendAPI(sender_psid, {
-        text: "Bạn cho mình thêm thông tin để mình tìm sản phẩm cụ thể hơn (VD: loại sản phẩm, khoảng giá, màu sắc...)",
-      });
-    } else {
-      let res = null;
-      for (const key in responses) {
-        if (Object.hasOwnProperty.call(responses, key)) {
-          if (
-            wit.traits &&
-            wit.traits[key] &&
-            wit.traits[key].length > 0 &&
-            wit.traits[key][0].value
-          ) {
-            res =
-              responses[key][Math.floor(Math.random() * responses[key].length)];
+        } else {
+          const categories =
+            wit.entities["product:category"] || wit.entities["product:name"];
+          console.log(wit.entities);
+          if (!categories) {
+            reply = { text: "Xin lỗi bạn, hiện tại không có sản phẩm nào" };
+          } else {
+            reply = await productTemplateList(
+              products,
+              transfer(categories[0].value.toLowerCase()),
+              "category"
+            );
           }
         }
+        if (!reply || reply.attachment.payload.elements.length === 0) {
+          callSendAPI(sender_psid, {
+            text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
+          });
+        } else {
+          console.log(reply);
+          callSendAPI(sender_psid, { ...reply });
+        }
+      } else if (intents.includes("see_other_products")) {
+        callSendAPI(sender_psid, {
+          text: "Bạn cho mình thêm thông tin để mình tìm sản phẩm cụ thể hơn (VD: loại sản phẩm, khoảng giá, màu sắc...)",
+        });
+      } else {
+        let res = null;
+        for (const key in responses) {
+          if (Object.hasOwnProperty.call(responses, key)) {
+            if (
+              wit.traits &&
+              wit.traits[key] &&
+              wit.traits[key].length > 0 &&
+              wit.traits[key][0].value
+            ) {
+              res =
+                responses[key][
+                  Math.floor(Math.random() * responses[key].length)
+                ];
+            }
+          }
+        }
+        if (!res) {
+          res =
+            "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001 để được hỗ trợ nhé!";
+        }
+        callSendAPI(sender_psid, {
+          text: res,
+        });
       }
-      if (!res) {
-        res =
-          "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001 để được hỗ trợ nhé!";
-      }
-      callSendAPI(sender_psid, {
-        text: res,
-      });
     }
+  } catch (error) {
+    console.log(error);
+    handleMessage(sender_psid, received_message);
   }
 }
 

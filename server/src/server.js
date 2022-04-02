@@ -71,6 +71,11 @@ app.get("/auth", authenToken, async (req, res) => {
         resolve(JSON.parse(JSON.stringify(result)));
       });
     });
+    if (user.length === 0) {
+      return res
+        .status(401)
+        .json({ message: "Sai tên đăng nhập hoặc mật khẩu!" });
+    }
     res.status(200).json({
       id: user[0].id,
       username: user[0].username,

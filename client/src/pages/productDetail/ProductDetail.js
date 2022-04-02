@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
-import getColor, { dict } from "../../helpers/dict";
+import { dict } from "../../helpers/dict";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import sortByIntValues from "../../helpers/sortByIntValues";
@@ -106,66 +106,34 @@ export default function ProductDetail() {
                   {variantValues[variantName] &&
                     [...sortByIntValues(variantValues[variantName])].map(
                       (value) => {
-                        if (variantName !== "color") {
-                          return (
-                            <span key={value}>
-                              <div
-                                onClick={() => {
-                                  setImgLoaded(false);
-                                  setChanged(true);
-                                  setSelectedProductVariant(
-                                    findProductVariant(
-                                      product.productVariants,
-                                      variantNames,
-                                      selectedProductVariant,
-                                      { [variantName]: value }
-                                    )
-                                  );
-                                }}
-                                className={`capacity ${
-                                  selectedProductVariant &&
-                                  selectedProductVariant[variantName] === value
-                                    ? "capacity--active "
-                                    : ""
-                                }`}
-                              >
-                                <p className="capacity__name">
-                                  {value.toUpperCase()}
-                                </p>
-                              </div>
-                            </span>
-                          );
-                        } else {
-                          return (
-                            <span key={value}>
-                              <div
-                                onClick={() => {
-                                  setImgLoaded(false);
-                                  setChanged(true);
-                                  setSelectedProductVariant(
-                                    findProductVariant(
-                                      product.productVariants,
-                                      variantNames,
-                                      selectedProductVariant,
-                                      { [variantName]: value }
-                                    )
-                                  );
-                                }}
-                                className={`color ${
-                                  selectedProductVariant &&
-                                  selectedProductVariant[variantName] === value
-                                    ? "color--active "
-                                    : ""
-                                }`}
-                                style={{
-                                  backgroundColor: getColor(
-                                    value.toLowerCase()
-                                  ),
-                                }}
-                              ></div>
-                            </span>
-                          );
-                        }
+                        return (
+                          <span key={value}>
+                            <div
+                              onClick={() => {
+                                setImgLoaded(false);
+                                setChanged(true);
+                                setSelectedProductVariant(
+                                  findProductVariant(
+                                    product.productVariants,
+                                    variantNames,
+                                    selectedProductVariant,
+                                    { [variantName]: value }
+                                  )
+                                );
+                              }}
+                              className={`option ${
+                                selectedProductVariant &&
+                                selectedProductVariant[variantName] === value
+                                  ? "option--active "
+                                  : ""
+                              }`}
+                            >
+                              <p className="option__name">
+                                {value.toUpperCase()}
+                              </p>
+                            </div>
+                          </span>
+                        );
                       }
                     )}
                 </div>

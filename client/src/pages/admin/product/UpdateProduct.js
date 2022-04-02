@@ -220,7 +220,7 @@ export default function UpdateProduct() {
             className="container"
           >
             <div className="row pt-4">
-              <div className="col-6">
+              <div className="col-md-6">
                 <TextField
                   style={{ width: "100%" }}
                   required
@@ -286,7 +286,7 @@ export default function UpdateProduct() {
                   Cập nhật thông tin chung
                 </Button>
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <h4>Thêm các biến thể</h4>
                 <TextField
                   style={{ width: "100%", marginBottom: 30 }}

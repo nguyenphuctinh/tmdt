@@ -240,6 +240,7 @@ router.delete(
     }
   }
 );
+
 router.delete("/:productId", authenAdminToken, async (req, res) => {
   try {
     await new Promise((resolve, reject) => {

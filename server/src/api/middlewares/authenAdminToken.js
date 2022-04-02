@@ -12,7 +12,6 @@ function authenAdminToken(req, res, next) {
       } else {
         req.username = data.username;
         req.role = data.role;
-        console.log(data.role);
         if (data.role !== "admin") {
           return res.status(403).send("Khong phai admin");
         }

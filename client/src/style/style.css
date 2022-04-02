@@ -21,6 +21,7 @@ body {
 #demo-simple-select {
   padding: 0.5rem 0.5rem;
 }
+
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
@@ -195,7 +196,7 @@ input:focus {
   text-decoration-line: line-through;
   font-weight: 400;
 }
-.productDetail .capacity {
+.productDetail .option {
   border: 1px solid #4f5155;
   text-align: center;
   padding: 0.5rem 1rem;
@@ -204,26 +205,15 @@ input:focus {
   margin-right: 1rem;
   cursor: pointer;
 }
-.productDetail .capacity__name {
+.productDetail .option__name {
   display: inline-block;
 }
-.productDetail .capacity--active {
+.productDetail .option--active {
   color: #e5e5e5;
   background-color: rgb(26, 26, 26);
 }
 
-.productDetail .color {
-  height: 2.5rem;
-  width: 2.5rem;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 1rem;
-  cursor: pointer;
-}
-.productDetail .color--active {
-  border: 3px solid #e5e5e5;
-  box-shadow: #00e366 0px 3px 4px 0px, #2200e3a6 0px 0px 0px 2px;
-}
+
 .addtocart {
   background-color: #00e3d0;
   text-align: center;
