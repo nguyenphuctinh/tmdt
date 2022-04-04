@@ -213,9 +213,36 @@ input:focus {
   background-color: rgb(26, 26, 26);
 }
 
-
+.quantity__increase,
+.quantity__decrease,
+.quantity__value {
+  border: 1px solid #dcdcdc;
+  width: 2.5rem;
+  padding-left: 0.7rem;
+  cursor: pointer;
+  background-color: white;
+}
+.buynow {
+  color: black;
+  font-weight: 700;border-radius: 0;
+  width: 100%;
+  background-color: #dcdcdc;
+  padding-top: 1.2rem ;
+  padding-bottom: 1.2rem ;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+  transition: all 0.5s;
+}
+.buynow:hover{
+  background-color: black;
+  color: white;
+}
+.productDetail__value {
+  background-color: #f0eeee;
+  cursor: default;
+}
 .addtocart {
-  background-color: #00e3d0;
+  background-color: #0071e3;
   text-align: center;
   width: 100%;
   padding: 1.2rem 4rem;
@@ -223,6 +250,10 @@ input:focus {
   font-size: 1.5rem;
   font-weight: 700;
   border-radius: 0.8rem;
+  cursor: pointer;
+}
+.addtocart:hover{
+  background-color: #0071e3be;
 }
 .productDetailDescription::-webkit-scrollbar,
 .updateForm__content::-webkit-scrollbar {

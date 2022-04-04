@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -9,8 +10,11 @@ import { Carousel } from "react-responsive-carousel";
 import sortByIntValues from "../../helpers/sortByIntValues";
 import NotFound from "../notfound/NotFound";
 export default function ProductDetail() {
+  let user = useSelector((state) => state.user);
+
   const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const [changed, setChanged] = useState(false);
   const products = useSelector((state) => state.products);
   const { productName } = useParams();
@@ -55,9 +59,45 @@ export default function ProductDetail() {
       }
     }
   }, [product, variantNames, selectedProductVariant, changed]);
+  const onHandleBuyNow = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/orders`,
+        {
+          productVariantId: selectedProductVariant.productVariantId,
+          sale: product.sale,
+          price: selectedProductVariant.price,
+          quantity,
+          userId: user.data.id,
+        }
+      );
+      console.log(res);
+      toast.success("Đặt hàng thành công!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+  const onHandleAddToCart=()=>{
+     try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/carts`,
+        {
+          productVariantId: selectedProductVariant.productVariantId,
+          sale: product.sale,
+          price: selectedProductVariant.price,
+          quantity,
+          userId: user.data.id,
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
   if (product === undefined) {
     return <NotFound />;
   }
+
   return product ? (
     <>
       <div className="container">
@@ -149,10 +189,37 @@ export default function ProductDetail() {
               spellCheck="false"
             ></textarea>
             <p className="mt-3"></p>
+            <div style={{ width: "100%" }}>
+              <div className="d-flex">
+                <div className="d-flex">
+                  <button
+                    onClick={() => {
+                      if (quantity === 1) return quantity;
+                      return setQuantity(quantity - 1);
+                    }}
+                    className="quantity__increase d-flex align-items-center"
+                  >
+                    -
+                  </button>
+                  <div className="quantity__value d-flex align-items-center">
+                    {quantity}
+                  </div>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="quantity__decrease d-flex align-items-center"
+                  >
+                    +
+                  </button>
+                </div>
+                <button onClick={onHandleBuyNow} className="btn buynow">
+                  MUA NGAY
+                </button>
+              </div>
 
-            <a href="/addtocart/{{product.id}}?color={{selectedcolor}}&capacity={{selectedcapacity}}">
-              <div className="addtocart mr-lg-3">Thêm vào giỏ</div>
-            </a>
+              <button onClick={onHandleAddToCart} className="btn mt-3   mr-lg-3  addtocart text-white">
+                Thêm vào giỏ
+              </button>
+            </div>
           </div>
         </div>
       </div>
