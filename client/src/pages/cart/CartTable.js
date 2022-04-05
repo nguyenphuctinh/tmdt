@@ -17,6 +17,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { dict } from "../../helpers/dict";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -130,14 +131,27 @@ export default function CartTable({ rows }) {
             return (
               <TableRow key={row.productId}>
                 <TableCell component="th" scope="row">
-                  <Link to={`/product/${row.productName}`}>
-                    <div className="d-lg-flex align-items-center">
+                  <div className="d-lg-flex align-items-center">
+                    <Link to={`/product/${row.productName}`}>
                       <img width={100} src={row.imgSrc} />
-                      <p className="productName" style={{ color: "#0d6efd" }}>
-                        {row.productName}
-                      </p>
+                    </Link>
+                    <div>
+                      <Link to={`/product/${row.productName}`}>
+                        <p className="productName" style={{ color: "#0d6efd" }}>
+                          {row.productName}
+                        </p>
+                      </Link>
+                      {row.variantValues.map((item) => {
+                        return (
+                          <p className="variantValue">
+                            {dict[item.variantName].toUpperCase() +
+                              ": " +
+                              item.value.toUpperCase()}
+                          </p>
+                        );
+                      })}
                     </div>
-                  </Link>
+                  </div>
                 </TableCell>
                 <TableCell component="th" scope="row">
                   <div className="d-flex price w-100 ">

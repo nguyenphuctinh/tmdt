@@ -155,7 +155,9 @@ function NavBar() {
                         id="number_in_cart"
                         style={{ fontSize: "0.8rem", fontWeight: "600" }}
                       >
-                        {cart.data.cartItems?.length}
+                        {cart.data.cartItems.reduce((a, b) => {
+                          return a + b.quantity;
+                        }, 0)}
                       </p>
                     </div>
                     <i className="far fa-shopping-bag"></i>

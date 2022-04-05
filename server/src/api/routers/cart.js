@@ -36,7 +36,7 @@ router.get("/:userId", async (req, res) => {
         });
       });
       const variantValues = await new Promise((resolve, reject) => {
-        const stm = `SELECT variant_name, value FROM product_detail
+        const stm = `SELECT variant_name as variantName, value FROM product_detail
                     join variant_value
                     on product_detail.value_id=variant_value.value_id
                     join variant
@@ -47,9 +47,11 @@ router.get("/:userId", async (req, res) => {
             console.log(err);
             return reject({ err: "Loi Sql" });
           }
+
           resolve(JSON.parse(JSON.stringify(result)));
         });
       });
+
       const imgLink = await new Promise((resolve, reject) => {
         const stm = `SELECT * FROM product_variant_img
                   where product_variant_id = ?
@@ -117,16 +119,10 @@ router.post("/", async (req, res) => {
     }
 
     await new Promise((resolve, reject) => {
-      const stm = "insert into cart values (?, ?, ?, ?, ?)";
+      const stm = "insert into cart values (?, ?, ?)";
       con.query(
         stm,
-        [
-          req.body.userId,
-          req.body.productVariantId,
-          req.body.quantity,
-          req.body.price,
-          req.body.sale,
-        ],
+        [req.body.userId, req.body.productVariantId, req.body.quantity],
         (err, result) => {
           if (err) {
             console.log(err);

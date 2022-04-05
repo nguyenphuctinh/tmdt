@@ -1,9 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-  /* background-color: #3e3e3f; */
-  /* color: w */
   overflow-y: scroll;
+  
 }
 .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
   margin-bottom: 1rem;
@@ -351,4 +350,40 @@ input:focus {
 }
 .cart .productPrice{
   font-size: 0.8rem;
+}
+.cart .variantValue{
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+.cart .btn{
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.cart .orderForm{
+  border:2px solid #eaeaea;
+}
+.cart .orderForm .quantity{
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  border-bottom:2px solid #eaeaea;
+  padding: 0.5rem;
+  margin: 0;
+}
+.cart .orderForm .checkout{
+  padding: 0.5rem;
+  background-color: #f2f2f2;
+}
+.cart .orderForm .price{
+  margin-bottom: 1rem;
+}
+.cart .orderForm .prizeNotification{
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+.cart .orderForm img{
+  width: 100%;
 }
