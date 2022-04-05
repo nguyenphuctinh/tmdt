@@ -20,9 +20,8 @@ router.get("/:userId", async (req, res) => {
       userId: req.params.userId,
       cartItems: [],
     };
-    console.log(rows);
     for (const item of rows) {
-      const productName = await new Promise((resolve, reject) => {
+      const product = await new Promise((resolve, reject) => {
         const stm = `SELECT * FROM product_variant
                     join product
                     on product.product_id=product_variant.product_id
@@ -33,8 +32,7 @@ router.get("/:userId", async (req, res) => {
             return reject({ err: "Loi Sql" });
           }
           const products = JSON.parse(JSON.stringify(result));
-          console.log(products, item);
-          resolve(products[0].product_name);
+          resolve(products[0]);
         });
       });
       const variantValues = await new Promise((resolve, reject) => {
@@ -66,10 +64,24 @@ router.get("/:userId", async (req, res) => {
           resolve(JSON.parse(JSON.stringify(result))[0].img);
         });
       });
+      const productVariant = await new Promise((resolve, reject) => {
+        const stm = `SELECT * FROM product_variant
+                  where product_variant_id = ?`;
+        con.query(stm, [item.product_variant_id], (err, result) => {
+          if (err) {
+            console.log(err);
+            return reject({ err: "Loi Sql" });
+          }
+          resolve(JSON.parse(JSON.stringify(result))[0]);
+        });
+      });
       data.cartItems.push({
-        productName,
+        productName: product.product_name,
         variantValues: [...variantValues],
         imgSrc: imgLink,
+        quantity: item.quantity,
+        sale: product.sale,
+        price: productVariant.price,
       });
     }
 

@@ -317,6 +317,8 @@ input:focus {
   text-align: center;
 }
 
+
+
 /* admin */
 .addImg {
   cursor: pointer;
@@ -337,4 +339,13 @@ input:focus {
 .infoForm{
   background-color: white;
   padding: 1rem;
+}
+
+
+/* cart */
+.cart .productName{
+  display: inline-block;
+}
+.cart .productPrice{
+  font-size: 0.9rem;
 }

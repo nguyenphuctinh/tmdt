@@ -33,6 +33,23 @@ router.post("/", async (req, res) => {
           message: "Số lượng sản phẩm trong kho không đủ",
         });
       }
+      await new Promise((resolve, reject) => {
+        const sql = `update product_variant set quantity = ? where product_variant_id = ?`;
+        con.query(
+          sql,
+          [
+            quantityInStock - productVariant.quantity,
+            productVariant.productVariantId,
+          ],
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              reject({ err: "SQL error" });
+            }
+            resolve();
+          }
+        );
+      });
       const newOrderId = await new Promise((resolve, reject) => {
         const stm = "insert into orders values (default, ?, ?, ?)";
         con.query(

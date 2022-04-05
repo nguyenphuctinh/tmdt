@@ -78,7 +78,7 @@ export default function InfoOrderForm({ productVariants }) {
       toast.success("Đặt hàng thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Cập nhật thất bại!");
+      toast.error(error.response.data.message);
     }
   };
   return (

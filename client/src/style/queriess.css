@@ -21,6 +21,9 @@
   .updateForm {
     width: 75%;
   }
+  .cart .productName {
+    display: block;
+  }
 }
 @media (min-width: 350px) and (max-width: 575.99px) {
   html {
