@@ -11,44 +11,75 @@ router.get("/", authenToken, (req, res) => {
   });
 });
 router.post("/", async (req, res) => {
-  var sql = "select * from user where username=?";
-  try {
-    await new Promise((resolve, reject) => {
-      con.query(sql, [req.body.username], (err, data) => {
-        if (err) {
-          console.log(err);
-          reject({ stt: 500, err: "Lỗi truy vấn" });
-          return;
-        }
-        if (data.length !== 0) {
-          return reject({ stt: 400, err: "Tài khoản đã tồn tại" });
-        }
-        resolve("ok");
+  if (req.body.type === "anonymous") {
+    try {
+      await new Promise((resolve, reject) => {
+        sql = `INSERT INTO user(first_name, last_name, dob,phone,address, role) VALUES (?,?,?,?,?,default)`;
+
+        con.query(
+          sql,
+          [
+            req.body.firstName,
+            req.body.lastName,
+            req.body.dob,
+            req.body.phone,
+            req.body.address,
+          ],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Loi SQL" });
+            }
+            const userId = JSON.parse(JSON.stringify(result)).insertId;
+            res.status(200).send({ userId });
+            resolve();
+          }
+        );
       });
-    });
-    await new Promise((resolve, reject) => {
-      sql = `INSERT INTO user(username, password,first_name, last_name, dob, role) VALUES (?,?,?,?,?,default)`;
-      con.query(
-        sql,
-        [
-          req.body.username,
-          passwordHash.generate(req.body.password),
-          req.body.firstName,
-          req.body.lastName,
-          req.body.dob,
-        ],
-        (err, result) => {
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Lỗi hệ thống");
+    }
+  } else {
+    var sql = "select * from user where username=?";
+    try {
+      await new Promise((resolve, reject) => {
+        con.query(sql, [req.body.username], (err, data) => {
           if (err) {
             console.log(err);
-            return reject({ stt: 500, err: "Loi SQL" });
+            reject({ stt: 500, err: "Lỗi truy vấn" });
+            return;
           }
-          res.send("Đăng ký thành công");
-          resolve();
-        }
-      );
-    });
-  } catch ({ stt, err }) {
-    return res.status(stt).send(err);
+          if (data.length !== 0) {
+            return reject({ stt: 400, err: "Tài khoản đã tồn tại" });
+          }
+          resolve("ok");
+        });
+      });
+      await new Promise((resolve, reject) => {
+        sql = `INSERT INTO user(username, password,first_name, last_name, dob, role) VALUES (?,?,?,?,?,default)`;
+        con.query(
+          sql,
+          [
+            req.body.username,
+            passwordHash.generate(req.body.password),
+            req.body.firstName,
+            req.body.lastName,
+            req.body.dob,
+          ],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Loi SQL" });
+            }
+            res.send("Đăng ký thành công");
+            resolve();
+          }
+        );
+      });
+    } catch ({ stt, err }) {
+      return res.status(stt).send(err);
+    }
   }
 });
 router.delete("/:id", authenAdminToken, (req, res) => {

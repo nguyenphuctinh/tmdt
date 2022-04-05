@@ -23,6 +23,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import UpdateProduct from "./pages/admin/product/UpdateProduct";
 import Search from "./pages/search/Search";
 import { fetchUser } from "./redux/slices/userSlice";
+import { fetchCart } from "./redux/slices/cartSlice";
+import Cart from "./pages/cart/Cart";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -36,6 +38,12 @@ function App() {
     dispatch(fetchProduct());
     dispatch(fetchUser());
   }, [dispatch]);
+  useEffect(() => {
+    console.log("fetch cart");
+    if (user.data) {
+      dispatch(fetchCart(user.data.id));
+    }
+  }, [user]);
   return (
     <>
       {user.loading || products.loading || !rendered ? (
@@ -58,6 +66,7 @@ function App() {
               path="/account"
               element={user.data ? <Account /> : <Navigate to="/login" />}
             ></Route>
+            <Route path="/cart" element={<Cart />}></Route>
             <Route
               path="/admin/product/add"
               element={

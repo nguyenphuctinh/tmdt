@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./api/routers/user.js";
 import productRouter from "./api/routers/product.js";
+import cartRouter from "./api/routers/cart.js";
 import orderRouter from "./api/routers/order.js";
 import webhookRouter from "./api/routers/webhook.js";
 import authenToken from "./api/middlewares/authenToken.js";
@@ -96,6 +97,7 @@ app.get("/auth", authenToken, async (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/carts", cartRouter);
 app.use("/webhook", webhookRouter);
 
 const port = process.env.PORT || 8080;

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function NavBar() {
   const navbar = useSelector((state) => state.navbar);
+  const cart = useSelector((state) => state.cart);
   const [finding, setFinding] = useState(false);
   const [finded, setFinded] = useState(false);
   const navigate = useNavigate();
@@ -135,14 +136,14 @@ function NavBar() {
                 onClick={() => setFinding(false)}
                 className="d-flex align-items-center"
               >
-                <Link to="/order/">
+                <Link to="/cart">
                   <div className="bg">
                     <div
                       className="grid"
                       style={{
-                        backgroundColor: "#00e366",
+                        backgroundColor: "brown",
                         borderRadius: "50%",
-                        color: "#2f3033",
+                        color: "white",
                         width: "1.3rem",
                         height: "1.3rem",
                         zIndex: "2",
@@ -154,7 +155,7 @@ function NavBar() {
                         id="number_in_cart"
                         style={{ fontSize: "0.8rem", fontWeight: "600" }}
                       >
-                        1
+                        {cart.data.cartItems?.length}
                       </p>
                     </div>
                     <i className="far fa-shopping-bag"></i>

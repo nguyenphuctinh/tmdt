@@ -279,7 +279,7 @@ input:focus {
   padding: 10px 20px;
   color: white;
   height: 7rem;
-  border-radius: 0.8rem;
+  border-radius: 0.3rem;
 }
 .description {
   color: #2f3033;
@@ -331,6 +331,10 @@ input:focus {
   color: black;
   border-radius: 5px;
 }
-.updatePw {
+.updatePw,.updateInfo {
   min-height: 100vh;
+}
+.infoForm{
+  background-color: white;
+  padding: 1rem;
 }

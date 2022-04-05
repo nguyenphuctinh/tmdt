@@ -9,6 +9,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import sortByIntValues from "../../helpers/sortByIntValues";
 import NotFound from "../notfound/NotFound";
+import InfoOrderForm from "../../components/InfoOrderForm";
 export default function ProductDetail() {
   let user = useSelector((state) => state.user);
 
@@ -21,6 +22,8 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [selectedProductVariant, setSelectedProductVariant] = useState(null);
   const [variantNames, setVariantNames] = useState([]);
+  const [updateInfoOrderFormOpened, setUpdateInfoOrderFormOpened] =
+    useState(false);
   useEffect(() => {
     console.log(productName);
     setProduct(
@@ -59,26 +62,11 @@ export default function ProductDetail() {
       }
     }
   }, [product, variantNames, selectedProductVariant, changed]);
-  const onHandleBuyNow = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/orders`,
-        {
-          productVariantId: selectedProductVariant.productVariantId,
-          sale: product.sale,
-          price: selectedProductVariant.price,
-          quantity,
-          userId: user.data.id,
-        }
-      );
-      console.log(res);
-      toast.success("Đặt hàng thành công!");
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+  const onHandleBuyNow = () => {
+    setUpdateInfoOrderFormOpened(true);
   };
-  const onHandleAddToCart=()=>{
-     try {
+  const onHandleAddToCart = async () => {
+    try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/carts`,
         {
@@ -93,7 +81,7 @@ export default function ProductDetail() {
     } catch (error) {
       toast.error(error.response.data.message);
     }
-  }
+  };
   if (product === undefined) {
     return <NotFound />;
   }
@@ -101,6 +89,46 @@ export default function ProductDetail() {
   return product ? (
     <>
       <div className="container">
+        {updateInfoOrderFormOpened ? (
+          <>
+            <div
+              onClick={() => setUpdateInfoOrderFormOpened(false)}
+              style={{
+                position: "fixed",
+                height: "100vh",
+                width: "100vw",
+                zIndex: "2",
+                left: 0,
+                // top: 0,
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }}
+            ></div>
+            <div
+              style={{
+                position: "fixed",
+                width: "50%",
+                left: "50%",
+                overflowY: "auto",
+                height: "500px",
+                transform: "translate(-50%, 0)",
+                zIndex: "3",
+              }}
+            >
+              <InfoOrderForm
+                productVariants={[
+                  {
+                    productVariantId: selectedProductVariant.productVariantId,
+                    sale: product.sale,
+                    price: selectedProductVariant.price,
+                    quantity,
+                  },
+                ]}
+              />
+            </div>
+          </>
+        ) : (
+          ""
+        )}
         <div className="row productDetail pt-2 pb-5">
           <div className="col-sm-6">
             <Carousel
@@ -216,7 +244,10 @@ export default function ProductDetail() {
                 </button>
               </div>
 
-              <button onClick={onHandleAddToCart} className="btn mt-3   mr-lg-3  addtocart text-white">
+              <button
+                onClick={onHandleAddToCart}
+                className="btn mt-3   mr-lg-3  addtocart text-white"
+              >
                 Thêm vào giỏ
               </button>
             </div>
