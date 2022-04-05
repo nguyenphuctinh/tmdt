@@ -108,16 +108,16 @@ export default function CartTable({ rows }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row">
-              Sản phẩm
+              <strong> Sản phẩm</strong>
             </TableCell>
             <TableCell component="th" scope="row">
-              Giá
+              <strong>Giá</strong>
             </TableCell>
             <TableCell component="th" scope="row">
-              Số lượng
+              <strong> Số lượng</strong>
             </TableCell>
             <TableCell component="th" scope="row">
-              Tổng
+              <strong>Tổng</strong>
             </TableCell>
 
             <TableCell style={{ width: 100 }} align="center"></TableCell>
@@ -131,7 +131,7 @@ export default function CartTable({ rows }) {
               <TableRow key={row.productId}>
                 <TableCell component="th" scope="row">
                   <Link to={`/product/${row.productName}`}>
-                    <div>
+                    <div className="d-lg-flex align-items-center">
                       <img width={100} src={row.imgSrc} />
                       <p className="productName" style={{ color: "#0d6efd" }}>
                         {row.productName}
@@ -171,11 +171,14 @@ export default function CartTable({ rows }) {
                   </div>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <strong>
-                    {parseInt(
-                      row.price * (1 - row.sale) * row.quantity
-                    ).toLocaleString()}
-                  </strong>
+                  <p className="productPrice ">
+                    <strong>
+                      {parseInt(
+                        row.price * (1 - row.sale) * row.quantity
+                      ).toLocaleString()}{" "}
+                      <small>₫</small>
+                    </strong>
+                  </p>
                 </TableCell>
                 <TableCell style={{ width: 100 }} align="center">
                   <Link to={`/`}>

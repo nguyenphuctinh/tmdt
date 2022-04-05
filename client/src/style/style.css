@@ -8,6 +8,7 @@ body {
 .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
   margin-bottom: 1rem;
 }
+
 .grid {
   display: grid;
   place-items: center;
@@ -343,9 +344,11 @@ input:focus {
 
 
 /* cart */
+
 .cart .productName{
   display: inline-block;
+  margin: 0;
 }
 .cart .productPrice{
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }

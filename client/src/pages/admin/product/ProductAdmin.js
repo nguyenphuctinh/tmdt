@@ -75,7 +75,7 @@ export default function ProductAdmin() {
           </div>
         </div>
 
-        <div className="col-12">
+        <div className="col-12 pb-5">
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 col-sm-3">
