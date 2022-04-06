@@ -39,7 +39,6 @@ function App() {
     dispatch(fetchUser());
   }, [dispatch]);
   useEffect(() => {
-    console.log("fetch cart");
     if (user.data) {
       dispatch(fetchCart(user.data.id));
     }

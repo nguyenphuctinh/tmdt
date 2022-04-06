@@ -66,6 +66,51 @@ const cartSlice = createSlice({
       });
       state.data.cartItems = cartItems;
     },
+    addItem: (state, action) => {
+      const {
+        productVariantId,
+        quantity,
+        productName,
+        sale,
+        price,
+        imgSrc,
+        variantValues,
+      } = action.payload;
+      let isProductVariantExist = false;
+      state.data.cartItems.forEach((cartItem) => {
+        if (cartItem.productVariantId === productVariantId) {
+          isProductVariantExist = true;
+          return;
+        }
+      });
+      if (isProductVariantExist) {
+        const cartItems = state.data.cartItems.map((item) => {
+          if (item.productVariantId === productVariantId) {
+            return {
+              ...item,
+              quantity: item.quantity + quantity,
+            };
+          }
+          return item;
+        });
+        state.data.cartItems = cartItems;
+      } else {
+        const cartItems = [
+          {
+            productVariantId,
+            quantity,
+            productName,
+            sale,
+            price,
+            imgSrc,
+            variantValues: [...variantValues],
+          },
+          ...state.data.cartItems,
+        ];
+
+        state.data.cartItems = [...cartItems];
+      }
+    },
   },
   extraReducers: {
     [fetchCart.pending]: (state) => {
@@ -83,7 +128,7 @@ const cartSlice = createSlice({
   },
 });
 const { reducer } = cartSlice;
-export const { increaseQuantity, decreaseQuantity, removeItem } =
+export const { increaseQuantity, decreaseQuantity, removeItem, addItem } =
   cartSlice.actions;
 
 export default reducer;

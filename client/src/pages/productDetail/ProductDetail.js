@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { dict } from "../../helpers/dict";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -10,9 +10,10 @@ import { Carousel } from "react-responsive-carousel";
 import sortByIntValues from "../../helpers/sortByIntValues";
 import NotFound from "../notfound/NotFound";
 import InfoOrderForm from "../../components/InfoOrderForm";
+import { addItem } from "../../redux/slices/cartSlice";
 export default function ProductDetail() {
   let user = useSelector((state) => state.user);
-
+  const dispatch = useDispatch();
   const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -77,7 +78,24 @@ export default function ProductDetail() {
           userId: user.data.id,
         }
       );
-      console.log(res);
+      let variantValues = [];
+      variantNames.forEach((variantName) => {
+        variantValues.push({
+          variantName,
+          value: selectedProductVariant[variantName],
+        });
+      });
+      dispatch(
+        addItem({
+          productName: product.productName,
+          productVariantId: selectedProductVariant.productVariantId,
+          sale: product.sale,
+          price: selectedProductVariant.price,
+          quantity,
+          imgSrc: selectedProductVariant.imgSrcList[0].img,
+          variantValues,
+        })
+      );
     } catch (error) {
       toast.error(error.response.data.message);
     }
