@@ -42,6 +42,7 @@ const cartSlice = createSlice({
         return item;
       });
       state.data.cartItems = cartItems;
+      localStorage.setItem("cart", JSON.stringify([...cartItems]));
     },
     decreaseQuantity: (state, action) => {
       const { productVariantId, quantity } = action.payload;
@@ -56,6 +57,7 @@ const cartSlice = createSlice({
         return item;
       });
       state.data.cartItems = cartItems;
+      localStorage.setItem("cart", JSON.stringify([...cartItems]));
     },
     removeItem: (state, action) => {
       console.log(action.payload);
@@ -65,6 +67,7 @@ const cartSlice = createSlice({
         return item.productVariantId !== productVariantId;
       });
       state.data.cartItems = cartItems;
+      localStorage.setItem("cart", JSON.stringify([...cartItems]));
     },
     addItem: (state, action) => {
       const {
@@ -76,6 +79,7 @@ const cartSlice = createSlice({
         imgSrc,
         variantValues,
       } = action.payload;
+      console.log(variantValues);
       let isProductVariantExist = false;
       state.data.cartItems.forEach((cartItem) => {
         if (cartItem.productVariantId === productVariantId) {
@@ -110,9 +114,14 @@ const cartSlice = createSlice({
 
         state.data.cartItems = [...cartItems];
       }
+      localStorage.setItem("cart", JSON.stringify([...state.data.cartItems]));
     },
     removeAllItems: (state, action) => {
       state.data.cartItems = [];
+      localStorage.setItem("cart", JSON.stringify([]));
+    },
+    setCart: (state, action) => {
+      state.data.cartItems = [...action.payload];
     },
   },
   extraReducers: {
@@ -136,6 +145,7 @@ export const {
   decreaseQuantity,
   removeItem,
   addItem,
+  setCart,
   removeAllItems,
 } = cartSlice.actions;
 

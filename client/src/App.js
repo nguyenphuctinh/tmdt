@@ -23,7 +23,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import UpdateProduct from "./pages/admin/product/UpdateProduct";
 import Search from "./pages/search/Search";
 import { fetchUser } from "./redux/slices/userSlice";
-import { fetchCart } from "./redux/slices/cartSlice";
+import { fetchCart, setCart } from "./redux/slices/cartSlice";
 import Cart from "./pages/cart/Cart";
 function App() {
   const [rendered, setRendered] = useState(false);
@@ -41,6 +41,13 @@ function App() {
   useEffect(() => {
     if (user.data) {
       dispatch(fetchCart(user.data.id));
+    } else {
+      let cart = JSON.parse(localStorage.getItem("cart"));
+      if (!cart) {
+        dispatch(setCart([]));
+      } else {
+        dispatch(setCart([...cart]));
+      }
     }
   }, [user]);
   return (

@@ -13,6 +13,7 @@ import InfoOrderForm from "../../components/InfoOrderForm";
 import { addItem } from "../../redux/slices/cartSlice";
 export default function ProductDetail() {
   let user = useSelector((state) => state.user);
+  let cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -67,24 +68,14 @@ export default function ProductDetail() {
     setUpdateInfoOrderFormOpened(true);
   };
   const onHandleAddToCart = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/carts`,
-        {
-          productVariantId: selectedProductVariant.productVariantId,
-          sale: product.sale,
-          price: selectedProductVariant.price,
-          quantity,
-          userId: user.data.id,
-        }
-      );
-      let variantValues = [];
-      variantNames.forEach((variantName) => {
-        variantValues.push({
-          variantName,
-          value: selectedProductVariant[variantName],
-        });
+    let selectedVariantValues = [];
+    variantNames.forEach((variantName) => {
+      selectedVariantValues.push({
+        variantName,
+        value: selectedProductVariant[variantName],
       });
+    });
+    if (!user.data) {
       dispatch(
         addItem({
           productName: product.productName,
@@ -93,11 +84,36 @@ export default function ProductDetail() {
           price: selectedProductVariant.price,
           quantity,
           imgSrc: selectedProductVariant.imgSrcList[0].img,
-          variantValues,
+          variantValues: [...selectedVariantValues],
         })
       );
-    } catch (error) {
-      toast.error(error.response.data.message);
+    } else {
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/carts`,
+          {
+            productVariantId: selectedProductVariant.productVariantId,
+            sale: product.sale,
+            price: selectedProductVariant.price,
+            quantity,
+            userId: user.data.id,
+          }
+        );
+
+        dispatch(
+          addItem({
+            productName: product.productName,
+            productVariantId: selectedProductVariant.productVariantId,
+            sale: product.sale,
+            price: selectedProductVariant.price,
+            quantity,
+            imgSrc: selectedProductVariant.imgSrcList[0].img,
+            variantValues: [...selectedVariantValues],
+          })
+        );
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
     }
   };
   if (product === undefined) {
@@ -127,7 +143,7 @@ export default function ProductDetail() {
                 width: "50%",
                 left: "50%",
                 overflowY: "auto",
-                height: "500px",
+                height: "400px",
                 transform: "translate(-50%, 0)",
                 zIndex: "3",
               }}

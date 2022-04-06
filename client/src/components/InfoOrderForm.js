@@ -2,15 +2,17 @@ import { Stack, TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import React, { useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { authorization } from "../auth/auth";
+import { removeAllItems } from "../redux/slices/cartSlice";
 
-export default function InfoOrderForm({ productVariants }) {
+export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [firstName, setFirstName] = useState(user.data?.firstName || "");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastName, setLastName] = useState(user.data?.lastName || "");
@@ -75,6 +77,12 @@ export default function InfoOrderForm({ productVariants }) {
           userId,
         }
       );
+      if (type === "orderFromCart") {
+        dispatch(removeAllItems());
+        await axios.delete(
+          `${process.env.REACT_APP_API_URL}/api/carts/${userId}`
+        );
+      }
       toast.success("Đặt hàng thành công!");
     } catch (error) {
       console.log(error);

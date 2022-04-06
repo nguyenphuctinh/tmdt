@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CartTable from "./CartTable";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import OrderForm from "./OrderForm";
 import emptyCartImg from "../../assets/images/empty-cart.png";
+import { changeNavbar } from "../../redux/slices/navbarSlice";
 export default function Cart() {
   const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(changeNavbar("others"));
+  }, []);
   return (
     <div className="container-fluid cart pb-5">
       <div className="row">

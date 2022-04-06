@@ -226,4 +226,22 @@ router.delete("/:userId/:productVariantId", async (req, res) => {
     res.status(500).send("Lỗi hệ thống");
   }
 });
+router.delete("/:userId", async (req, res) => {
+  try {
+    await new Promise((resolve, reject) => {
+      const stm = `delete from cart where user_id = ?`;
+      con.query(stm, [req.params.userId], (err, result) => {
+        if (err) {
+          console.log(err);
+          reject({ stt: 500, message: "SQL error" });
+        }
+        resolve(JSON.parse(JSON.stringify(result)));
+      });
+    });
+    res.send({ message: "Xóa sản phẩm khỏi giỏ hàng thành công" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Lỗi hệ thống");
+  }
+});
 export default router;

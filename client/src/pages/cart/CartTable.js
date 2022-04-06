@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import { useTheme } from "@mui/material/styles";
@@ -113,40 +113,53 @@ export default function CartTable({ rows, userId }) {
     setPage(0);
   };
   const dispatch = useDispatch();
+
   const onHandleIncrease = async (productVariantId, quantity) => {
-    try {
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
-        {
-          quantity: quantity + 1,
-        }
-      );
+    if (userId) {
+      try {
+        const res = await axios.put(
+          `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
+          {
+            quantity: quantity + 1,
+          }
+        );
+        dispatch(increaseQuantity({ productVariantId, quantity }));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
       dispatch(increaseQuantity({ productVariantId, quantity }));
-    } catch (error) {
-      console.log(error);
     }
   };
   const onHandleDecrease = async (productVariantId, quantity) => {
-    try {
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
-        {
-          quantity: quantity - 1,
-        }
-      );
+    if (userId) {
+      try {
+        const res = await axios.put(
+          `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
+          {
+            quantity: quantity - 1,
+          }
+        );
+        dispatch(decreaseQuantity({ productVariantId, quantity }));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
       dispatch(decreaseQuantity({ productVariantId, quantity }));
-    } catch (error) {
-      console.log(error);
     }
   };
   const handleRemove = async (productVariantId) => {
-    try {
-      const res = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`
-      );
+    if (userId) {
+      try {
+        const res = await axios.delete(
+          `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`
+        );
+        dispatch(removeItem({ productVariantId }));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
       dispatch(removeItem({ productVariantId }));
-    } catch (error) {
-      console.log(error);
     }
   };
   return (
