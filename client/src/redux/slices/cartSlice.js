@@ -3,7 +3,6 @@ import axios from "axios";
 import { authorization } from "../../auth/auth";
 
 export const fetchCart = createAsyncThunk("carts/fetchCart", async (userId) => {
-  console.log(userId);
   const carts = await new Promise(async (resolve, reject) => {
     try {
       const res = await axios.get(
@@ -18,7 +17,6 @@ export const fetchCart = createAsyncThunk("carts/fetchCart", async (userId) => {
       });
     }
   });
-  console.log(carts, "cart");
   return carts;
 });
 const cartSlice = createSlice({
@@ -31,7 +29,44 @@ const cartSlice = createSlice({
     },
     error: null,
   },
-  reducers: {},
+  reducers: {
+    increaseQuantity: (state, action) => {
+      const { productVariantId, quantity } = action.payload;
+      const cartItems = state.data.cartItems.map((item) => {
+        if (item.productVariantId === productVariantId) {
+          return {
+            ...item,
+            quantity: quantity + 1,
+          };
+        }
+        return item;
+      });
+      state.data.cartItems = cartItems;
+    },
+    decreaseQuantity: (state, action) => {
+      const { productVariantId, quantity } = action.payload;
+      if (quantity === 1) return;
+      const cartItems = state.data.cartItems.map((item) => {
+        if (item.productVariantId === productVariantId) {
+          return {
+            ...item,
+            quantity: quantity - 1,
+          };
+        }
+        return item;
+      });
+      state.data.cartItems = cartItems;
+    },
+    removeItem: (state, action) => {
+      console.log(action.payload);
+      const { productVariantId } = action.payload;
+      const cartItems = state.data.cartItems.filter((item) => {
+        console.log(item.productVariantId, productVariantId);
+        return item.productVariantId !== productVariantId;
+      });
+      state.data.cartItems = cartItems;
+    },
+  },
   extraReducers: {
     [fetchCart.pending]: (state) => {
       state.loading = true;
@@ -48,6 +83,7 @@ const cartSlice = createSlice({
   },
 });
 const { reducer } = cartSlice;
-// export const {  } = cartSlice.actions;
+export const { increaseQuantity, decreaseQuantity, removeItem } =
+  cartSlice.actions;
 
 export default reducer;

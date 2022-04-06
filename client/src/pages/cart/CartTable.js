@@ -1,6 +1,10 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -18,6 +22,12 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { dict } from "../../helpers/dict";
+import axios from "axios";
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeItem,
+} from "../../redux/slices/cartSlice";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -87,7 +97,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function CartTable({ rows }) {
+export default function CartTable({ rows, userId }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -102,7 +112,43 @@ export default function CartTable({ rows }) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  const dispatch = useDispatch();
+  const onHandleIncrease = async (productVariantId, quantity) => {
+    try {
+      const res = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
+        {
+          quantity: quantity + 1,
+        }
+      );
+      dispatch(increaseQuantity({ productVariantId, quantity }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onHandleDecrease = async (productVariantId, quantity) => {
+    try {
+      const res = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
+        {
+          quantity: quantity - 1,
+        }
+      );
+      dispatch(decreaseQuantity({ productVariantId, quantity }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleRemove = async (productVariantId) => {
+    try {
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`
+      );
+      dispatch(removeItem({ productVariantId }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -129,7 +175,7 @@ export default function CartTable({ rows }) {
             : rows
           ).map((row) => {
             return (
-              <TableRow key={row.productId}>
+              <TableRow key={row.productVariantId}>
                 <TableCell component="th" scope="row">
                   <div className="d-lg-flex align-items-center">
                     <Link to={`/product/${row.productName}`}>
@@ -143,7 +189,10 @@ export default function CartTable({ rows }) {
                       </Link>
                       {row.variantValues.map((item) => {
                         return (
-                          <p className="variantValue">
+                          <p
+                            key={item.variantName + item.value}
+                            className="variantValue"
+                          >
                             {dict[item.variantName].toUpperCase() +
                               ": " +
                               item.value.toUpperCase()}
@@ -171,13 +220,23 @@ export default function CartTable({ rows }) {
                   <div style={{ width: "100%" }}>
                     <div className="d-flex">
                       <div className="d-flex">
-                        <button className="quantity__increase d-flex align-items-center">
+                        <button
+                          onClick={() =>
+                            onHandleDecrease(row.productVariantId, row.quantity)
+                          }
+                          className="quantity__increase d-flex align-items-center"
+                        >
                           -
                         </button>
                         <div className="quantity__value d-flex align-items-center">
                           {row.quantity}
                         </div>
-                        <button className="quantity__decrease d-flex align-items-center">
+                        <button
+                          onClick={() =>
+                            onHandleIncrease(row.productVariantId, row.quantity)
+                          }
+                          className="quantity__decrease d-flex align-items-center"
+                        >
                           +
                         </button>
                       </div>
@@ -195,11 +254,13 @@ export default function CartTable({ rows }) {
                   </p>
                 </TableCell>
                 <TableCell style={{ width: 100 }} align="center">
-                  <Link to={`/`}>
-                    <button type="button" className="btn btn-danger">
-                      Xóa
-                    </button>
-                  </Link>
+                  <div
+                    onClick={() => handleRemove(row.productVariantId)}
+                    className="remove"
+                  >
+                    {" "}
+                    <DeleteForeverOutlinedIcon />
+                  </div>
                 </TableCell>
               </TableRow>
             );

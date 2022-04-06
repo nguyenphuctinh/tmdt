@@ -78,6 +78,7 @@ router.get("/:userId", async (req, res) => {
         });
       });
       data.cartItems.push({
+        productVariantId: item.product_variant_id,
         productName: product.product_name,
         variantValues: [...variantValues],
         imgSrc: imgLink,
@@ -117,12 +118,77 @@ router.post("/", async (req, res) => {
         message: "Số lượng sản phẩm trong kho không đủ",
       });
     }
-
-    await new Promise((resolve, reject) => {
-      const stm = "insert into cart values (?, ?, ?)";
+    const productVariantQuantityInCart = await new Promise(
+      (resolve, reject) => {
+        const stm =
+          "select * from cart where user_id=? and product_variant_id=?";
+        con.query(
+          stm,
+          [req.body.userId, req.body.productVariantId],
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              reject({ stt: 500, message: "SQL error" });
+            }
+            const rows = JSON.parse(JSON.stringify(result));
+            resolve(rows);
+          }
+        );
+      }
+    );
+    if (productVariantQuantityInCart.length > 0) {
+      const stm =
+        "update cart set quantity=? where user_id=? and product_variant_id=?";
       con.query(
         stm,
-        [req.body.userId, req.body.productVariantId, req.body.quantity],
+        [
+          productVariantQuantityInCart[0].quantity + req.body.quantity,
+          req.body.userId,
+          req.body.productVariantId,
+        ],
+        function (err, result) {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({ stt: 500, message: "SQL error" });
+          }
+          return res.status(200).json({ stt: 200, message: "OK" });
+        }
+      );
+    } else {
+      await new Promise((resolve, reject) => {
+        const stm = "insert into cart values (?, ?, ?)";
+        con.query(
+          stm,
+          [req.body.userId, req.body.productVariantId, req.body.quantity],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject({ stt: 500, message: "SQL error" });
+            }
+            resolve(JSON.parse(JSON.stringify(result)));
+          }
+        );
+      });
+      res.send({ stt: 200, message: "Thêm vào giỏ hàng thành công" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Lỗi hệ thống");
+  }
+});
+router.put("/:userId/:productVariantId", async (req, res) => {
+  if (req.body.quantity <= 0) {
+    return res.status(400).json({
+      stt: 400,
+      message: "Số lượng sản phẩm phải lớn hơn 0",
+    });
+  }
+  try {
+    await new Promise((resolve, reject) => {
+      const stm = `update cart set quantity = ? where user_id = ? and product_variant_id = ?`;
+      con.query(
+        stm,
+        [req.body.quantity, req.params.userId, req.params.productVariantId],
         (err, result) => {
           if (err) {
             console.log(err);
@@ -132,7 +198,29 @@ router.post("/", async (req, res) => {
         }
       );
     });
-    res.send({ stt: 200, message: "Thêm vào giỏ hàng thành công" });
+    res.send({ message: "Cập nhật số lượng thành công" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Lỗi hệ thống");
+  }
+});
+router.delete("/:userId/:productVariantId", async (req, res) => {
+  try {
+    await new Promise((resolve, reject) => {
+      const stm = `delete from cart where user_id = ? and product_variant_id = ?`;
+      con.query(
+        stm,
+        [req.params.userId, req.params.productVariantId],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            reject({ stt: 500, message: "SQL error" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        }
+      );
+    });
+    res.send({ message: "Xóa sản phẩm khỏi giỏ hàng thành công" });
   } catch (error) {
     console.log(error);
     res.status(500).send("Lỗi hệ thống");

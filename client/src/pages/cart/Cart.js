@@ -13,7 +13,10 @@ export default function Cart() {
       </div>
       <div className="row">
         <div className="col-lg-9">
-          <CartTable rows={[...cart.data.cartItems]} />
+          <CartTable
+            rows={[...cart.data.cartItems]}
+            userId={cart.data.userId}
+          />
         </div>
         <div className="col-lg-3 pt-5 pt-lg-0 ">
           <OrderForm items={[...cart.data.cartItems]} />

@@ -376,14 +376,6 @@ input:focus {
   padding: 0.5rem;
   background-color: #f2f2f2;
 }
-.cart .orderForm .price{
-  margin-bottom: 1rem;
-}
-.cart .orderForm .prizeNotification{
-    font-size: 0.8rem;
-    color: #6c757d;
-    font-weight: 600;
-}
-.cart .orderForm img{
-  width: 100%;
+.cart .remove{
+  cursor: pointer;
 }
