@@ -28,6 +28,7 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
   const onHandleClick = async () => {
     console.log(firstNameError, lastNameError, dobError);
     if (!firstName || !lastName || dobError !== "" || !phone || !address) {
+      console.log(!firstName, !lastName, dobError !== "", !phone, !address);
       toast.error("Vui lòng nhập đầy đủ và chính xác thông tin");
       return;
     }
@@ -155,7 +156,6 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
                     newValue === null ||
                     newValue.toString() === "Invalid Date"
                   ) {
-                    console.log("invalid");
                     setDobError("Ngày sinh không hợp lệ");
                   } else {
                     setDob(newValue);

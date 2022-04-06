@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
   if (req.body.type === "anonymous") {
     try {
       await new Promise((resolve, reject) => {
-        sql = `INSERT INTO user(first_name, last_name, dob,phone,address, role) VALUES (?,?,?,?,?,default)`;
+        sql = `INSERT INTO user(first_name, last_name, dob,phone,address, role) VALUES (?,?,?,?,?,?)`;
 
         con.query(
           sql,
@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
             req.body.dob,
             req.body.phone,
             req.body.address,
+            "anonymous",
           ],
           (err, result) => {
             if (err) {

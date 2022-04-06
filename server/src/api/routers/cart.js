@@ -115,7 +115,7 @@ router.post("/", async (req, res) => {
     if (quantityInStock < req.body.quantity) {
       return res.status(400).json({
         stt: 400,
-        message: "Số lượng sản phẩm trong kho không đủ",
+        message: "Sản phẩm hiện đang hết hàng",
       });
     }
     const productVariantQuantityInCart = await new Promise(

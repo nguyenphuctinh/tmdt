@@ -12,6 +12,7 @@ import { changeNavbar } from "../../redux/slices/navbarSlice.js";
 import UpdatePw from "./UpdatePw.js";
 import Info from "./Info.js";
 import { removeAllItems } from "../../redux/slices/cartSlice.js";
+import Orders from "./Orders.js";
 export default function Account() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,10 +43,13 @@ export default function Account() {
           <p>
             <Link to="/account?tab=info"> Cập nhật thông tin</Link>
           </p>
+
           <p>
             <Link to="/account?tab=security"> Đổi mật khẩu</Link>
           </p>
-
+          <p>
+            <Link to="/account?tab=orders"> Đơn hàng của bạn</Link>
+          </p>
           <button
             type="button"
             className="btn btn-warning"
@@ -59,8 +63,14 @@ export default function Account() {
             Đăng xuất
           </button>
         </div>
-        <div style={{ minHeight: "100vh" }} className="col-9">
-          {tab === "security" ? <UpdatePw /> : tab === "info" ? <Info /> : ""}
+        <div style={{ minHeight: "100vh" }} className="col-sm-9">
+          {tab === "security" ? (
+            <UpdatePw />
+          ) : tab === "info" ? (
+            <Info />
+          ) : (
+            <Orders />
+          )}
         </div>
       </div>
     </div>
