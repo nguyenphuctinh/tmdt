@@ -379,3 +379,6 @@ input:focus {
 .cart .remove{
   cursor: pointer;
 }
+.cart .emptyCart{
+  width: 100%;
+}

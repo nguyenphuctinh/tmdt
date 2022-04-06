@@ -111,6 +111,9 @@ const cartSlice = createSlice({
         state.data.cartItems = [...cartItems];
       }
     },
+    removeAllItems: (state, action) => {
+      state.data.cartItems = [];
+    },
   },
   extraReducers: {
     [fetchCart.pending]: (state) => {
@@ -128,7 +131,12 @@ const cartSlice = createSlice({
   },
 });
 const { reducer } = cartSlice;
-export const { increaseQuantity, decreaseQuantity, removeItem, addItem } =
-  cartSlice.actions;
+export const {
+  increaseQuantity,
+  decreaseQuantity,
+  removeItem,
+  addItem,
+  removeAllItems,
+} = cartSlice.actions;
 
 export default reducer;

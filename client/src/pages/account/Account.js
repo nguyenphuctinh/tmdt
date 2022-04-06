@@ -11,6 +11,7 @@ import {
 import { changeNavbar } from "../../redux/slices/navbarSlice.js";
 import UpdatePw from "./UpdatePw.js";
 import Info from "./Info.js";
+import { removeAllItems } from "../../redux/slices/cartSlice.js";
 export default function Account() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,6 +51,8 @@ export default function Account() {
             className="btn btn-warning"
             onClick={() => {
               dispatch(logoutAction());
+              dispatch(removeAllItems());
+
               localStorage.removeItem("token");
             }}
           >
