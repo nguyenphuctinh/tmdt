@@ -9,14 +9,15 @@ const router = express.Router();
 
 router.post("/", (req, res) => {
   let body = req.body;
+  console.log(JSON.stringify(body));
 
   // Checks this is an event from a page subscription
   if (body.object === "page") {
     // Iterates over each entry - there may be multiple if batched
+
     body.entry.forEach(function (entry) {
       // Gets the body of the webhook event
       let webhook_event = entry.messaging[0];
-      console.log("event message: " + webhook_event.message);
 
       // Get the sender PSID
       let sender_psid = webhook_event.sender.id;

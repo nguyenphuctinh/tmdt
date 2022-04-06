@@ -33,7 +33,9 @@ function App() {
   const products = useSelector((state) => state.products);
   console.log(user);
   useEffect(() => {
-    document.title = "TopZone - Cửa hàng Apple chính hãng";
+    document.title =
+      " Cửa hàng điện thoại, máy tính, máy tính bảng, đồng hô chính hãng";
+
     setRendered(true);
     dispatch(fetchProduct());
     dispatch(fetchUser());

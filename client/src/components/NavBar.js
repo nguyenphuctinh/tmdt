@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import logo from "../assets/images/logo.png";
+import logo from "../assets/images/shop.jpg";
 import { useNavigate } from "react-router-dom";
 
 function NavBar() {

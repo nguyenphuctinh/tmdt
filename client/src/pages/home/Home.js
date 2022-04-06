@@ -30,7 +30,8 @@ function Home() {
     setTablets(
       products.data.filter((item) => item.category === "tablet").slice(0, 8)
     );
-    document.title = "TopZone - Cửa hàng Apple chính hãng";
+    document.title =
+      " Cửa hàng điện thoại, máy tính, máy tính bảng, đồng hô chính hãng";
   }, [dispatch, products]);
   return (
     <div className="App home">
