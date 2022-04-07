@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/", (req, res) => {
   let body = req.body;
-  console.log(JSON.stringify(body));
+  // console.log(JSON.stringify(body));
 
   // Checks this is an event from a page subscription
   if (body.object === "page") {
@@ -145,7 +145,7 @@ async function handlePostback(sender_psid, received_postback) {
     };
   }
   // console.log(response.attachment.payload.elements);
-  callSendAPI(sender_psid, response);
+  await callSendAPI(sender_psid, response);
 }
 async function handleMessage(sender_psid, received_message) {
   try {
@@ -159,9 +159,10 @@ async function handleMessage(sender_psid, received_message) {
       var wit = await client.message(msg);
       const intents = wit.intents.map((intent) => intent["name"]);
       var reply = null;
+      console.log(JSON.stringify(wit));
       if (intents.includes("see_product_list")) {
         const products = await getAllProducts();
-        callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
+        await callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
         if (wit.entities["product:name"]) {
           const names = wit.entities["product:name"];
           reply = await productTemplateList(
@@ -184,15 +185,15 @@ async function handleMessage(sender_psid, received_message) {
           }
         }
         if (!reply || reply.attachment.payload.elements.length === 0) {
-          callSendAPI(sender_psid, {
+          await callSendAPI(sender_psid, {
             text: "Xin lỗi bạn, hiện tại không có sản phẩm nào thuộc danh mục này",
           });
         } else {
           console.log(reply);
-          callSendAPI(sender_psid, { ...reply });
+          await callSendAPI(sender_psid, { ...reply });
         }
       } else if (intents.includes("see_other_products")) {
-        callSendAPI(sender_psid, {
+        await callSendAPI(sender_psid, {
           text: "Bạn cho mình thêm thông tin để mình tìm sản phẩm cụ thể hơn (VD: loại sản phẩm, khoảng giá, màu sắc...)",
         });
       } else {
@@ -213,10 +214,9 @@ async function handleMessage(sender_psid, received_message) {
           }
         }
         if (!res) {
-          res =
-            "Bạn có thể liên hệ qua sdt chăm sóc kh 0239872001 để được hỗ trợ nhé!";
+          res = "Bạn có thể liên hệ qua sdt chăm sóc kh để được hỗ trợ nhé!";
         }
-        callSendAPI(sender_psid, {
+        await callSendAPI(sender_psid, {
           text: res,
         });
       }
@@ -228,27 +228,31 @@ async function handleMessage(sender_psid, received_message) {
 }
 
 function callSendAPI(sender_psid, response) {
-  let request_body = {
-    recipient: {
-      id: sender_psid,
-    },
-    message: response,
-  };
-  request(
-    {
-      uri: "https://graph.facebook.com/v2.6/me/messages",
-      qs: { access_token: process.env.FACEBOOK_PAGE_ACCESS_TOKEN },
-      method: "POST",
-      json: request_body,
-    },
-    (err, res, body) => {
-      if (!err) {
-        console.log("message sent!");
-      } else {
-        console.error("Unable to send message:" + err);
+  return new Promise((resolve, reject) => {
+    let request_body = {
+      recipient: {
+        id: sender_psid,
+      },
+      message: response,
+    };
+    request(
+      {
+        uri: "https://graph.facebook.com/v2.6/me/messages",
+        qs: { access_token: process.env.FACEBOOK_PAGE_ACCESS_TOKEN },
+        method: "POST",
+        json: request_body,
+      },
+      (err, res, body) => {
+        if (!err) {
+          resolve();
+          console.log("message sent!");
+        } else {
+          reject();
+          console.error("Unable to send message:" + err);
+        }
       }
-    }
-  );
+    );
+  });
 }
 router.get("/", (req, res) => {
   // Your verify token. Should be a random string.
