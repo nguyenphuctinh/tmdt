@@ -142,7 +142,6 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
             required
             error={phoneError === "" ? false : true}
             onBlur={() => {
-              console.log(phone);
               if (!isPhoneNumber(phone)) {
                 setPhoneError("Số điện thoại không hợp lệ");
               } else setPhoneError("");

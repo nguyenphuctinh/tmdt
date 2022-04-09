@@ -3,6 +3,7 @@ import authenToken from "../middlewares/authenToken.js";
 import con from "../../config/connection.js";
 import passwordHash from "password-hash";
 import authenAdminToken from "../middlewares/authenAdminToken.js";
+import isPhoneNumber from "../validations/isPhoneNumber.js";
 const router = express.Router();
 router.get("/", authenToken, (req, res) => {
   con.query("SELECT * FROM user", function (err, result) {
@@ -12,6 +13,12 @@ router.get("/", authenToken, (req, res) => {
 });
 router.post("/", async (req, res) => {
   if (req.body.type === "anonymous") {
+    if (!isPhoneNumber(req.body.phone)) {
+      return res.status(400).json({
+        stt: 400,
+        message: "Số điện thoại không hợp lệ",
+      });
+    }
     try {
       await new Promise((resolve, reject) => {
         sql = `INSERT INTO user(first_name, last_name, dob,phone,address, role) VALUES (?,?,?,?,?,?)`;
@@ -136,6 +143,12 @@ router.put("/:id", authenToken, async (req, res) => {
     }
   }
   if (req.body.type === "updateInfo") {
+    if (req.body.phone && !isPhoneNumber(req.body.phone)) {
+      return res.status(400).json({
+        stt: 400,
+        message: "Số điện thoại không hợp lệ",
+      });
+    }
     try {
       await new Promise((resolve, reject) => {
         con.query(
