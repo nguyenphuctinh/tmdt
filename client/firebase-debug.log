@@ -1,0 +1,31 @@
+[debug] [2022-04-09T14:01:04.471Z] ----------------------------------------------------------------------
+[debug] [2022-04-09T14:01:04.472Z] Command:       D:\Apps\NodeJS\node.exe C:\Users\Asus\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2022-04-09T14:01:04.473Z] CLI Version:   9.23.1
+[debug] [2022-04-09T14:01:04.473Z] Platform:      win32
+[debug] [2022-04-09T14:01:04.473Z] Node Version:  v14.16.1
+[debug] [2022-04-09T14:01:04.473Z] Time:          Sat Apr 09 2022 21:01:04 GMT+0700 (Indochina Time)
+[debug] [2022-04-09T14:01:04.473Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-04-09T14:01:04.530Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-04-09T14:01:04.530Z] > authorizing via signed-in user (phuctinh2001@gmail.com)
+[debug] [2022-04-09T14:01:04.530Z] [iam] checking project ttcs-npt for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2022-04-09T14:01:04.533Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/ttcs-npt:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2022-04-09T14:01:05.614Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 09 Apr 2022 14:01:04 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=820","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2022-04-09T14:01:05.615Z] > refreshing access token with scopes: []
+[debug] [2022-04-09T14:01:05.615Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2022-04-09T14:01:05.794Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Sat, 09 Apr 2022 14:01:04 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2022-04-09T14:01:05.816Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ttcs-npt [none]
+[debug] [2022-04-09T14:01:06.236Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ttcs-npt 200
+[debug] [2022-04-09T14:01:06.236Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ttcs-npt {"projectId":"ttcs-npt","projectNumber":"99575860365","displayName":"ttcs","name":"projects/ttcs-npt","resources":{"hostingSite":"ttcs-npt"},"state":"ACTIVE"}
+[info] 
+[info] === Deploying to 'ttcs-npt'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2022-04-09T14:01:06.243Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2022-04-09T14:01:06.243Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2022-04-09T14:01:06.442Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","date":"Sat, 09 Apr 2022 14:01:05 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2022-04-09T14:01:06.461Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/ttcs-npt/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}

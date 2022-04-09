@@ -65,7 +65,7 @@ export default function Login() {
                 type="button"
                 className="btn btn-primary"
               >
-                Submit
+                Đăng nhập
               </button>
               <Link className="text-success" to="/register">
                 Đăng ký

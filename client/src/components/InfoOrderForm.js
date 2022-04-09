@@ -109,6 +109,7 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
         </div>
         <div className="col-12">
           <TextField
+            sx={{ mb: 2 }}
             required
             error={firstNameError === "" ? false : true}
             style={{ width: "100%" }}
@@ -124,6 +125,7 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
             }}
           />
           <TextField
+            sx={{ mb: 2 }}
             style={{ width: "100%" }}
             label="Họ"
             variant="outlined"
@@ -139,6 +141,7 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
             }}
           />
           <TextField
+            sx={{ mb: 2 }}
             required
             error={phoneError === "" ? false : true}
             onBlur={() => {
@@ -153,7 +156,7 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <LocalizationProvider sx={{ mb: 2 }} dateAdapter={AdapterDateFns}>
             <Stack spacing={3}>
               <DatePicker
                 disableFuture
@@ -180,6 +183,7 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
           </LocalizationProvider>
 
           <TextField
+            sx={{ mb: 2 }}
             required
             error={addressError === "" ? false : true}
             helperText={addressError}

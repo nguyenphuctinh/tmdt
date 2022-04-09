@@ -238,7 +238,7 @@ export default function UpdateProduct() {
 
                 <br />
                 <TextField
-                  style={{ width: "100%", marginTop: 30 }}
+                  style={{ width: "100%" }}
                   required
                   error={saleError === "" ? false : true}
                   label="Sale"
@@ -257,7 +257,7 @@ export default function UpdateProduct() {
                     else setSaleError("");
                   }}
                 />
-                <FormControl className="mt-4" fullWidth>
+                <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     Thể loại
                   </InputLabel>

@@ -76,7 +76,7 @@ export default function ProductAdmin() {
         </div>
 
         <div className="col-12 pb-5">
-          <div className="container-fluid">
+          <div className="container-fluid p-0">
             <div className="row">
               <div className="col-12 col-sm-3">
                 <Link to="/admin/product/add">

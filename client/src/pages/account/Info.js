@@ -65,6 +65,7 @@ export default function Info() {
         </div>
         <div className="col-12">
           <TextField
+            sx={{ mb: 2 }}
             required
             error={firstNameError === "" ? false : true}
             style={{ width: "100%" }}
@@ -80,6 +81,7 @@ export default function Info() {
             }}
           />
           <TextField
+            sx={{ mb: 2 }}
             style={{ width: "100%" }}
             label="Họ"
             variant="outlined"
@@ -95,13 +97,14 @@ export default function Info() {
             }}
           />
           <TextField
+            sx={{ mb: 2 }}
             style={{ width: "100%" }}
             label="Số điện thoại"
             variant="outlined"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <LocalizationProvider sx={{ mb: 2 }} dateAdapter={AdapterDateFns}>
             <Stack spacing={3}>
               <DatePicker
                 disableFuture
@@ -129,6 +132,7 @@ export default function Info() {
           </LocalizationProvider>
 
           <TextField
+            sx={{ mb: 2 }}
             style={{ width: "100%" }}
             label="Địa chỉ"
             variant="outlined"
