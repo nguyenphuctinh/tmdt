@@ -9,6 +9,8 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { authorization } from "../auth/auth";
 import { removeAllItems } from "../redux/slices/cartSlice";
+import isNumber from "../helpers/isNumber";
+import isPhoneNumber from "../helpers/isPhoneNumber";
 
 export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
   const user = useSelector((state) => state.user);
@@ -27,8 +29,15 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
   const [addressError, setAddressError] = useState("");
   const onHandleClick = async () => {
     console.log(firstNameError, lastNameError, dobError);
-    if (!firstName || !lastName || dobError !== "" || !phone || !address) {
-      console.log(!firstName, !lastName, dobError !== "", !phone, !address);
+    if (
+      !firstName ||
+      !lastName ||
+      dobError !== "" ||
+      !phone ||
+      !isNumber(phone) ||
+      !address ||
+      !isPhoneNumber(phone)
+    ) {
       toast.error("Vui lòng nhập đầy đủ và chính xác thông tin");
       return;
     }
@@ -133,8 +142,10 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
             required
             error={phoneError === "" ? false : true}
             onBlur={() => {
-              if (phone.length === 0) setPhoneError("Không được để trống");
-              else setPhoneError("");
+              console.log(phone);
+              if (!isPhoneNumber(phone)) {
+                setPhoneError("Số điện thoại không hợp lệ");
+              } else setPhoneError("");
             }}
             style={{ width: "100%" }}
             label="Số điện thoại"

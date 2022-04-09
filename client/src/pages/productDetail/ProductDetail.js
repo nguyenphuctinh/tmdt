@@ -138,9 +138,10 @@ export default function ProductDetail() {
               }}
             ></div>
             <div
+              className="orderFormContainer"
               style={{
                 position: "fixed",
-                width: "50%",
+
                 left: "50%",
                 overflowY: "auto",
                 height: "400px",

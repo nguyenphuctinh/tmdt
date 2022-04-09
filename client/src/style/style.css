@@ -4,8 +4,8 @@ body {
   overflow-y: scroll;
   
 }
-.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-  margin-bottom: 1rem;
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  margin-bottom: 1rem!important;
 }
 
 .grid {
@@ -335,6 +335,9 @@ input:focus {
 }
 .updatePw,.updateInfo {
   min-height: 100vh;
+}
+.orderFormContainer{
+  width:50%;
 }
 .infoForm{
   background-color: white;

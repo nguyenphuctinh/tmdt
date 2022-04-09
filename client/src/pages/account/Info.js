@@ -8,6 +8,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { authorization } from "../../auth/auth";
+import isPhoneNumber from "../../helpers/isPhoneNumber";
 
 export default function Info() {
   const user = useSelector((state) => state.user);
@@ -23,6 +24,10 @@ export default function Info() {
     console.log(firstNameError, lastNameError, dobError);
     if (!firstName || !lastName || dobError !== "") {
       toast.error("Vui lòng nhập đầy đủ và chính xác thông tin");
+      return;
+    }
+    if (phone && !isPhoneNumber(phone)) {
+      toast.error("Số điện thoại không hợp lệ");
       return;
     }
     console.log(firstName, lastName, phone, typeof dob, address);

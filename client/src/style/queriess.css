@@ -30,7 +30,7 @@
     font-size: 13px;
   }
   .space {
-    padding-top: 4rem;
+    padding-top: 4.5rem;
   }
   .addtocart,
   .installment {
@@ -43,6 +43,9 @@
     font-size: 0.8rem;
   }
   .updateForm {
+    width: 75%;
+  }
+  .orderFormContainer{
     width: 75%;
   }
 }
@@ -60,6 +63,9 @@
   }
   .product .productPrice--sale {
     font-size: 0.8rem;
+  }
+  .orderFormContainer {
+    width: 75%;
   }
 }
 

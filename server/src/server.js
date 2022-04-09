@@ -40,7 +40,7 @@ app.post("/login", async (req, res) => {
     if (user.length === 0) {
       return res
         .status(401)
-        .json({ message: "Sai tên đăng nhập hoặc mật khẩu!" });
+        .json({ message: "Tài khoản hoặc mật khẩu không chính xác!" });
     }
 
     if (passwordHash.verify(req.body.password, user[0].password)) {

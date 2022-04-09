@@ -37,7 +37,7 @@ function Home() {
     <div className="App home">
       <div className="container-fluid ">
         <div className="row p-0">
-          {/* <div className="p-0 col-12 slider">
+          <div className="p-0 col-12 slider">
             <Carousel
               infiniteLoop={true}
               autoPlay={true}
@@ -48,7 +48,7 @@ function Home() {
               <img src={sliderImg2} alt="" />
               <img src={sliderImg3} alt="" />
             </Carousel>
-          </div> */}
+          </div>
         </div>
       </div>
       {products.data.length > 0 ? (
