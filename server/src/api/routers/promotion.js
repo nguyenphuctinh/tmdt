@@ -14,8 +14,12 @@ router.get("/", async (req, res) => {
         resolve(JSON.parse(JSON.stringify(result)));
       });
     });
-    res.send(rows[0]);
-    console.log(rows);
+    res.send({
+      promotionId: rows[0].promotion_id,
+      promotionName: rows[0].promotion_name,
+      promotionStartTime: rows[0].promotion_start_time,
+      promotionExpTime: rows[0].promotion_exp_time,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -25,12 +29,13 @@ router.get("/", async (req, res) => {
   }
 });
 router.post("/", async (req, res) => {
+  // neu expTime > startTime thi se dien ra
   try {
     await new Promise((resolve, reject) => {
-      const stm = "insert into promotion values(default,?,?,?)";
+      const stm = "insert into promotion values(default,?,?,?,'tmp')";
       con.query(
         stm,
-        ["sale tet", new Date(), addDays(new Date(), 2)],
+        ["sale tet", addDays(new Date(), 2), addDays(new Date(), 4)],
         (err, result) => {
           if (err) {
             console.log(err);

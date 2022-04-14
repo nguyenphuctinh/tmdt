@@ -182,7 +182,8 @@ input:focus {
 }
 
 .promotion__title1 {
-  font-weight: 700;
+text-transform: uppercase;
+font-weight: 700;
   margin-bottom: 0;
 }
 
@@ -409,16 +410,24 @@ input:focus {
 }
 
 
-/* cart */
+/* cart order */
 
-.cart .productName{
+.cart .productName,
+.order .productName
+
+{
   display: inline-block;
   margin: 0;
 }
-.cart .productPrice{
+.cart .productPrice,
+.order .productPrice
+
+{
   font-size: 0.8rem;
 }
-.cart .variantValue{
+.cart .variantValue,
+.order .variantValue
+{
   margin: 0;
   font-size: 0.6rem;
   font-weight: 700;
@@ -443,7 +452,7 @@ input:focus {
   padding: 0.5rem;
   background-color: #f2f2f2;
 }
-.cart .remove{
+.cart .remove,.order .remove{
   cursor: pointer;
 }
 .cart .emptyCart{

@@ -35,6 +35,8 @@ export default function Account() {
                 <Link to="/admin/product">Quản lý sản phẩm</Link>
                 <br />
                 <Link to="/admin/user">Quản lý người dùng</Link>
+                <br />
+                <Link to="/admin/order">Quản lý đơn hàng</Link>
               </>
             ) : (
               ""

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import CartTable from "./CartTable";
+import ProductTable from "../../components/ProductTable";
 import { useSelector, useDispatch } from "react-redux";
 import OrderForm from "./OrderForm";
 import emptyCartImg from "../../assets/images/empty-cart.png";
@@ -20,7 +20,8 @@ export default function Cart() {
               <h1>Giỏ hàng của bạn</h1>
             </div>
             <div className="col-lg-9">
-              <CartTable
+              <ProductTable
+                type="cart"
                 rows={[...cart.data.cartItems]}
                 userId={cart.data.userId}
               />

@@ -21,13 +21,13 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { dict } from "../../helpers/dict";
+import { dict } from "../helpers/dict.js";
 import axios from "axios";
 import {
   decreaseQuantity,
   increaseQuantity,
   removeItem,
-} from "../../redux/slices/cartSlice";
+} from "../redux/slices/cartSlice";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -97,7 +97,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function CartTable({ rows, userId }) {
+export default function ProductTable({ rows, userId, type }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -233,25 +233,36 @@ export default function CartTable({ rows, userId }) {
                   <div style={{ width: "100%" }}>
                     <div className="d-flex">
                       <div className="d-flex">
-                        <button
-                          onClick={() =>
-                            onHandleDecrease(row.productVariantId, row.quantity)
-                          }
-                          className="quantity__increase d-flex align-items-center"
-                        >
-                          -
-                        </button>
+                        {type === "cart" && (
+                          <button
+                            onClick={() =>
+                              onHandleDecrease(
+                                row.productVariantId,
+                                row.quantity
+                              )
+                            }
+                            className="quantity__increase d-flex align-items-center"
+                          >
+                            -
+                          </button>
+                        )}
+
                         <div className="quantity__value d-flex align-items-center">
                           {row.quantity}
                         </div>
-                        <button
-                          onClick={() =>
-                            onHandleIncrease(row.productVariantId, row.quantity)
-                          }
-                          className="quantity__decrease d-flex align-items-center"
-                        >
-                          +
-                        </button>
+                        {type === "cart" && (
+                          <button
+                            onClick={() =>
+                              onHandleIncrease(
+                                row.productVariantId,
+                                row.quantity
+                              )
+                            }
+                            className="quantity__decrease d-flex align-items-center"
+                          >
+                            +
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -267,13 +278,15 @@ export default function CartTable({ rows, userId }) {
                   </p>
                 </TableCell>
                 <TableCell style={{ width: 100 }} align="center">
-                  <div
-                    onClick={() => handleRemove(row.productVariantId)}
-                    className="remove"
-                  >
-                    {" "}
-                    <DeleteForeverOutlinedIcon />
-                  </div>
+                  {type === "cart" && (
+                    <div
+                      onClick={() => handleRemove(row.productVariantId)}
+                      className="remove"
+                    >
+                      {" "}
+                      <DeleteForeverOutlinedIcon />
+                    </div>
+                  )}
                 </TableCell>
               </TableRow>
             );

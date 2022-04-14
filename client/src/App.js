@@ -25,6 +25,8 @@ import Search from "./pages/search/Search";
 import { fetchUser } from "./redux/slices/userSlice";
 import { fetchCart, setCart } from "./redux/slices/cartSlice";
 import Cart from "./pages/cart/Cart";
+import { fetchPromotion } from "./redux/slices/promotionSlice";
+import OrderAdmin from "./pages/admin/order/OrderAdmin";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -39,6 +41,7 @@ function App() {
     setRendered(true);
     dispatch(fetchProduct());
     dispatch(fetchUser());
+    dispatch(fetchPromotion());
   }, [dispatch]);
   useEffect(() => {
     if (user.data) {
@@ -100,6 +103,16 @@ function App() {
               element={
                 user.data && user.data.role === "admin" ? (
                   <ProductAdmin />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            ></Route>
+            <Route
+              path="/admin/order"
+              element={
+                user.data && user.data.role === "admin" ? (
+                  <OrderAdmin />
                 ) : (
                   <Navigate to="/" />
                 )

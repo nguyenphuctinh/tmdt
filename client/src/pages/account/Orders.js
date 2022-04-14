@@ -3,9 +3,11 @@ import { Box } from "@mui/system";
 // import React from "react";
 import * as React from "react";
 import OrderList from "./OrderList";
-export default function Orders() {
+export default function Orders({ type }) {
   const [value, setValue] = React.useState(0);
+  const [tab, setTab] = React.useState("tất cả");
   const handleChange = (e, newValue) => {
+    setTab(e.target.innerText);
     setValue(newValue);
   };
   return (
@@ -27,7 +29,9 @@ export default function Orders() {
         </Tabs>
       </div>
       <div className="row">
-        <div className="col-12">{value === 0 ? <OrderList /> : ""}</div>
+        <div className="col-12">
+          <OrderList type={type} tab={tab} />
+        </div>
       </div>
     </div>
   );
