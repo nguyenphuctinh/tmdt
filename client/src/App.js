@@ -54,8 +54,8 @@ function App() {
   }, [user]);
   return (
     <>
-      {user.loading || products.loading || !rendered ? (
-        <Loading />
+      {user.loading || !rendered ? (
+        ""
       ) : (
         <Router>
           <ScrollToTop />

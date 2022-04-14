@@ -213,16 +213,21 @@ export default function ProductDetail() {
                           <span key={value}>
                             <div
                               onClick={() => {
-                                setImgLoaded(false);
-                                setChanged(true);
-                                setSelectedProductVariant(
-                                  findProductVariant(
-                                    product.productVariants,
-                                    variantNames,
-                                    selectedProductVariant,
-                                    { [variantName]: value }
-                                  )
-                                );
+                                if (
+                                  selectedProductVariant &&
+                                  selectedProductVariant[variantName] !== value
+                                ) {
+                                  setImgLoaded(false);
+                                  setChanged(true);
+                                  setSelectedProductVariant(
+                                    findProductVariant(
+                                      product.productVariants,
+                                      variantNames,
+                                      selectedProductVariant,
+                                      { [variantName]: value }
+                                    )
+                                  );
+                                }
                               }}
                               className={`option ${
                                 selectedProductVariant &&

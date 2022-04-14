@@ -3,11 +3,13 @@ import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
 import { useSelector } from "react-redux";
+
 import { Carousel } from "react-responsive-carousel";
 import sliderImg1 from "../../assets/images/top-mac-2880-800-1920x533-2.png";
 import sliderImg2 from "../../assets/images/2880-800-1920x533-2.png";
 import sliderImg3 from "../../assets/images/2880-800-1920x533-6.png";
 import Product from "../../components/Product";
+import Promotion from "./Promotion";
 function Home() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
@@ -50,7 +52,11 @@ function Home() {
             </Carousel>
           </div>
         </div>
+        <div className="row">
+          <Promotion />
+        </div>
       </div>
+
       {products.data.length > 0 ? (
         <div className="container pb-4">
           <div className="row p-0">

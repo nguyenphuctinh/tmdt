@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./api/routers/user.js";
 import productRouter from "./api/routers/product.js";
+import promotionRouter from "./api/routers/promotion.js";
 import cartRouter from "./api/routers/cart.js";
 import orderRouter from "./api/routers/order.js";
 import webhookRouter from "./api/routers/webhook.js";
@@ -98,6 +99,7 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/carts", cartRouter);
+app.use("/api/promotions", promotionRouter);
 app.use("/webhook", webhookRouter);
 
 const port = process.env.PORT || 8080;
