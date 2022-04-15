@@ -458,3 +458,8 @@ font-weight: 700;
 .cart .emptyCart{
   width: 100%;
 }
+
+.addPromotion .productList{
+  height: 300px;
+  overflow-y: scroll;
+}

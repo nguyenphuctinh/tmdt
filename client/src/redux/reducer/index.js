@@ -12,7 +12,7 @@ const allReducers = combineReducers({
   navbar: navbarSlice,
   loading: loadingSlice,
   cart: cartSlice,
-  promotion: promotionSlice,
+  promotions: promotionSlice,
   order: orderSlice,
 });
 export default allReducers;

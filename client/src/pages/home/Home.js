@@ -13,6 +13,8 @@ import Promotion from "./Promotion";
 function Home() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
+  const promotions = useSelector((state) => state.promotions);
+
   const [phones, setPhones] = useState([]);
   const [laptops, setLaptops] = useState([]);
   const [tablets, setTablets] = useState([]);
@@ -53,7 +55,10 @@ function Home() {
           </div>
         </div>
         <div className="row">
-          <Promotion />
+          {promotions.data &&
+            promotions.data.map((promotion) => (
+              <Promotion promotion={promotion} />
+            ))}
         </div>
       </div>
 

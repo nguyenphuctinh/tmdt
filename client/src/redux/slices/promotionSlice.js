@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authorization } from "../../auth/auth";
 import axios from "axios";
 export const fetchPromotion = createAsyncThunk(
-  "promotion/fetchPromotion",
+  "promotion/fetchPromotions",
   async () => {
-    const promotion = await new Promise(async (resolve, reject) => {
+    const promotions = await new Promise(async (resolve, reject) => {
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/promotions`,
@@ -17,11 +17,11 @@ export const fetchPromotion = createAsyncThunk(
       }
     });
 
-    return promotion;
+    return promotions;
   }
 );
 const promotionSlice = createSlice({
-  name: "promotion",
+  name: "promotions",
   initialState: {
     loading: false,
     data: null,

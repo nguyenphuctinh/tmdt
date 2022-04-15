@@ -224,7 +224,7 @@ export default function AddProduct() {
                   parseFloat(sale) > 1 ||
                   isNumber(sale) === false
                 )
-                  setSaleError("Nhập không đúng định dạng");
+                  setSaleError("Nhập không đúng định dạng (giá trị từ 0-1)");
                 else setSaleError("");
               }}
             />

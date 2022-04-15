@@ -93,6 +93,7 @@ export default function MyTable({
   onHandleDelete,
   setUpdateFromOpened,
   setProductVariantUpdated,
+  setSaledProducts,
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -176,8 +177,7 @@ export default function MyTable({
                   </TableCell>
                 </TableRow>
               );
-            }
-            if (type === "product") {
+            } else {
               return (
                 <TableRow key={row.productId}>
                   <TableCell component="th" scope="row">
@@ -191,16 +191,30 @@ export default function MyTable({
                     {row.sale}
                   </TableCell>
                   <TableCell style={{ width: 100 }} align="center">
-                    <Link to={`/admin/product/update/${row.productId}`}>
-                      <button type="button" className="btn btn-primary">
-                        Chỉnh sửa
+                    {type === "promotion" ? (
+                      <button
+                        onClick={() =>
+                          setSaledProducts(
+                            rows.filter(
+                              (product) => product.productId !== row.productId
+                            )
+                          )
+                        }
+                        type="button"
+                        className="btn btn-primary"
+                      >
+                        Xóa
                       </button>
-                    </Link>
+                    ) : (
+                      <Link to={`/admin/product/update/${row.productId}`}>
+                        <button type="button" className="btn btn-primary">
+                          Chỉnh sửa
+                        </button>
+                      </Link>
+                    )}
                   </TableCell>
                 </TableRow>
               );
-            } else {
-              return "";
             }
           })}
           {emptyRows > 0 && (
