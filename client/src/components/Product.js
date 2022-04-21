@@ -4,8 +4,12 @@ import { Link } from "react-router-dom";
 export default function Product({ product, displayedAt }) {
   return (
     <div
-      className={`col-6 productContainer  ${
-        displayedAt === "home" ? "col-sm-4 col-md-3" : "col-sm-4"
+      className={`productContainer  ${
+        displayedAt === "home"
+          ? "col-6  col-sm-4 col-md-3"
+          : displayedAt === "slider"
+          ? ""
+          : " col-6  col-sm-4"
       } mt-5`}
     >
       <Link to={`/product/${product.productName}`}>

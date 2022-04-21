@@ -7,7 +7,9 @@ body {
 .MuiFormControl-root {
   margin-bottom: 1rem!important;
 }
-
+/* .swiper-slide{
+  width: 100px!important;
+} */
 .grid {
   display: grid;
   place-items: center;
@@ -28,6 +30,7 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
   -webkit-appearance: none;
 }
+
 a,
 a:hover {
   text-decoration: none;
@@ -140,12 +143,20 @@ input:focus {
   height: 35rem;
   width: 100%;
 }
+.promotion__slider{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
 .promotion__info{
   position: absolute;
   z-index: 1;
   /* color: white; */
   width: 100%;
-  top: 0;
+  top: 2rem;
+  padding: 0 2rem;
   left: 0;
   color: black;
   /* transform: translateY(-50%); */
@@ -154,8 +165,9 @@ input:focus {
 }
 .promotion__name{
   /* margin: 0; */
+  text-align: center;
   text-transform: uppercase;
-  /* font-size: 1.5rem; */
+  font-size: 1.5rem;
   font-weight:300;
 }
 .promotion {

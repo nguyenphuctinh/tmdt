@@ -8,6 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Product from "../../components/Product";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import NotFound from "../notfound/NotFound";
+import Slider from "../home/Slider";
 export default function CategoryPage() {
   const category = useParams().category;
   const dispatch = useDispatch();

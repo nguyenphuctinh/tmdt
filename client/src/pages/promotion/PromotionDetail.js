@@ -47,7 +47,7 @@ export default function PromotionDetail() {
             Kết thúc vào:{" "}
             {new Date(promotion.promotionExpTime).toLocaleDateString()}
           </p>
-          <div className="container">
+          <div className="container ">
             <div className="row">
               {saledProducts.length > 0 &&
                 saledProducts.map((item) => {

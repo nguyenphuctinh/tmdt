@@ -27,6 +27,9 @@
   .orderFormContainer {
     width: 75%;
   }
+  .promotion__name{
+    font-size: 1rem;
+  }
 }
 @media (min-width: 350px) and (max-width: 575.99px) {
   html {

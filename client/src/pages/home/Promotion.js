@@ -3,6 +3,8 @@ import { countdown } from "../../helpers/dateCalculation";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Product from "../../components/Product";
+import Slider from "./Slider";
+
 export default function Promotion({ promotion }) {
   const [days, setDays] = useState();
   const [hours, setHours] = useState();
@@ -86,46 +88,40 @@ export default function Promotion({ promotion }) {
         </div>
       ) : new Date() > new Date(promotion?.promotionStartTime) &&
         new Date() < new Date(promotion?.promotionExpTime) ? (
-        <div className="promotion-wrapper">
-          <img
-            className="promotion__img"
-            src={promotion?.promotionImg}
-            alt=""
-          />
-          <div className="promotion__info d-flex justify-content-between">
-            <p className="promotion__name">{promotion?.promotionName}</p>
-            <div className="d-flex justify-content-center">
-              <div className="d-flex ">
-                <p>
-                  <strong>Kết thúc sau:</strong>
-                </p>
-                <p>{days} ngày</p>
-                <p>{hours} giờ</p>
-                <p>{minutes} phút</p>
-                <p>{seconds} giây</p>
+        <>
+          <div></div>
+          <div className="promotion-wrapper ">
+            <img
+              className="promotion__img"
+              src={promotion?.promotionImg}
+              alt=""
+            />
+            <div className="promotion__info d-flex  flex-column">
+              <p className="promotion__name">{promotion?.promotionName}</p>
+              <div className="d-flex justify-content-center">
+                <div className="d-flex ">
+                  <p>
+                    <strong>Kết thúc sau:</strong>
+                  </p>
+                  <p>{days} ngày</p>
+                  <p>{hours} giờ</p>
+                  <p>{minutes} phút</p>
+                  <p>{seconds} giây</p>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="container">
-            <div className="row">
-              {saledProducts.length > 0 &&
-                saledProducts.map((item) => {
-                  return (
-                    // <h1>clgt</h1>
-                    <Product
-                      displayedAt="home"
-                      key={item.productId}
-                      product={item}
-                    />
-                  );
-                })}
+            <div className="container-fluid promotion__slider ">
+              <div className="row">
+                <div className="col-12">
+                  <Slider saledProducts={saledProducts} />
+                </div>
+              </div>
+            </div>
+            <div className="promotion__btn myBtn">
+              <Link to={`/promotion/${promotion.promotionId}`}> Chi tiết</Link>
             </div>
           </div>
-          <div className="promotion__btn myBtn">
-            <Link to={`/promotion/${promotion.promotionId}`}> Chi tiết</Link>
-          </div>
-        </div>
+        </>
       ) : (
         ""
       )}
