@@ -1,8 +1,5 @@
 import express from "express";
-import authenToken from "../middlewares/authenToken.js";
 import con from "../../config/connection.js";
-import passwordHash from "password-hash";
-import authenAdminToken from "../middlewares/authenAdminToken.js";
 const router = express.Router();
 router.get("/:userId", async (req, res) => {
   try {
@@ -34,6 +31,24 @@ router.get("/:userId", async (req, res) => {
           const products = JSON.parse(JSON.stringify(result));
           resolve(products[0]);
         });
+      });
+      const productInPromotion = await new Promise((resolve, reject) => {
+        const stm = `select * from promotion_product
+                join promotion 
+                on promotion.promotion_id = promotion_product.promotion_id
+                where product_id = ? and promotion_start_time <= ? and promotion_exp_time >=?
+      `;
+        con.query(
+          stm,
+          [product.product_id, new Date(), new Date()],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve(JSON.parse(JSON.stringify(result)));
+          }
+        );
       });
       const variantValues = await new Promise((resolve, reject) => {
         const stm = `SELECT variant_name as variantName, value FROM product_detail
@@ -83,7 +98,10 @@ router.get("/:userId", async (req, res) => {
         variantValues: [...variantValues],
         imgSrc: imgLink,
         quantity: item.quantity,
-        sale: product.sale,
+        sale:
+          productInPromotion.length > 0
+            ? productInPromotion[0].sale
+            : product.sale,
         price: productVariant.price,
       });
     }
