@@ -8,7 +8,6 @@ export const fetchUser = createAsyncThunk("user/fecthUser", async () => {
         `${process.env.REACT_APP_API_URL}/auth`,
         authorization()
       );
-      console.log(res.data);
       resolve(res.data);
     } catch (error) {
       reject(null);

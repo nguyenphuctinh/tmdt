@@ -15,15 +15,29 @@ router.get("/", async (req, res) => {
       });
     });
     let data = [];
-    rows.forEach((element) => {
-      data.push({
-        promotionId: element.promotion_id,
-        promotionName: element.promotion_name,
-        promotionStartTime: element.promotion_start_time,
-        promotionExpTime: element.promotion_exp_time,
-        promotionImg: element.img,
+    for (const promotion of rows) {
+      const saledProducts = await new Promise((resolve, reject) => {
+        const stm =
+          "SELECT product_id as productId,sale FROM promotion_product where promotion_id = ?";
+        con.query(stm, [promotion.promotion_id], (err, result) => {
+          if (err) {
+            console.log(err);
+            return reject({ err: "Loi Sql" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        });
       });
-    });
+
+      data.push({
+        promotionId: promotion.promotion_id,
+        promotionName: promotion.promotion_name,
+        promotionStartTime: promotion.promotion_start_time,
+        promotionExpTime: promotion.promotion_exp_time,
+        promotionImg: promotion.img,
+        saledProducts: [...saledProducts],
+      });
+    }
+
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -101,6 +115,7 @@ router.post("/", async (req, res) => {
       );
     });
     for (const product of req.body.saledProducts) {
+      // console.log(product.sale);
       await new Promise((resolve, reject) => {
         const stm = "insert into promotion_product   values(default,?,?,?)";
         con.query(

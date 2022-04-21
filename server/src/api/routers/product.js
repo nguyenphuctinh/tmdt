@@ -362,10 +362,31 @@ export const getAllProducts = async () => {
     );
   });
   for (const [i, product] of products.entries()) {
+    const productInPromotion = await new Promise((resolve, reject) => {
+      const stm = `select * from promotion_product
+                join promotion 
+                on promotion.promotion_id = promotion_product.promotion_id
+                where product_id = ? and promotion_start_time <= ? and promotion_exp_time >=?
+      `;
+      con.query(
+        stm,
+        [product.product_id, new Date(), new Date()],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return reject({ stt: 500, err: "Lỗi truy vấn" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        }
+      );
+    });
     data.push({
       productId: product.product_id,
       productName: product.product_name,
-      sale: product.sale,
+      sale:
+        productInPromotion.length > 0
+          ? productInPromotion[0].sale
+          : product.sale,
       description: product.description,
       category: product.category,
       productVariants: [],
@@ -412,7 +433,7 @@ export const getAllProducts = async () => {
           }
         );
       });
-      let tmp = {}; // object chứa các tên variant và giá trị của nó
+      let tmp = {};
       for (const valueId of valueIds) {
         const variantValue = await new Promise((resolve, reject) => {
           con.query(

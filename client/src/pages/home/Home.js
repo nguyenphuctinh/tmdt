@@ -10,6 +10,7 @@ import sliderImg2 from "../../assets/images/2880-800-1920x533-2.png";
 import sliderImg3 from "../../assets/images/2880-800-1920x533-6.png";
 import Product from "../../components/Product";
 import Promotion from "./Promotion";
+import { fetchPromotion } from "../../redux/slices/promotionSlice";
 function Home() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
@@ -22,6 +23,7 @@ function Home() {
 
   useEffect(() => {
     dispatch(changeNavbar("home"));
+    dispatch(fetchPromotion());
     setWatches(
       products.data.filter((item) => item.category === "watch").slice(0, 8)
     );

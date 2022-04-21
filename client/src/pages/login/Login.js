@@ -41,7 +41,7 @@ export default function Login() {
   }
   return (
     <div className="container w-50">
-      <div class="row ">
+      <div className="row ">
         <div className="col-12 ">
           <div className="">
             <div className="">

@@ -140,6 +140,24 @@ input:focus {
   height: 35rem;
   width: 100%;
 }
+.promotion__info{
+  position: absolute;
+  z-index: 1;
+  /* color: white; */
+  width: 100%;
+  top: 0;
+  left: 0;
+  color: black;
+  /* transform: translateY(-50%); */
+  /* text-align: center; */
+  /* margin: 0; */
+}
+.promotion__name{
+  /* margin: 0; */
+  text-transform: uppercase;
+  /* font-size: 1.5rem; */
+  font-weight:300;
+}
 .promotion {
   z-index: -1;
   color: white;

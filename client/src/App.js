@@ -28,13 +28,13 @@ import Cart from "./pages/cart/Cart";
 import { fetchPromotion } from "./redux/slices/promotionSlice";
 import OrderAdmin from "./pages/admin/order/OrderAdmin";
 import AddPromotion from "./pages/admin/promotion/AddPromotion";
+import PromotionDetail from "./pages/promotion/PromotionDetail";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
   let user = useSelector((state) => state.user);
   let loading = useSelector((state) => state.loading);
   const products = useSelector((state) => state.products);
-  console.log(user);
   useEffect(() => {
     document.title =
       " Cửa hàng điện thoại, máy tính, máy tính bảng, đồng hô chính hãng";
@@ -130,6 +130,10 @@ function App() {
               }
             ></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route
+              path="/promotion/:promotionId"
+              element={<PromotionDetail />}
+            ></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/*" element={<NotFound />}></Route>
           </Routes>

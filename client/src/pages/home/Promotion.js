@@ -1,25 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { countdown } from "../../helpers/dateCalculation";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import Product from "../../components/Product";
 export default function Promotion({ promotion }) {
-  console.log(promotion);
   const [days, setDays] = useState();
   const [hours, setHours] = useState();
   const [minutes, setMinutes] = useState();
   const [seconds, setSeconds] = useState();
+  const [saledProducts, setSaledProducts] = useState([]);
+  const products = useSelector((state) => state.products);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setDays(countdown(promotion?.promotionStartTime).days);
-      setHours(countdown(promotion?.promotionStartTime).hours);
-      setMinutes(countdown(promotion?.promotionStartTime).minutes);
-      setSeconds(countdown(promotion?.promotionStartTime).seconds);
+      if (new Date() < new Date(promotion.promotionStartTime)) {
+        setDays(countdown(promotion?.promotionStartTime).days);
+        setHours(countdown(promotion?.promotionStartTime).hours);
+        setMinutes(countdown(promotion?.promotionStartTime).minutes);
+        setSeconds(countdown(promotion?.promotionStartTime).seconds);
+      } else {
+        setDays(countdown(promotion?.promotionExpTime).days);
+        setHours(countdown(promotion?.promotionExpTime).hours);
+        setMinutes(countdown(promotion?.promotionExpTime).minutes);
+        setSeconds(countdown(promotion?.promotionExpTime).seconds);
+      }
     }, 1000);
 
     return () => {
       clearInterval(intervalId);
     };
   }, [promotion]);
-
+  useEffect(() => {
+    console.log(promotion);
+    if (
+      promotion &&
+      promotion.saledProducts.length > 0 &&
+      products.data.length > 0
+    ) {
+      setSaledProducts([
+        ...promotion.saledProducts.map((saledProduct) => {
+          return {
+            ...products.data.find((product) => {
+              return product.productId === saledProduct.productId;
+            }),
+            sale: saledProduct.sale,
+          };
+        }),
+      ]);
+    }
+  }, [promotion, products.data]);
   return (
     <>
       {new Date() < new Date(promotion?.promotionStartTime) ? (
@@ -51,11 +80,52 @@ export default function Promotion({ promotion }) {
               </p>
             </div>
           </div>
-          <div className="promotion__btn myBtn">Chi tiết</div>
+          <div className="promotion__btn myBtn">
+            <Link to={`/promotion/${promotion.promotionId}`}> Chi tiết</Link>
+          </div>
         </div>
       ) : new Date() > new Date(promotion?.promotionStartTime) &&
         new Date() < new Date(promotion?.promotionExpTime) ? (
-        "dang dien ra do"
+        <div className="promotion-wrapper">
+          <img
+            className="promotion__img"
+            src={promotion?.promotionImg}
+            alt=""
+          />
+          <div className="promotion__info d-flex justify-content-between">
+            <p className="promotion__name">{promotion?.promotionName}</p>
+            <div className="d-flex justify-content-center">
+              <div className="d-flex ">
+                <p>
+                  <strong>Kết thúc sau:</strong>
+                </p>
+                <p>{days} ngày</p>
+                <p>{hours} giờ</p>
+                <p>{minutes} phút</p>
+                <p>{seconds} giây</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="container">
+            <div className="row">
+              {saledProducts.length > 0 &&
+                saledProducts.map((item) => {
+                  return (
+                    // <h1>clgt</h1>
+                    <Product
+                      displayedAt="home"
+                      key={item.productId}
+                      product={item}
+                    />
+                  );
+                })}
+            </div>
+          </div>
+          <div className="promotion__btn myBtn">
+            <Link to={`/promotion/${promotion.promotionId}`}> Chi tiết</Link>
+          </div>
+        </div>
       ) : (
         ""
       )}

@@ -10,13 +10,11 @@ export const fetchPromotion = createAsyncThunk(
           `${process.env.REACT_APP_API_URL}/api/promotions`,
           authorization()
         );
-        console.log(res.data);
         resolve(res.data);
       } catch (error) {
         reject(null);
       }
     });
-
     return promotions;
   }
 );
