@@ -1,6 +1,6 @@
 import React from "react";
-import OrderList from "../../account/OrderList";
-import Orders from "../../account/Orders";
+import OrderList from "../../../components/OrderList";
+import Orders from "../../../components/Orders";
 
 export default function OrderAdmin() {
   return (

@@ -21,7 +21,6 @@ export default function ProductAdmin() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productSearched, setProductSearched] = useState([]);
   useEffect(() => {
-    document.title = "Quản lý sản phẩm";
     setFilteredProducts([...products?.data]);
     setProductSearched([...products?.data]);
   }, [products]);

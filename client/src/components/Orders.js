@@ -2,7 +2,7 @@ import { Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
 // import React from "react";
 import * as React from "react";
-import OrderList from "./OrderList";
+import OrderList from "../components/OrderList";
 export default function Orders({ type }) {
   const [value, setValue] = React.useState(0);
   const [tab, setTab] = React.useState("tất cả");

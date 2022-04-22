@@ -29,6 +29,7 @@ import { fetchPromotion } from "./redux/slices/promotionSlice";
 import OrderAdmin from "./pages/admin/order/OrderAdmin";
 import AddPromotion from "./pages/admin/promotion/AddPromotion";
 import PromotionDetail from "./pages/promotion/PromotionDetail";
+import Admin from "./pages/admin/main/Admin";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ function App() {
   }, [user]);
   return (
     <>
-      {user.loading || !rendered ? (
+      {user.loading || products.loading || !rendered ? (
         <Loading />
       ) : (
         <Router>
@@ -79,6 +80,16 @@ function App() {
               element={user.data ? <Account /> : <Navigate to="/login" />}
             ></Route>
             <Route path="/cart" element={<Cart />}></Route>
+            <Route
+              path="/admin"
+              element={
+                user.data && user.data.role === "admin" ? (
+                  <Admin />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            ></Route>
             <Route
               path="/admin/product/add"
               element={

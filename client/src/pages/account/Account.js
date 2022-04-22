@@ -12,7 +12,7 @@ import { changeNavbar } from "../../redux/slices/navbarSlice.js";
 import UpdatePw from "./UpdatePw.js";
 import Info from "./Info.js";
 import { removeAllItems } from "../../redux/slices/cartSlice.js";
-import Orders from "./Orders.js";
+import Orders from "../../components/Orders.js";
 export default function Account() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,21 +29,6 @@ export default function Account() {
     <div className="container-fluid">
       <div className="row">
         <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-3">
-          <div>
-            {user.data.role === "admin" ? (
-              <>
-                <Link to="/admin/product">Quản lý sản phẩm</Link>
-                <br />
-                <Link to="/admin/user">Quản lý người dùng</Link>
-                <br />
-                <Link to="/admin/order">Quản lý đơn hàng</Link>
-                <br />
-                <Link to="/admin/promotion/add">Tạo sự kiện khuyến mại</Link>
-              </>
-            ) : (
-              ""
-            )}
-          </div>
           <p>
             <Link to="/account?tab=info"> Cập nhật thông tin</Link>
           </p>

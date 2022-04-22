@@ -11,6 +11,8 @@ function NavBar() {
   const [finded, setFinded] = useState(false);
   const navigate = useNavigate();
   const inputEl = useRef(null);
+  let user = useSelector((state) => state.user);
+
   useEffect(() => {
     if (finding && inputEl.current) inputEl.current.focus();
     if (!finding) inputEl.current.value = "";
@@ -67,14 +69,14 @@ function NavBar() {
             className="main justify-content-center"
           >
             <ul className="d-flex  justify-content-center">
-              <li
+              {/* <li
                 style={{
                   backgroundColor: navbar.value === "home" ? "#2f3033" : "",
                 }}
                 className="d-flex align-items-center "
               >
                 <Link to="/">Home</Link>
-              </li>
+              </li> */}
 
               <li
                 style={{
@@ -108,6 +110,18 @@ function NavBar() {
               >
                 <Link to="/category/watch">Watch</Link>
               </li>
+              {user.data && user.data.role === "admin" ? (
+                <li
+                  style={{
+                    backgroundColor: navbar.value === "admin" ? "#2f3033" : "",
+                  }}
+                  className="d-flex align-items-center "
+                >
+                  <Link to="/admin">Admin</Link>
+                </li>
+              ) : (
+                ""
+              )}
             </ul>
           </div>
         </div>

@@ -330,5 +330,23 @@ router.get("/:userId", authenToken, async (req, res) => {
     res.status(500).send("Lỗi hệ thống");
   }
 });
-
+router.put("/:orderId", authenAdminToken, async (req, res) => {
+  console.log("oks");
+  try {
+    await new Promise((resolve, reject) => {
+      const stm = "update orders set status=? where order_id=?";
+      con.query(
+        stm,
+        [req.body.status, req.params.orderId],
+        function (err, result) {
+          if (err) {
+            console.log(err);
+            reject({ stt: 500, message: "SQL error" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        }
+      );
+    });
+  } catch (error) {}
+});
 export default router;
