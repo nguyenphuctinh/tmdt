@@ -28,7 +28,6 @@ export const fetchAllOrders = createAsyncThunk(
           `${process.env.REACT_APP_API_URL}/api/orders/management`,
           authorization()
         );
-        console.log(res.data);
         resolve(res.data);
       } catch (error) {
         reject(null);

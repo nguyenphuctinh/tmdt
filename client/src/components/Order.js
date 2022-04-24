@@ -30,7 +30,7 @@ export default function Order({ order, type }) {
           Đơn hàng ngày{" "}
           {new Date(order.orderDate).getDate() +
             "-" +
-            new Date(order.orderDate).getMonth() +
+            (new Date(order.orderDate).getMonth() + 1) +
             "-" +
             new Date(order.orderDate).getFullYear()}
         </h5>

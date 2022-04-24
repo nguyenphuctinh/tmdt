@@ -23,3 +23,15 @@ export function decreaseDays(date, days) {
   result.setDate(result.getDate() - days);
   return result;
 }
+export function increaseMonths(date, months) {
+  var result = new Date(date);
+  result.setMonth(result.getMonth() + months);
+  return result;
+}
+export function getMonthDifference(startDate, endDate) {
+  return (
+    endDate.getMonth() -
+    startDate.getMonth() +
+    12 * (endDate.getFullYear() - startDate.getFullYear())
+  );
+}

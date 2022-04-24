@@ -2,6 +2,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Stack, TextField } from "@mui/material";
+import { addMonths } from "date-fns/esm";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,7 +20,10 @@ import {
   Legend,
   Bar,
 } from "recharts";
-import { decreaseDays } from "../../../helpers/dateCalculation";
+import {
+  decreaseDays,
+  getMonthDifference,
+} from "../../../helpers/dateCalculation";
 import { fetchAllOrders } from "../../../redux/slices/orderSlice";
 export default function Report() {
   const orders = useSelector((state) => state.orders);
@@ -31,18 +35,20 @@ export default function Report() {
   const [startTimeError, setStartTimeError] = useState("");
   const [endTime, setEndTime] = useState(new Date());
   const [endTimeError, setEndTimeError] = useState("");
-  const [dataByDate, setDataByDate] = useState();
+  const [categoryReport, setCategoryReport] = useState();
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
   const data = [
     {
-      name: "Thống kê theo sản phẩm",
-      phone: 4000,
-      laptop: 2400,
-      tablet: 2400,
-      watch: 2400,
+      name: "Tháng 1",
+      revenue: 11111,
+    },
+    {
+      name: "Tháng 2",
+      revenue: 111122,
     },
   ];
   useEffect(() => {
-    setDataByDate([
+    setCategoryReport([
       {
         ...orders.data
           ?.filter((order) => {
@@ -88,10 +94,44 @@ export default function Report() {
             (acc, curr) => {
               return { ...acc, ...curr };
             },
-            { name: "Thống kê theo sản phẩm" }
+            { name: "Số sản phẩm đã bán" }
           ),
       },
     ]);
+    let monthCount = getMonthDifference(new Date(startTime), new Date(endTime));
+    let data = [];
+
+    for (let i = 0; i <= monthCount; i++) {
+      let revenue = orders.data
+        ?.filter((order) => {
+          return (
+            new Date(order.orderDate).getMonth() ==
+              addMonths(startTime, i).getMonth() &&
+            order.orderStatus.toLowerCase() === "đã giao"
+          );
+        })
+        .map((order) => {
+          return order.orderItems.reduce((acc, curr) => {
+            return acc + curr.quantity * curr.price * (1 - curr.sale);
+          }, 0);
+        })
+        .reduce((acc, curr) => {
+          return acc + curr;
+        }, 0);
+      console.log(revenue);
+      data = [
+        ...data,
+        {
+          name: ` ${addMonths(startTime, i).getMonth() + 1}/${addMonths(
+            startTime,
+            i
+          ).getFullYear()}`,
+          revenue: revenue / 1000000,
+        },
+      ];
+    }
+    console.log(data);
+    setMonthlyRevenue(data);
   }, [orders.data, startTime, endTime]);
   return (
     <div>
@@ -99,14 +139,14 @@ export default function Report() {
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-6">
-            <p>Từ ngày</p>
+            <p>Từ</p>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Stack spacing={3}>
                 <DatePicker
                   disableFuture
-                  label="Từ ngày"
+                  label="Từ tháng"
                   openTo="year"
-                  views={["year", "month", "day"]}
+                  views={["year", "month"]}
                   value={startTime}
                   onChange={(newValue) => {
                     if (
@@ -128,14 +168,14 @@ export default function Report() {
             </LocalizationProvider>
           </div>
           <div className="col-md-6">
-            <p>Đến ngày</p>
+            <p>Đến</p>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Stack spacing={3}>
                 <DatePicker
                   disableFuture
-                  label="Đến ngày"
+                  label="Đến tháng"
                   openTo="year"
-                  views={["year", "month", "day"]}
+                  views={["year", "month"]}
                   value={endTime}
                   onChange={(newValue) => {
                     if (
@@ -159,52 +199,61 @@ export default function Report() {
         </div>
       </div>
       {orders && orders.data && (
-        // <AreaChart
-        //   width={730}
-        //   height={250}
-        //   data={orders.data}
-        //   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        // >
-        //   <defs>
-        //     <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-        //       <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-        //       <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-        //     </linearGradient>
-        //     <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-        //       <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-        //       <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-        //     </linearGradient>
-        //   </defs>
-        //   <XAxis dataKey="name" />
-        //   <YAxis />
-        //   <CartesianGrid strokeDasharray="3 3" />
-        //   <Tooltip />
-        //   <Area
-        //     type="monotone"
-        //     dataKey="orderId"
-        //     stroke="#8884d8"
-        //     fillOpacity={1}
-        //     fill="url(#colorUv)"
-        //   />
-        //   {/* <Area
-        //     type="monotone"
-        //     dataKey="pv"
-        //     stroke="#82ca9d"
-        //     fillOpacity={1}
-        //     fill="url(#colorPv)"
-        //   /> */}
-        // </AreaChart>
-        <BarChart width={730} height={250} data={dataByDate}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="phone" fill="#DD6E42" />
-          <Bar dataKey="laptop" fill="#E8DAB2" />
-          <Bar dataKey="tablet" fill="#4F6D7A" />
-          <Bar dataKey="watch" fill="#C0D6DF" />
-        </BarChart>
+        <div>
+          <div className="pb-3">
+            {" "}
+            <AreaChart
+              width={320}
+              height={250}
+              data={monthlyRevenue}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="name" />
+              <YAxis unit={"tr"} />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="revenue"
+                stroke="#8884d8"
+                fillOpacity={1}
+                fill="url(#colorUv)"
+              />
+            </AreaChart>
+          </div>
+          {/* <BarChart width={320} height={250} data={monthlyRevenue}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="phone" fill="#DD6E42" />
+            <Bar dataKey="laptop" fill="#E8DAB2" />
+            <Bar dataKey="tablet" fill="#4F6D7A" />
+            <Bar dataKey="watch" fill="#C0D6DF" />
+          </BarChart> */}
+          <BarChart width={320} height={250} data={categoryReport}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="phone" fill="#DD6E42" />
+            <Bar dataKey="laptop" fill="#E8DAB2" />
+            <Bar dataKey="tablet" fill="#4F6D7A" />
+            <Bar dataKey="watch" fill="#C0D6DF" />
+          </BarChart>
+        </div>
       )}
     </div>
   );

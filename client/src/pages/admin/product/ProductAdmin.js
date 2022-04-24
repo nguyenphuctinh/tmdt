@@ -68,9 +68,9 @@ export default function ProductAdmin() {
   return (
     <div className="container-fluid pb-3 productAdmin">
       <div className="row">
-        <div class="row pt-5 pb-5">
-          <div class="col-sm-12 sessionTitle">
-            <i class="fab fa-apple"></i> <span>Quản lý sản phẩm</span>
+        <div className="row pt-5 pb-5">
+          <div className="col-sm-12 sessionTitle">
+            <i className="fab fa-apple"></i> <span>Quản lý sản phẩm</span>
           </div>
         </div>
 
@@ -79,7 +79,7 @@ export default function ProductAdmin() {
             <div className="row">
               <div className="col-12 col-sm-3">
                 <Link to="/admin/product/add">
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" className="btn btn-primary">
                     Đăng sản phẩm
                   </button>
                 </Link>
