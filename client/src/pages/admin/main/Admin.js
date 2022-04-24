@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeNavbar } from "../../../redux/slices/navbarSlice";
 import ProductAdmin from "../product/ProductAdmin";
 import OrderAdmin from "../order/OrderAdmin";
+import Report from "../report/Report";
+import { fetchAllOrders } from "../../../redux/slices/orderSlice";
 
 export default function Admin() {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ export default function Admin() {
   let [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
   let user = useSelector((state) => state.user);
+
   useEffect(() => {
     dispatch(changeNavbar("admin"));
     document.title = "Quản lý";
@@ -24,6 +27,9 @@ export default function Admin() {
     else navigate("/admin?tab=" + tab);
   }, []);
   useEffect(() => {}, [tab]);
+  useEffect(() => {
+    dispatch(fetchAllOrders());
+  }, []);
   return (
     <div className="container-fluid">
       <div className="row">
@@ -35,6 +41,8 @@ export default function Admin() {
           <Link to="/admin?tab=order">Quản lý đơn hàng</Link>
           <br />
           <Link to="/admin?tab=promotion">Quản lý sự kiện</Link>
+          <br />
+          <Link to="/admin?tab=report">Báo cáo thống kê</Link>
         </div>
         <div style={{ minHeight: "100vh" }} className="col-sm-10 p-0">
           {tab === "product" ? (
@@ -45,6 +53,8 @@ export default function Admin() {
             <OrderAdmin />
           ) : tab === "promotion" ? (
             <div>Quản lý sự kiện</div>
+          ) : tab === "report" ? (
+            <Report />
           ) : (
             <p>Không có trang này</p>
           )}

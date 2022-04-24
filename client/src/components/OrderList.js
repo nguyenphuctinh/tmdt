@@ -4,11 +4,10 @@ import { fetchOrders, fetchAllOrders } from "../redux/slices/orderSlice";
 import Order from "./Order";
 export default function OrderList({ tab, type = "normal" }) {
   const user = useSelector((state) => state.user);
-  const order = useSelector((state) => state.order);
+  const orders = useSelector((state) => state.orders);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(type);
     if (type === "normal") {
       dispatch(fetchOrders(user.data.id));
     } else {
@@ -18,8 +17,8 @@ export default function OrderList({ tab, type = "normal" }) {
 
   return (
     <div className="container-fluid order p-0">
-      {order.data &&
-        order.data
+      {orders.data &&
+        orders.data
           .filter((order) => {
             if (tab.toLowerCase() === "tất cả") {
               return true;
@@ -29,7 +28,7 @@ export default function OrderList({ tab, type = "normal" }) {
           .map((order) => (
             <div key={order.orderId} className="row pb-4">
               <div className="col-12 p-0 ">
-                <Order order={order} />
+                <Order type={type} order={order} />
               </div>
             </div>
           ))}

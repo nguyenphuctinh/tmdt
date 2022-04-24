@@ -10,7 +10,6 @@ export const fetchOrders = createAsyncThunk(
           `${process.env.REACT_APP_API_URL}/api/orders/${userId}`,
           authorization()
         );
-        console.log(res.data);
         resolve(res.data);
       } catch (error) {
         reject(null);
@@ -40,7 +39,7 @@ export const fetchAllOrders = createAsyncThunk(
   }
 );
 const orderSlice = createSlice({
-  name: "promotion",
+  name: "orders",
   initialState: {
     loading: false,
     data: null,

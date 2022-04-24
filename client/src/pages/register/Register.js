@@ -12,6 +12,8 @@ export default function Register() {
   const [usernameError, setUsernameError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastName, setLastName] = useState("");
@@ -19,7 +21,14 @@ export default function Register() {
   const [dob, setDob] = useState(null);
   const [dobError, setDobError] = useState("");
   const register = async () => {
-    if (!username || !password || !firstName || !lastName || dobError !== "") {
+    if (
+      !username ||
+      !password ||
+      !firstName ||
+      !lastName ||
+      dobError !== "" ||
+      confirmPasswordError !== ""
+    ) {
       toast.error("Vui lòng nhập đầy đủ  và chính xác thông tin");
       return;
     }
@@ -44,6 +53,7 @@ export default function Register() {
       setLastName("");
       setUsername("");
       setPassword("");
+      setConfirmPassword("");
       setDob(null);
       toast.success(res.data);
     } catch (error) {
@@ -91,6 +101,22 @@ export default function Register() {
               if (password.length === 0)
                 setPasswordError("Không được để trống");
               else setPasswordError("");
+            }}
+          />
+          <TextField
+            style={{ width: "100%" }}
+            label="Nhập lại mật khẩu"
+            variant="outlined"
+            type={"password"}
+            required
+            error={confirmPasswordError === "" ? false : true}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            helperText={confirmPasswordError}
+            onBlur={() => {
+              if (password !== confirmPassword)
+                setConfirmPasswordError("Mật khẩu không khớp");
+              else setConfirmPasswordError("");
             }}
           />
           <TextField

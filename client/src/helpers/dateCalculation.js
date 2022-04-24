@@ -13,3 +13,13 @@ export function countdown(date) {
     seconds,
   };
 }
+export function increaseDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+export function decreaseDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() - days);
+  return result;
+}

@@ -12,9 +12,6 @@ router.get("/", authenToken, (req, res) => {
   });
 });
 router.post("/", async (req, res) => {
-  if (!req.body.username || !req.body.password) {
-    return res.send("Username and password is required");
-  }
   if (req.body.type === "anonymous") {
     if (!isPhoneNumber(req.body.phone)) {
       return res.status(400).json({
@@ -52,6 +49,9 @@ router.post("/", async (req, res) => {
       res.status(500).send("Lỗi hệ thống");
     }
   } else {
+    if (!req.body.username || !req.body.password) {
+      return res.send("Username and password is required");
+    }
     var sql = "select * from user where username=?";
     try {
       await new Promise((resolve, reject) => {

@@ -13,6 +13,6 @@ const allReducers = combineReducers({
   loading: loadingSlice,
   cart: cartSlice,
   promotions: promotionSlice,
-  order: orderSlice,
+  orders: orderSlice,
 });
 export default allReducers;

@@ -11,6 +11,7 @@ import sortByIntValues from "../../helpers/sortByIntValues";
 import NotFound from "../notfound/NotFound";
 import InfoOrderForm from "../../components/InfoOrderForm";
 import { addItem } from "../../redux/slices/cartSlice";
+import { changeNavbar } from "../../redux/slices/navbarSlice";
 export default function ProductDetail() {
   let user = useSelector((state) => state.user);
   let cart = useSelector((state) => state.cart);
@@ -27,6 +28,7 @@ export default function ProductDetail() {
   const [updateInfoOrderFormOpened, setUpdateInfoOrderFormOpened] =
     useState(false);
   useEffect(() => {
+    dispatch(changeNavbar("others"));
     console.log(productName);
     setProduct(
       products?.data.find((item) => {

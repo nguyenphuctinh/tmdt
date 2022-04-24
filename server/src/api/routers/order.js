@@ -5,6 +5,9 @@ import passwordHash from "password-hash";
 import authenAdminToken from "../middlewares/authenAdminToken.js";
 const router = express.Router();
 router.post("/", async (req, res) => {
+  if (!req.body.userId) {
+    return res.status(400).send("userId is required");
+  }
   try {
     for (const productVariant of req.body.productVariants) {
       const quantityInStock = await new Promise((resolve, reject) => {
@@ -135,6 +138,18 @@ router.get("/management", authenAdminToken, async (req, res) => {
       });
     });
     for (const [i, order] of orders.entries()) {
+      const user = await new Promise((resolve, reject) => {
+        const stm =
+          "select id as userId, first_name as firstName, last_name as lastName, dob, phone, address from user where id=?";
+        con.query(stm, [order.user_id], function (err, result) {
+          if (err) {
+            console.log(err);
+            reject({ stt: 500, message: "SQL error" });
+          }
+          resolve(JSON.parse(JSON.stringify(result)));
+        });
+      });
+      console.log(user);
       const rows = await new Promise((resolve, reject) => {
         const stm = "select * from order_item where order_id=?";
         con.query(stm, [order.order_id], function (err, result) {
@@ -146,6 +161,7 @@ router.get("/management", authenAdminToken, async (req, res) => {
         });
       });
       data.push({
+        user: user[0],
         orderId: order.order_id,
         orderDate: order.order_date,
         orderStatus: order.status,

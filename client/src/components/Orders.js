@@ -25,7 +25,6 @@ export default function Orders({ type }) {
           <Tab label="Chờ lấy hàng" />
           <Tab label="Đang giao" />
           <Tab label="Đã giao" />
-          <Tab label="Đã hủy" />
         </Tabs>
       </div>
       <div className="row">
