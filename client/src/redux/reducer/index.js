@@ -6,6 +6,7 @@ import productSlice from "../slices/productSlice";
 import cartSlice from "../slices/cartSlice";
 import promotionSlice from "../slices/promotionSlice";
 import orderSlice from "../slices/orderSlice";
+import userListSlice from "../slices/userListSlice";
 const allReducers = combineReducers({
   user: userSlice,
   products: productSlice,
@@ -14,5 +15,6 @@ const allReducers = combineReducers({
   cart: cartSlice,
   promotions: promotionSlice,
   orders: orderSlice,
+  users: userListSlice,
 });
 export default allReducers;

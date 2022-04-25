@@ -6,10 +6,13 @@ import authenAdminToken from "../middlewares/authenAdminToken.js";
 import isPhoneNumber from "../validations/isPhoneNumber.js";
 const router = express.Router();
 router.get("/", authenToken, (req, res) => {
-  con.query("SELECT * FROM user", function (err, result) {
-    if (err) return res.send("Error");
-    res.send(result);
-  });
+  con.query(
+    "SELECT id,username, first_name as firstName, last_name as lastName, dob, phone, address, role FROM user",
+    function (err, result) {
+      if (err) return res.send("Error");
+      res.send(result);
+    }
+  );
 });
 router.post("/", async (req, res) => {
   if (req.body.type === "anonymous") {
@@ -180,5 +183,21 @@ router.put("/:id", authenToken, async (req, res) => {
     }
   }
 });
-
+router.put("/management/:id", authenAdminToken, async (req, res) => {
+  try {
+    await new Promise((resolve, reject) => {
+      const stm = "update user set role = ? where id = ?";
+      con.query(stm, [req.body.role, req.params.id], (err, result) => {
+        if (err) {
+          return reject({ stt: 500, err: "Lỗi truy vấn" });
+        }
+        resolve();
+      });
+    });
+    res.send("Cập nhật thành công!");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("error");
+  }
+});
 export default router;

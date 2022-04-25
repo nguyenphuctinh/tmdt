@@ -118,7 +118,6 @@ export default function Report() {
         .reduce((acc, curr) => {
           return acc + curr;
         }, 0);
-      console.log(revenue);
       data = [
         ...data,
         {
@@ -130,7 +129,6 @@ export default function Report() {
         },
       ];
     }
-    console.log(data);
     setMonthlyRevenue(data);
   }, [orders.data, startTime, endTime]);
   return (
