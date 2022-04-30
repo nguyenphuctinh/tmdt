@@ -36,10 +36,11 @@ export default function Prize() {
       const tmpPrize = prizes.data.find(
         (prize) => prize.prizeName === prizeName
       );
+      console.log(tmpPrize);
       axios.post(`${process.env.REACT_APP_API_URL}/api/prizesUsers`, {
         prizeId: tmpPrize.prizeId,
         userId: user.data.id,
-        state: tmpPrize.type === "discount" ? "chưa sử dụng" : "chờ xử lý",
+        state: tmpPrize.prizeType === "discount" ? "chưa sử dụng" : "chờ xử lý",
       });
     } catch (error) {
       console.log(error);

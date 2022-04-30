@@ -143,7 +143,7 @@ export default function Prize() {
               {prizesUser.data?.map((prizeUser) => (
                 <tr key={prizeUser.prizeUserId}>
                   <th scope="row">
-                    {generateEntityId("PU", prizeUser.prizeId)}
+                    {generateEntityId("PU", prizeUser.prizeUserId)}
                   </th>
                   <td>{generateEntityId("U", prizeUser.userId)}</td>
                   <td>
@@ -153,24 +153,31 @@ export default function Prize() {
                       : prizeUser.prizeName}
                   </td>
                   <td>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Trạng thái
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={prizeUser.state}
-                        label="Thể loại"
-                        onChange={(e) => {
-                          handleUpdateState(e.target.value, prizeUser.prizeId);
-                        }}
-                      >
-                        <MenuItem value="chờ xử lý">Chờ xử lý</MenuItem>
-                        <MenuItem value="đang giao">Đang giao</MenuItem>
-                        <MenuItem value="đã giao">Đã giao</MenuItem>
-                      </Select>
-                    </FormControl>
+                    {prizeUser.prizeType === "discount" ? (
+                      <p>{prizeUser.state}</p>
+                    ) : (
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Trạng thái
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={prizeUser.state}
+                          label="Thể loại"
+                          onChange={(e) => {
+                            handleUpdateState(
+                              e.target.value,
+                              prizeUser.prizeId
+                            );
+                          }}
+                        >
+                          <MenuItem value="chờ xử lý">Chờ xử lý</MenuItem>
+                          <MenuItem value="đang giao">Đang giao</MenuItem>
+                          <MenuItem value="đã giao">Đã giao</MenuItem>
+                        </Select>
+                      </FormControl>
+                    )}
                   </td>
                 </tr>
               ))}
