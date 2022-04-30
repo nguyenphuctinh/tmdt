@@ -19,6 +19,24 @@ export const fetchPrizesUserById = createAsyncThunk(
     return prizesUser;
   }
 );
+export const fetchPrizesUsers = createAsyncThunk(
+  "prizesUser/fetchPrizesUsers",
+  async () => {
+    const prizesUser = await new Promise(async (resolve, reject) => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/prizesUsers`,
+          authorization()
+        );
+        resolve(res.data);
+      } catch (error) {
+        reject(null);
+      }
+    });
+
+    return prizesUser;
+  }
+);
 
 const prizesUserSlice = createSlice({
   name: "prizesUser",
@@ -46,6 +64,19 @@ const prizesUserSlice = createSlice({
       state.error = action.error.message;
     },
     [fetchPrizesUserById.fulfilled]: (state, action) => {
+      // console.log(action);
+      state.loading = false;
+      state.data = action.payload;
+      state.error = null;
+    },
+    [fetchPrizesUsers.pending]: (state) => {
+      state.loading = true;
+    },
+    [fetchPrizesUsers.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    },
+    [fetchPrizesUsers.fulfilled]: (state, action) => {
       // console.log(action);
       state.loading = false;
       state.data = action.payload;

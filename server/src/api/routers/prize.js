@@ -4,8 +4,8 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const newPrize = await new Promise((resolve, reject) => {
-      const stm = "insert into prize values(default, ?)";
-      con.query(stm, [req.body.prizeName], (err, result) => {
+      const stm = "insert into prize values(default, ?,?)";
+      con.query(stm, [req.body.prizeName, req.body.type], (err, result) => {
         if (err) {
           console.log(err);
           return reject({ err: "Loi Sql" });
@@ -13,6 +13,7 @@ router.post("/", async (req, res) => {
         resolve({
           prizeId: result.insertId,
           prizeName: req.body.prizeName,
+          prizeType: req.body.type,
         });
       });
     });
@@ -28,7 +29,7 @@ router.get("/", async (req, res) => {
   try {
     const result = await new Promise((resolve, reject) => {
       const stm =
-        "select prize_id as prizeId, prize_name as prizeName from prize";
+        "select prize_id as prizeId, prize_name as prizeName, prize_type as prizeType from prize";
       con.query(stm, (err, result) => {
         if (err) {
           console.log(err);

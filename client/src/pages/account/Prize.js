@@ -20,6 +20,7 @@ export default function Prize() {
     dispatch(fetchPrizesUserById(user.data.id));
   }, []);
   const onHandleSpin = async (prizeName) => {
+    console.log(prizeName);
     if (user.data.points < 1000) {
       return;
     }
@@ -32,10 +33,13 @@ export default function Prize() {
         },
         authorization()
       );
+      const tmpPrize = prizes.data.find(
+        (prize) => prize.prizeName === prizeName
+      );
       axios.post(`${process.env.REACT_APP_API_URL}/api/prizesUsers`, {
-        prizeId: prizes.data.find((prize) => prize.prizeName === prizeName)
-          .prizeId,
+        prizeId: tmpPrize.prizeId,
         userId: user.data.id,
+        state: tmpPrize.type === "discount" ? "chưa sử dụng" : "chờ xử lý",
       });
     } catch (error) {
       console.log(error);
@@ -51,7 +55,9 @@ export default function Prize() {
           )}
           <p> Lịch sử quay</p>
           {prizesUser.data &&
-            prizesUser.data.map((prizeUser) => <p>{prizeUser.prizeName}</p>)}
+            prizesUser.data.map((prizeUser) => (
+              <p key={prizeUser.prizeUserId}>{prizeUser.prizeName}</p>
+            ))}
         </div>
       </div>
     </div>
