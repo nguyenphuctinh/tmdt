@@ -13,6 +13,7 @@ import OrderAdmin from "../order/OrderAdmin";
 import Report from "../report/Report";
 import { fetchAllOrders } from "../../../redux/slices/orderSlice";
 import UserManagement from "../users/UserManagement";
+import Prize from "../prize/Prize";
 
 export default function Admin() {
   const dispatch = useDispatch();
@@ -43,6 +44,8 @@ export default function Admin() {
           <br />
           <Link to="/admin?tab=promotion">Quản lý sự kiện</Link>
           <br />
+          <Link to="/admin?tab=prize">Quản lý quay may mắn</Link>
+          <br />
           <Link to="/admin?tab=report">Báo cáo thống kê</Link>
         </div>
         <div style={{ minHeight: "100vh" }} className="col-sm-10 p-0">
@@ -56,6 +59,8 @@ export default function Admin() {
             <div>Quản lý sự kiện</div>
           ) : tab === "report" ? (
             <Report />
+          ) : tab === "prize" ? (
+            <Prize />
           ) : (
             <p>Không có trang này</p>
           )}

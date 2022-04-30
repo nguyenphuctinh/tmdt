@@ -5,14 +5,25 @@ import passwordHash from "password-hash";
 import authenAdminToken from "../middlewares/authenAdminToken.js";
 import isPhoneNumber from "../validations/isPhoneNumber.js";
 const router = express.Router();
-router.get("/", authenToken, (req, res) => {
-  con.query(
-    "SELECT id,username, first_name as firstName, last_name as lastName, dob, phone, address, role FROM user",
-    function (err, result) {
-      if (err) return res.send("Error");
-      res.send(result);
-    }
-  );
+router.get("/", authenToken, async (req, res) => {
+  try {
+    await new Promise(async (resolve, reject) => {
+      con.query(
+        "SELECT id,username, first_name as firstName, last_name as lastName, dob, phone, address, points, role, state FROM user where role!=?",
+        ["admin"],
+        function (err, result) {
+          if (err) {
+            reject(err);
+            return res.send("Error");
+          }
+          res.send(result);
+          resolve();
+        }
+      );
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 router.post("/", async (req, res) => {
   if (req.body.type === "anonymous") {
@@ -71,7 +82,7 @@ router.post("/", async (req, res) => {
         });
       });
       await new Promise((resolve, reject) => {
-        sql = `INSERT INTO user(username, password,first_name, last_name, dob, role) VALUES (?,?,?,?,?,default)`;
+        sql = `INSERT INTO user(username, password,first_name, last_name, dob, points, state, role) VALUES (?,?,?,?,?,default,default,default)`;
         con.query(
           sql,
           [
@@ -182,12 +193,32 @@ router.put("/:id", authenToken, async (req, res) => {
       return res.status(500).send("error");
     }
   }
+  if (req.body.type === "updatePoints") {
+    try {
+      await new Promise((resolve, reject) => {
+        con.query(
+          `update user set  points=${req.body.points} where id=${req.params.id} `,
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              return reject({ stt: 500, err: "Lỗi truy vấn" });
+            }
+            resolve();
+          }
+        );
+      });
+      res.send("cập nhật thành công");
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("error");
+    }
+  }
 });
 router.put("/management/:id", authenAdminToken, async (req, res) => {
   try {
     await new Promise((resolve, reject) => {
-      const stm = "update user set role = ? where id = ?";
-      con.query(stm, [req.body.role, req.params.id], (err, result) => {
+      const stm = "update user set state = ? where id = ?";
+      con.query(stm, [req.body.state, req.params.id], (err, result) => {
         if (err) {
           return reject({ stt: 500, err: "Lỗi truy vấn" });
         }

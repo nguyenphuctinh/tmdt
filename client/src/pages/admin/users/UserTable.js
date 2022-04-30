@@ -108,17 +108,16 @@ export default function UserTable({ rows, type }) {
     setPage(0);
   };
   const dispatch = useDispatch();
-  const handleChangeRole = async (e, userId) => {
-    // console.log(e.target.value);
+  const handleChangeState = async (val, userId) => {
     try {
       await axios.put(
         `${process.env.REACT_APP_API_URL}/api/users/management/${userId}`,
         {
-          role: e.target.value,
+          state: val,
         },
         authorization()
       );
-      dispatch(updateUser({ userId, role: e.target.value }));
+      dispatch(updateUser({ userId, userState: val }));
     } catch (error) {
       console.log(error);
     }
@@ -144,9 +143,8 @@ export default function UserTable({ rows, type }) {
               Địa chỉ
             </TableCell>
             <TableCell component="th" scope="row">
-              Role
+              Điểm tích lũy
             </TableCell>
-
             <TableCell style={{ width: 100 }} align="center"></TableCell>
           </TableRow>
 
@@ -172,23 +170,23 @@ export default function UserTable({ rows, type }) {
                   {row.address}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">role</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={row.role}
-                      label="Thể loại"
-                      onChange={(e) => handleChangeRole(e, row.id)}
-                    >
-                      <MenuItem value="customer">Customer</MenuItem>
-                      <MenuItem value="admin">Admin</MenuItem>
-                    </Select>
-                  </FormControl>
+                  {row.points}
                 </TableCell>
                 <TableCell style={{ width: 100 }} align="center">
-                  <button type="button" className="btn btn-primary">
-                    Xóa
+                  <button
+                    onClick={() => {
+                      if (row.state === "active") {
+                        handleChangeState("locked", row.id);
+                      } else {
+                        handleChangeState("active", row.id);
+                      }
+                    }}
+                    type="button"
+                    className={`btn ${
+                      row.state === "active" ? "btn-success" : "btn-danger"
+                    }`}
+                  >
+                    {row.state}
                   </button>
                 </TableCell>
               </TableRow>

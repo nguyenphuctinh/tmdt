@@ -7,6 +7,8 @@ import userRouter from "./api/routers/user.js";
 import productRouter from "./api/routers/product.js";
 import promotionRouter from "./api/routers/promotion.js";
 import cartRouter from "./api/routers/cart.js";
+import prizeRouter from "./api/routers/prize.js";
+import prizesUserRouter from "./api/routers/prizesUser.js";
 import orderRouter from "./api/routers/order.js";
 import webhookRouter from "./api/routers/webhook.js";
 import authenToken from "./api/middlewares/authenToken.js";
@@ -43,7 +45,9 @@ app.post("/login", async (req, res) => {
         .status(401)
         .json({ message: "Tài khoản hoặc mật khẩu không chính xác!" });
     }
-
+    if (user[0].state === "locked") {
+      return res.status(401).json({ message: "Tài khoản đã bị khóa!" });
+    }
     if (passwordHash.verify(req.body.password, user[0].password)) {
       const accessToken = jwt.sign(
         { ...req.body, role: user[0].role },
@@ -87,6 +91,7 @@ app.get("/auth", authenToken, async (req, res) => {
       phone: user[0].phone,
       dob: user[0].dob,
       address: user[0].address,
+      points: user[0].points,
       role: user[0].role,
     });
   } catch (err) {
@@ -100,6 +105,8 @@ app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/promotions", promotionRouter);
+app.use("/api/prizes", prizeRouter);
+app.use("/api/prizesUsers", prizesUserRouter);
 app.use("/webhook", webhookRouter);
 
 const port = process.env.PORT || 8080;

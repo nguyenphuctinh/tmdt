@@ -15,7 +15,6 @@ export const fetchAllUsers = createAsyncThunk(
         reject(null);
       }
     });
-    console.log(users);
     return users;
   }
 );
@@ -28,17 +27,15 @@ const userSlice = createSlice({
   },
   reducers: {
     updateUser(state, action) {
-      // console.log(action.payload);
-      // const { userId, role } = action.payload;
-      // console.log(state.data);
-      // state.data.map((user) => {
-      //   console.log(user);
-      //   console.log(user.id, userId);
-      //   if (user.id === userId) {
-      //     return { ...user, role };
-      //   }
-      //   return { ...user };
-      // });
+      console.log(action.payload);
+      const { userId, userState } = action.payload;
+      console.log(state.data);
+      state.data = state.data.map((user) => {
+        if (user.id === userId) {
+          user.state = userState;
+        }
+        return user;
+      });
     },
   },
   extraReducers: {

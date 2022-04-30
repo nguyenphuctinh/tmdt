@@ -13,6 +13,7 @@ import UpdatePw from "./UpdatePw.js";
 import Info from "./Info.js";
 import { removeAllItems } from "../../redux/slices/cartSlice.js";
 import Orders from "../../components/Orders.js";
+import Prize from "./Prize";
 export default function Account() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ export default function Account() {
           <p>
             <Link to="/account?tab=orders"> Đơn hàng của bạn</Link>
           </p>
+          <p>
+            <Link to="/account?tab=prize"> Quay may mắn</Link>
+          </p>
           <button
             type="button"
             className="btn btn-warning"
@@ -57,8 +61,12 @@ export default function Account() {
             <UpdatePw />
           ) : tab === "info" ? (
             <Info />
-          ) : (
+          ) : tab === "orders" ? (
             <Orders />
+          ) : tab === "prize" ? (
+            <Prize />
+          ) : (
+            "Not found"
           )}
         </div>
       </div>

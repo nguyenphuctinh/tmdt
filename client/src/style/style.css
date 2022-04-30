@@ -10,6 +10,10 @@ body {
 /* .swiper-slide{
   width: 100px!important;
 } */
+#canvas{
+  width: 1000px;
+  height: 100%;
+}
 .grid {
   display: grid;
   place-items: center;
