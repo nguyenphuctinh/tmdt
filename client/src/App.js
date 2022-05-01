@@ -30,6 +30,7 @@ import OrderAdmin from "./pages/admin/order/OrderAdmin";
 import AddPromotion from "./pages/admin/promotion/AddPromotion";
 import PromotionDetail from "./pages/promotion/PromotionDetail";
 import Admin from "./pages/admin/main/Admin";
+import UpdatePromotion from "./pages/admin/promotion/UpdatePromotion";
 function App() {
   const [rendered, setRendered] = useState(false);
   const dispatch = useDispatch();
@@ -105,6 +106,16 @@ function App() {
               element={
                 user.data && user.data.role === "admin" ? (
                   <AddPromotion />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            ></Route>
+            <Route
+              path="/admin/promotion/update/:promotionId"
+              element={
+                user.data && user.data.role === "admin" ? (
+                  <UpdatePromotion />
                 ) : (
                   <Navigate to="/" />
                 )

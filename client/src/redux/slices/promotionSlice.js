@@ -25,7 +25,18 @@ const promotionSlice = createSlice({
     data: null,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    deleteProduct(state, action) {
+      const { promotionId, productId } = action.payload;
+      const promotion = state.data.find(
+        (item) => item.promotionId === promotionId
+      );
+      const newProducts = promotion.saledProducts.filter(
+        (product) => product.productId !== productId
+      );
+      promotion.saledProducts = newProducts;
+    },
+  },
   extraReducers: {
     [fetchPromotion.pending]: (state) => {
       state.loading = true;
@@ -43,4 +54,6 @@ const promotionSlice = createSlice({
   },
 });
 const { actions, reducer } = promotionSlice;
+export const { deleteProduct } = promotionSlice.actions;
+
 export default reducer;

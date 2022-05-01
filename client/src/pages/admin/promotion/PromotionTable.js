@@ -93,7 +93,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function UserTable({ rows, type }) {
+export default function PromotionTable({ rows, type }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -109,20 +109,7 @@ export default function UserTable({ rows, type }) {
     setPage(0);
   };
   const dispatch = useDispatch();
-  const handleChangeState = async (val, userId) => {
-    try {
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/users/management/${userId}`,
-        {
-          state: val,
-        },
-        authorization()
-      );
-      dispatch(updateUser({ userId, userState: val }));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -135,20 +122,12 @@ export default function UserTable({ rows, type }) {
               Tên
             </TableCell>
             <TableCell component="th" scope="row">
-              Họ
+              Thời gian bắt đầu
             </TableCell>
             <TableCell component="th" scope="row">
-              Năm sinh
+              Thời gian kết thúc
             </TableCell>
-            <TableCell component="th" scope="row">
-              Số điện thoại
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Địa chỉ
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Điểm tích lũy
-            </TableCell>
+
             <TableCell style={{ width: 100 }} align="center"></TableCell>
           </TableRow>
 
@@ -157,43 +136,27 @@ export default function UserTable({ rows, type }) {
             : rows
           ).map((row) => {
             return (
-              <TableRow key={row.id}>
+              <TableRow key={row.promotionId}>
                 <TableCell component="th" scope="row">
-                  <span>{generateEntityId("U", row.id)}</span>
+                  <span>{generateEntityId("PR", row.promotionId)}</span>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <span>{row.firstName}</span>
+                  <span>{row.promotionName}</span>
+                </TableCell>
+
+                <TableCell component="th" scope="row">
+                  {new Date(row.promotionStartTime).toISOString().split("T")[0]}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.lastName}
+                  {new Date(row.promotionExpTime).toISOString().split("T")[0]}
                 </TableCell>
-                <TableCell component="th" scope="row">
-                  {new Date(row.dob).toISOString().split("T")[0]}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.phone}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.address}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.points}
-                </TableCell>
+
                 <TableCell style={{ width: 100 }} align="center">
-                  <button
-                    onClick={() => {
-                      if (row.state === "active") {
-                        handleChangeState("locked", row.id);
-                      } else {
-                        handleChangeState("active", row.id);
-                      }
-                    }}
-                    type="button"
-                    className={`btn ${
-                      row.state === "active" ? "btn-success" : "btn-danger"
-                    }`}
-                  >
-                    {row.state}
+                  <button type="button" className={`btn  btn-primary }`}>
+                    <Link to={`/admin/promotion/update/${row.promotionId}`}>
+                      {" "}
+                      Chỉnh sửa
+                    </Link>
                   </button>
                 </TableCell>
               </TableRow>

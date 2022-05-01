@@ -10,6 +10,7 @@ export default function Cart() {
 
   useEffect(() => {
     dispatch(changeNavbar("others"));
+    document.title = "Giỏ hàng";
   }, []);
   return (
     <div className="container-fluid cart pb-5">

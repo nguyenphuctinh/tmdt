@@ -221,6 +221,14 @@ export default function AddPromotion() {
           <button
             onClick={() => {
               if (
+                saledProducts.some(
+                  (product) => product.productId === selectedProduct.productId
+                )
+              ) {
+                toast.error("Sản phẩm đã có trong danh sách");
+                return;
+              }
+              if (
                 saleError !== "" ||
                 !selectedProduct ||
                 saledProducts.some(

@@ -14,6 +14,7 @@ import Report from "../report/Report";
 import { fetchAllOrders } from "../../../redux/slices/orderSlice";
 import UserManagement from "../users/UserManagement";
 import Prize from "../prize/Prize";
+import Promotion from "../promotion/Promotion";
 
 export default function Admin() {
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ export default function Admin() {
           ) : tab === "order" ? (
             <OrderAdmin />
           ) : tab === "promotion" ? (
-            <div>Quản lý sự kiện</div>
+            <Promotion />
           ) : tab === "report" ? (
             <Report />
           ) : tab === "prize" ? (

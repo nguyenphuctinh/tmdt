@@ -1,9 +1,8 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-
 import PropTypes from "prop-types";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -20,10 +19,8 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { authorization } from "../../../auth/auth";
-import { updateUser } from "../../../redux/slices/userListSlice";
-import { generateEntityId } from "../../../helpers/generateId";
+import { deleteProduct } from "../../../redux/slices/promotionSlice";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -93,7 +90,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function UserTable({ rows, type }) {
+export default function UpdateProductPromotionTable({ rows, promotionId }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -109,19 +106,16 @@ export default function UserTable({ rows, type }) {
     setPage(0);
   };
   const dispatch = useDispatch();
-  const handleChangeState = async (val, userId) => {
+  const handleDeleleProduct = async (productId) => {
+    console.log(productId, promotionId);
     try {
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/users/management/${userId}`,
-        {
-          state: val,
-        },
+        `${process.env.REACT_APP_API_URL}/api/promotions/${promotionId}`,
+        { type: "deleteProduct", productId },
         authorization()
       );
-      dispatch(updateUser({ userId, userState: val }));
-    } catch (error) {
-      console.log(error);
-    }
+      dispatch(deleteProduct({ productId, promotionId }));
+    } catch (error) {}
   };
   return (
     <TableContainer component={Paper}>
@@ -129,26 +123,12 @@ export default function UserTable({ rows, type }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row">
-              Mã
+              Tên sản phẩm
             </TableCell>
             <TableCell component="th" scope="row">
-              Tên
+              Sale
             </TableCell>
-            <TableCell component="th" scope="row">
-              Họ
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Năm sinh
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Số điện thoại
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Địa chỉ
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Điểm tích lũy
-            </TableCell>
+
             <TableCell style={{ width: 100 }} align="center"></TableCell>
           </TableRow>
 
@@ -157,43 +137,24 @@ export default function UserTable({ rows, type }) {
             : rows
           ).map((row) => {
             return (
-              <TableRow key={row.id}>
+              <TableRow key={row.productId}>
                 <TableCell component="th" scope="row">
-                  <span>{generateEntityId("U", row.id)}</span>
+                  <Link to={`/product/${row.productName}`}>
+                    <span style={{ color: "#0d6efd" }}>{row.productName}</span>
+                  </Link>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <span>{row.firstName}</span>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.lastName}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {new Date(row.dob).toISOString().split("T")[0]}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.phone}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.address}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.points}
+                  {row.sale}
                 </TableCell>
                 <TableCell style={{ width: 100 }} align="center">
                   <button
                     onClick={() => {
-                      if (row.state === "active") {
-                        handleChangeState("locked", row.id);
-                      } else {
-                        handleChangeState("active", row.id);
-                      }
+                      handleDeleleProduct(row.productId);
                     }}
                     type="button"
-                    className={`btn ${
-                      row.state === "active" ? "btn-success" : "btn-danger"
-                    }`}
+                    className="btn btn-danger"
                   >
-                    {row.state}
+                    Xóa
                   </button>
                 </TableCell>
               </TableRow>
