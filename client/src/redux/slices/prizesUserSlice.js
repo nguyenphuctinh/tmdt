@@ -47,7 +47,8 @@ const prizesUserSlice = createSlice({
   },
   reducers: {
     addPrizeUser: (state, action) => {
-      state.data.push(action.payload);
+      console.log(action.payload);
+      state.data = [action.payload, ...state.data];
     },
     deletePrizeUser: (state, action) => {
       //   state.data = state.data.filter(
@@ -85,6 +86,6 @@ const prizesUserSlice = createSlice({
   },
 });
 const { actions, reducer } = prizesUserSlice;
-export const { addPrize, deletePrize } = prizesUserSlice.actions;
+export const { addPrizeUser } = prizesUserSlice.actions;
 
 export default reducer;

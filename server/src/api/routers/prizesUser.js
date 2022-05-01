@@ -17,12 +17,14 @@ router.post("/", async (req, res) => {
             return reject({ err: "Loi Sql" });
           }
           resolve({
+            prizeUserId: result.insertId,
             prizeId: req.body.prizeId,
+            userId: req.body.userId,
+            state: req.body.state,
           });
         }
       );
     });
-    // console.log(result);
     res.send(newPrizeUser);
   } catch (error) {
     console.log(error);
@@ -33,7 +35,7 @@ router.get("/:id", authenToken, async (req, res) => {
   try {
     const prizeUser = await new Promise((resolve, reject) => {
       const stm = `SELECT prize_user_id as prizeUserId, prize.prize_id as prizeId, user_id as userId,state, prize_name as prizeName, prize_type as prizeType  FROM prize_user join prize
-on prize.prize_id=prize_user.prize_id where user_id=?`;
+on prize.prize_id=prize_user.prize_id where user_id=? order by prize_user_id desc`;
       con.query(stm, [req.params.id], (err, result) => {
         if (err) {
           console.log(err);
@@ -52,7 +54,7 @@ router.get("/", authenAdminToken, async (req, res) => {
   try {
     const prizeUser = await new Promise((resolve, reject) => {
       const stm = `SELECT prize_user_id as prizeUserId, prize.prize_id as prizeId,state, user_id as userId, prize_name as prizeName , prize_type as prizeType FROM prize_user join prize
-on prize.prize_id=prize_user.prize_id`;
+on prize.prize_id=prize_user.prize_id order by prize_user_id desc`;
       con.query(stm, [req.params.id], (err, result) => {
         if (err) {
           console.log(err);

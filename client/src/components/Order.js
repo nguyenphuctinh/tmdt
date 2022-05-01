@@ -19,6 +19,17 @@ export default function Order({ order, type }) {
         },
         authorization()
       );
+      if (value === "Đã giao") {
+        console.log(order);
+        const res = await axios.put(
+          `${process.env.REACT_APP_API_URL}/api/users/${order.user.userId}`,
+          {
+            type: "updatePoints",
+            points: order.user.points + setTotalPrice(order.orderItems) / 50000,
+          },
+          authorization()
+        );
+      }
     } catch (error) {
       console.log(error);
     }

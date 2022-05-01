@@ -5,9 +5,10 @@ import { fetchPrizes } from "../../redux/slices/prizeSlice";
 import axios from "axios";
 import { authorization } from "../../auth/auth";
 import {
-  fetchPrizesUser,
+  addPrizeUser,
   fetchPrizesUserById,
 } from "../../redux/slices/prizesUserSlice";
+import { generateEntityId } from "../../helpers/generateId";
 export default function Prize() {
   const user = useSelector((state) => state.user);
   const prizes = useSelector((state) => state.prizes);
@@ -37,11 +38,24 @@ export default function Prize() {
         (prize) => prize.prizeName === prizeName
       );
       console.log(tmpPrize);
-      axios.post(`${process.env.REACT_APP_API_URL}/api/prizesUsers`, {
-        prizeId: tmpPrize.prizeId,
-        userId: user.data.id,
-        state: tmpPrize.prizeType === "discount" ? "chưa sử dụng" : "chờ xử lý",
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/prizesUsers`,
+        {
+          prizeId: tmpPrize.prizeId,
+          userId: user.data.id,
+          state:
+            tmpPrize.prizeType === "discount" ? "chưa sử dụng" : "chờ xử lý",
+        },
+        authorization()
+      );
+      console.log(res.data);
+      // dispatch(
+      //   addPrizeUser({
+      //     ...res.data,
+      //     prizeName: tmpPrize.prizeName,
+      //     prizeType: tmpPrize.prizeType,
+      //   })
+      // );
     } catch (error) {
       console.log(error);
     }
@@ -55,10 +69,30 @@ export default function Prize() {
             <Wheel onHandleSpin={onHandleSpin} segments={prizes.data} />
           )}
           <p> Lịch sử quay</p>
-          {prizesUser.data &&
-            prizesUser.data.map((prizeUser) => (
-              <p key={prizeUser.prizeUserId}>{prizeUser.prizeName}</p>
-            ))}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Tên phần thưởng</th>
+                <th scope="col">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {prizesUser.data?.map((prizeUser) => (
+                <tr key={prizeUser.prizeUserId}>
+                  <td>
+                    {" "}
+                    {prizeUser.prizeType === "discount"
+                      ? `Phiếu giảm giá ${prizeUser.prizeName * 100}%`
+                      : prizeUser.prizeName}
+                  </td>
+                  <td>
+                    <p>{prizeUser.state}</p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -76,7 +76,6 @@ export default function Prize() {
               }}
             >
               <MenuItem value="discount">Phiếu giảm giá</MenuItem>
-              <MenuItem value="betterLuckNextTime">May mắn lần sau</MenuItem>
               <MenuItem value="others">Khác</MenuItem>
             </Select>
           </FormControl>

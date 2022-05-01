@@ -140,7 +140,7 @@ router.get("/management", authenAdminToken, async (req, res) => {
     for (const [i, order] of orders.entries()) {
       const user = await new Promise((resolve, reject) => {
         const stm =
-          "select id as userId, first_name as firstName, last_name as lastName, dob, phone, address from user where id=?";
+          "select id as userId, first_name as firstName, last_name as lastName, dob, phone, address, points from user where id=?";
         con.query(stm, [order.user_id], function (err, result) {
           if (err) {
             console.log(err);
@@ -347,7 +347,6 @@ router.get("/:userId", authenToken, async (req, res) => {
   }
 });
 router.put("/:orderId", authenAdminToken, async (req, res) => {
-  console.log("oks");
   try {
     await new Promise((resolve, reject) => {
       const stm = "update orders set status=? where order_id=?";
@@ -363,6 +362,8 @@ router.put("/:orderId", authenAdminToken, async (req, res) => {
         }
       );
     });
+
+    res.send({ stt: 200, message: "Cập nhật thành công" });
   } catch (error) {}
 });
 export default router;
