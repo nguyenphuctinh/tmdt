@@ -12,7 +12,7 @@ export default function Order({ order, type }) {
   );
   const handleUpdateOrderState = async (value, orderId) => {
     try {
-      const res = await axios.put(
+      await axios.put(
         `${process.env.REACT_APP_API_URL}/api/orders/${orderId}`,
         {
           status: value,
@@ -20,12 +20,11 @@ export default function Order({ order, type }) {
         authorization()
       );
       if (value === "Đã giao") {
-        console.log(order);
-        const res = await axios.put(
+        await axios.put(
           `${process.env.REACT_APP_API_URL}/api/users/${order.user.userId}`,
           {
             type: "updatePoints",
-            points: order.user.points + setTotalPrice(order.orderItems) / 50000,
+            points: order.user.points + calTotalPrice(order.orderItems) / 50000,
           },
           authorization()
         );
@@ -97,15 +96,38 @@ export default function Order({ order, type }) {
           {" "}
           <strong>
             {" "}
-            {setTotalPrice(order.orderItems).toLocaleString()}
+            {calTotalPrice(order.orderItems).toLocaleString()}
             <small>₫</small>
+          </strong>
+        </p>
+      </div>
+      <div className="d-flex justify-content-between price">
+        <p>
+          <strong> Chiết khấu: </strong>
+        </p>
+        <p>
+          {" "}
+          <strong> {`${order.coupons * 100}%`}</strong>
+        </p>
+      </div>
+      <div className="d-flex justify-content-between price">
+        <p>
+          <strong> Còn lại: </strong>
+        </p>
+        <p>
+          <strong>
+            {(
+              calTotalPrice(order.orderItems) *
+              (1 - order.coupons)
+            ).toLocaleString()}
+            đ
           </strong>
         </p>
       </div>
     </>
   );
 }
-const setTotalPrice = (items) => {
+const calTotalPrice = (items) => {
   return items.reduce((a, b) => {
     return a + b.price * (1 - b.sale) * b.quantity;
   }, 0);

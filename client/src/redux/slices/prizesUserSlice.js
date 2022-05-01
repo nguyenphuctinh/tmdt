@@ -46,14 +46,9 @@ const prizesUserSlice = createSlice({
     error: null,
   },
   reducers: {
-    addPrizeUser: (state, action) => {
+    addPrizeUser(state, action) {
       console.log(action.payload);
       state.data = [action.payload, ...state.data];
-    },
-    deletePrizeUser: (state, action) => {
-      //   state.data = state.data.filter(
-      //     (prize) => prize.prizeId !== action.payload
-      //   );
     },
   },
   extraReducers: {

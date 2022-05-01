@@ -27,6 +27,9 @@ const userSlice = createSlice({
     logoutAction(state, action) {
       state.data = null;
     },
+    decreasePoints(state, action) {
+      state.data.points -= action.payload;
+    },
   },
   extraReducers: {
     [fetchUser.pending]: (state) => {
@@ -45,5 +48,5 @@ const userSlice = createSlice({
   },
 });
 const { actions, reducer } = userSlice;
-export const { logoutAction } = actions;
+export const { logoutAction, decreasePoints } = actions;
 export default reducer;

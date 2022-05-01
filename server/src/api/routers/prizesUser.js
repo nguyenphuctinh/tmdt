@@ -70,4 +70,22 @@ on prize.prize_id=prize_user.prize_id order by prize_user_id desc`;
     res.status(500).send(error);
   }
 });
+router.put("/:id", authenToken, async (req, res) => {
+  try {
+    const prizeUser = await new Promise((resolve, reject) => {
+      const stm = `UPDATE prize_user SET state=? WHERE prize_user_id=?`;
+      con.query(stm, [req.body.state, req.params.id], (err, result) => {
+        if (err) {
+          console.log(err);
+          return reject({ err: "Loi Sql" });
+        }
+        resolve(JSON.parse(JSON.stringify(result)));
+      });
+    });
+    res.send(prizeUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
 export default router;

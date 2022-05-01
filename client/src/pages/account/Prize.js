@@ -9,6 +9,7 @@ import {
   fetchPrizesUserById,
 } from "../../redux/slices/prizesUserSlice";
 import { generateEntityId } from "../../helpers/generateId";
+import { decreasePoints } from "../../redux/slices/userSlice";
 export default function Prize() {
   const user = useSelector((state) => state.user);
   const prizes = useSelector((state) => state.prizes);
@@ -48,14 +49,14 @@ export default function Prize() {
         },
         authorization()
       );
-      console.log(res.data);
-      // dispatch(
-      //   addPrizeUser({
-      //     ...res.data,
-      //     prizeName: tmpPrize.prizeName,
-      //     prizeType: tmpPrize.prizeType,
-      //   })
-      // );
+      dispatch(decreasePoints(1000));
+      dispatch(
+        addPrizeUser({
+          ...res.data,
+          prizeName: tmpPrize.prizeName,
+          prizeType: tmpPrize.prizeType,
+        })
+      );
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +65,7 @@ export default function Prize() {
     <div className="container-fluid">
       <div className="row">
         <div className="col-12">
-          <p>Số lượt quay còn lại:{user.data?.points / 1000}</p>
+          <p>Số lượt quay còn lại:{parseInt(user.data?.points / 1000)}</p>
           {prizes.data && (
             <Wheel onHandleSpin={onHandleSpin} segments={prizes.data} />
           )}

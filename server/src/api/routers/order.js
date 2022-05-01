@@ -38,15 +38,20 @@ router.post("/", async (req, res) => {
             productVariant.variantValues?.reduce((a, b) => {
               return a + "" + b.value + " ";
             }, "") || " "
-          }hiện đang hết hàng!`,
+          } hiện hết hàng hoặc trong kho không đủ!`,
         });
       }
     }
     const newOrderId = await new Promise((resolve, reject) => {
-      const stm = "insert into orders values (default, ?, ?, ?)";
+      const stm = "insert into orders values (default, ?, ?,?, ?)";
       con.query(
         stm,
-        [req.body.userId, new Date(), "chờ xác nhận"],
+        [
+          req.body.userId,
+          new Date(),
+          parseFloat(req.body.coupons),
+          "chờ xác nhận",
+        ],
         (err, result) => {
           if (err) {
             console.log(err);
@@ -118,7 +123,7 @@ router.post("/", async (req, res) => {
     res.send({ stt: 200, message: "Order thành công" });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Lỗi hệ thống");
+    res.status(500).send({ stt: 500, message: " error" });
   }
 });
 router.get("/management", authenAdminToken, async (req, res) => {
@@ -165,6 +170,7 @@ router.get("/management", authenAdminToken, async (req, res) => {
         orderId: order.order_id,
         orderDate: order.order_date,
         orderStatus: order.status,
+        coupons: order.coupons,
         orderItems: [],
       });
       for (const item of rows) {

@@ -12,8 +12,14 @@ import { removeAllItems } from "../redux/slices/cartSlice";
 import isNumber from "../helpers/isNumber";
 import isPhoneNumber from "../helpers/isPhoneNumber";
 
-export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
+export default function InfoOrderForm({
+  productVariants,
+  type = "buyNow",
+  coupons = 0,
+  totalPrice,
+}) {
   const user = useSelector((state) => state.user);
+  const prizesUser = useSelector((state) => state.prizesUser);
   const dispatch = useDispatch();
   const [firstName, setFirstName] = useState(user.data?.firstName || "");
   const [firstNameError, setFirstNameError] = useState("");
@@ -84,18 +90,34 @@ export default function InfoOrderForm({ productVariants, type = "buyNow" }) {
         `${process.env.REACT_APP_API_URL}/api/orders`,
         {
           productVariants,
+          coupons,
           userId,
         }
       );
+
       if (type === "orderFromCart") {
-        dispatch(removeAllItems());
         await axios.delete(
           `${process.env.REACT_APP_API_URL}/api/carts/${userId}`
         );
+        if (coupons) {
+          const tmpPUId = prizesUser.data.find(
+            (item) =>
+              item.prizeName === coupons && item.state === "chưa sử dụng"
+          ).prizeUserId;
+          console.log(tmpPUId);
+          await axios.put(
+            `${process.env.REACT_APP_API_URL}/api/prizesUsers/${tmpPUId}`,
+            {
+              state: "đã sử dụng",
+            },
+            authorization()
+          );
+        }
+        dispatch(removeAllItems());
       }
+
       toast.success("Đặt hàng thành công!");
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
