@@ -13,7 +13,7 @@ import NavBar from "./components/NavBar";
 import NotFound from "./pages/notfound/NotFound";
 import { ToastContainer } from "react-toastify";
 import Loading from "./components/Loading";
-import PhonePage from "./pages/category/CategoryPage";
+import CategoryPage from "./pages/category/CategoryPage";
 import AddProduct from "./pages/admin/product/AddProduct.js";
 import Account from "./pages/account/Account";
 import ProductAdmin from "./pages/admin/product/ProductAdmin.js";
@@ -69,18 +69,60 @@ function App() {
           <NavBar />
           {loading.value ? <Loading /> : ""}
           <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/category/:category" element={<PhonePage />}></Route>
-            <Route path="/search" element={<Search />}></Route>
+            <Route
+              path="/"
+              element={
+                !user.data || user.data.role !== "admin" ? (
+                  <Home />
+                ) : (
+                  <Navigate to="/admin?tab=product" />
+                )
+              }
+            ></Route>
+            <Route
+              path="/category/:category"
+              element={
+                !user.data || user.data.role !== "admin" ? (
+                  <CategoryPage />
+                ) : (
+                  <Navigate to="/admin?tab=product" />
+                )
+              }
+            ></Route>
+            <Route
+              path="/search"
+              element={
+                !user.data || user.data.role !== "admin" ? (
+                  <Search />
+                ) : (
+                  <Navigate to="/admin?tab=product" />
+                )
+              }
+            ></Route>
             <Route
               path="/product/:productName"
-              element={<ProductDetail />}
+              element={
+                !user.data || user.data.role !== "admin" ? (
+                  <ProductDetail />
+                ) : (
+                  <Navigate to="/admin?tab=product" />
+                )
+              }
             ></Route>
             <Route
               path="/account"
               element={user.data ? <Account /> : <Navigate to="/login" />}
             ></Route>
-            <Route path="/cart" element={<Cart />}></Route>
+            <Route
+              path="/cart"
+              element={
+                !user.data || user.data.role !== "admin" ? (
+                  <Cart />
+                ) : (
+                  <Navigate to="/admin?tab=product" />
+                )
+              }
+            ></Route>
             <Route
               path="/admin"
               element={

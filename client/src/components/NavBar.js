@@ -68,59 +68,61 @@ function NavBar() {
             style={{ display: !finding ? "block" : "none" }}
             className="main justify-content-center"
           >
-            <ul className="d-flex  justify-content-center">
-              {/* <li
-                style={{
-                  backgroundColor: navbar.value === "home" ? "#2f3033" : "",
-                }}
-                className="d-flex align-items-center "
-              >
-                <Link to="/">Home</Link>
-              </li> */}
-
-              <li
-                style={{
-                  backgroundColor: navbar.value === "phone" ? "#2f3033" : "",
-                }}
-                className="d-flex align-items-center"
-              >
-                <Link to="/category/phone">Phone</Link>
-              </li>
-              <li
-                style={{
-                  backgroundColor: navbar.value === "laptop" ? "#2f3033" : "",
-                }}
-                className="d-flex align-items-center"
-              >
-                <Link to="/category/laptop">Laptop</Link>
-              </li>
-              <li
-                style={{
-                  backgroundColor: navbar.value === "tablet" ? "#2f3033" : "",
-                }}
-                className="d-flex align-items-center"
-              >
-                <Link to="/category/tablet">Tablet</Link>
-              </li>
-              <li
-                style={{
-                  backgroundColor: navbar.value === "watch" ? "#2f3033" : "",
-                }}
-                className="d-flex align-items-center"
-              >
-                <Link to="/category/watch">Watch</Link>
-              </li>
-              {user.data && user.data.role === "admin" ? (
+            <ul
+              className={`d-flex ${
+                !user.data || user.data.role !== "admin"
+                  ? "justify - content - between"
+                  : "flex-row"
+              }`}
+            >
+              {!user.data || user.data.role !== "admin" ? (
+                <>
+                  <li
+                    style={{
+                      backgroundColor:
+                        navbar.value === "phone" ? "#2f3033" : "",
+                    }}
+                    className="d-flex align-items-center"
+                  >
+                    <Link to="/category/phone">Phone</Link>
+                  </li>
+                  <li
+                    style={{
+                      backgroundColor:
+                        navbar.value === "laptop" ? "#2f3033" : "",
+                    }}
+                    className="d-flex align-items-center"
+                  >
+                    <Link to="/category/laptop">Laptop</Link>
+                  </li>
+                  <li
+                    style={{
+                      backgroundColor:
+                        navbar.value === "tablet" ? "#2f3033" : "",
+                    }}
+                    className="d-flex align-items-center"
+                  >
+                    <Link to="/category/tablet">Tablet</Link>
+                  </li>
+                  <li
+                    style={{
+                      backgroundColor:
+                        navbar.value === "watch" ? "#2f3033" : "",
+                    }}
+                    className="d-flex align-items-center"
+                  >
+                    <Link to="/category/watch">Watch</Link>
+                  </li>
+                </>
+              ) : (
                 <li
                   style={{
-                    backgroundColor: navbar.value === "admin" ? "#2f3033" : "",
+                    backgroundColor: navbar.value === "laptop" ? "#2f3033" : "",
                   }}
-                  className="d-flex align-items-center "
+                  className="d-flex align-items-center"
                 >
-                  <Link to="/admin">Admin</Link>
+                  <Link to="/admin?tab=product">Admin</Link>
                 </li>
-              ) : (
-                ""
               )}
             </ul>
           </div>
@@ -135,54 +137,67 @@ function NavBar() {
 
         <div className="col-sm-3 padding-0">
           <div className="menu pl-5 pr-5">
-            <ul className="d-flex justify-content-between">
-              <li
-                onClick={() => {
-                  setFinding(true);
-                }}
-                className="d-flex align-items-center"
-              >
-                <div className="bg searchIcon">
-                  <i className="far fa-search"></i>
-                </div>
-              </li>
-              <li
-                onClick={() => setFinding(false)}
-                className="d-flex align-items-center"
-              >
-                <Link to="/cart">
-                  <div className="bg">
-                    <div
-                      className="grid"
-                      style={{
-                        backgroundColor: "brown",
-                        borderRadius: "50%",
-                        color: "white",
-                        width: "1.3rem",
-                        height: "1.3rem",
-                        zIndex: "2",
-                        position: "relative",
-                        right: "5px",
-                      }}
-                    >
-                      <p
-                        id="number_in_cart"
-                        style={{ fontSize: "0.8rem", fontWeight: "600" }}
-                      >
-                        {cart.data.cartItems.reduce((a, b) => {
-                          return a + b.quantity;
-                        }, 0)}
-                      </p>
+            <ul
+              className={`d-flex ${
+                !user.data || user.data.role !== "admin"
+                  ? "justify-content-between"
+                  : "flex-row-reverse"
+              }`}
+            >
+              {!user.data || user.data.role !== "admin" ? (
+                <>
+                  <li
+                    onClick={() => {
+                      setFinding(true);
+                    }}
+                    className="d-flex align-items-center"
+                  >
+                    <div className="bg searchIcon">
+                      <i className="far fa-search"></i>
                     </div>
-                    <i className="far fa-shopping-bag"></i>
-                  </div>
-                </Link>
-              </li>
+                  </li>
+                  <li
+                    onClick={() => setFinding(false)}
+                    className="d-flex align-items-center"
+                  >
+                    <Link to="/cart">
+                      <div className="bg">
+                        <div
+                          className="grid"
+                          style={{
+                            backgroundColor: "brown",
+                            borderRadius: "50%",
+                            color: "white",
+                            width: "1.3rem",
+                            height: "1.3rem",
+                            zIndex: "2",
+                            position: "relative",
+                            right: "5px",
+                          }}
+                        >
+                          <p
+                            id="number_in_cart"
+                            style={{ fontSize: "0.8rem", fontWeight: "600" }}
+                          >
+                            {cart.data.cartItems.reduce((a, b) => {
+                              return a + b.quantity;
+                            }, 0)}
+                          </p>
+                        </div>
+                        <i className="far fa-shopping-bag"></i>
+                      </div>
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                ""
+              )}
+
               <li
                 onClick={() => setFinding(false)}
                 className="d-flex align-items-center"
               >
-                <Link to="/account?tab=info">
+                <Link to="/account?tab=security">
                   <div className="bg">
                     <i className="far fa-user"></i>
                   </div>

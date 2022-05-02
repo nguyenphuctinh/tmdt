@@ -30,19 +30,26 @@ export default function Account() {
     <div className="container-fluid">
       <div className="row">
         <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-3">
-          <p>
-            <Link to="/account?tab=info"> Cập nhật thông tin</Link>
-          </p>
+          {user.data.role !== "admin" ? (
+            <>
+              <p>
+                <Link to="/account?tab=info"> Cập nhật thông tin</Link>
+              </p>
+              <p>
+                <Link to="/account?tab=orders"> Đơn hàng của bạn</Link>
+              </p>
+              <p>
+                <Link to="/account?tab=prize"> Quay may mắn</Link>
+              </p>
+            </>
+          ) : (
+            ""
+          )}
 
           <p>
             <Link to="/account?tab=security"> Đổi mật khẩu</Link>
           </p>
-          <p>
-            <Link to="/account?tab=orders"> Đơn hàng của bạn</Link>
-          </p>
-          <p>
-            <Link to="/account?tab=prize"> Quay may mắn</Link>
-          </p>
+
           <button
             type="button"
             className="btn btn-warning"
