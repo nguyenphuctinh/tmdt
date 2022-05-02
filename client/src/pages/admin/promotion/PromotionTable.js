@@ -152,12 +152,12 @@ export default function PromotionTable({ rows, type }) {
                 </TableCell>
 
                 <TableCell style={{ width: 100 }} align="center">
-                  <button type="button" className={`btn  btn-primary }`}>
-                    <Link to={`/admin/promotion/update/${row.promotionId}`}>
+                  <Link to={`/admin/promotion/update/${row.promotionId}`}>
+                    <button type="button" className={`btn  btn-primary }`}>
                       {" "}
                       Chỉnh sửa
-                    </Link>
-                  </button>
+                    </button>
+                  </Link>
                 </TableCell>
               </TableRow>
             );
