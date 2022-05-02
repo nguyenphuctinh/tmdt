@@ -32,6 +32,15 @@ const productSlice = createSlice({
       );
       state.data = [...newData];
     },
+    addProduct(state, action) {
+      // console.log(action.payload);
+      // const tmp = [...state.data, action.payload];
+      // console.log(tmp);
+      // state.data = [...tmp];
+      // console.log(state.data);
+      // state.data.push(action.payload);
+      state.data = [action.payload, ...state.data];
+    },
   },
   extraReducers: {
     [fetchProduct.pending]: (state) => {
@@ -49,6 +58,6 @@ const productSlice = createSlice({
   },
 });
 const { reducer } = productSlice;
-export const { deleteProduct } = productSlice.actions;
+export const { deleteProduct, addProduct } = productSlice.actions;
 
 export default reducer;

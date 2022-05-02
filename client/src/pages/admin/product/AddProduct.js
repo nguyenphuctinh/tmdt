@@ -10,6 +10,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import Table from "../../../components/MyTable.js";
 import { authorization } from "../../../auth/auth";
@@ -17,7 +18,14 @@ import addImg from "../../../assets/images/addimg.png";
 import isNumber from "../../../helpers/isNumber.js";
 import UpdateForm from "./UpdateForm.js";
 import generateId from "../../../helpers/generateId.js";
+import {
+  addProduct,
+  fetchProduct,
+} from "../../../redux/slices/productSlice.js";
+import { useDispatch } from "react-redux";
 export default function AddProduct() {
+  const navigate = useNavigate();
+
   const [updateFromOpened, setUpdateFromOpened] = useState(false);
   const [productVariantUpdated, setProductVariantUpdated] = useState(null);
 
@@ -41,6 +49,7 @@ export default function AddProduct() {
   const [category, setCategory] = useState("phone");
   const [description, setDescription] = useState("");
   const inputEl = useRef(null);
+  const dispatch = useDispatch();
   const onHandleDelete = (id) => {
     const newList = productVariants.filter((item) => item.id !== id);
     setProductVariants(newList);
@@ -56,7 +65,6 @@ export default function AddProduct() {
       let imgSrcList = [];
       try {
         for (const img of variant.imgList) {
-          console.log(img);
           await new Promise((resolve, reject) => {
             const formData = new FormData();
             formData.append("file", img.img);
@@ -82,9 +90,11 @@ export default function AddProduct() {
         }
 
         productVariants[index].imgSrcList = [...imgSrcList];
+        productVariants[index].imgList = [];
       } catch (error) {
         setLoading(false);
         ok = false;
+        console.log(error);
         toast.error("Upload ảnh không thành công");
       }
     }
@@ -96,8 +106,9 @@ export default function AddProduct() {
       } else {
         variantNames = ["color", "capacity"];
       }
-      axios
-        .post(
+
+      try {
+        const res = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/products`,
           {
             name: ten.trim(),
@@ -108,15 +119,15 @@ export default function AddProduct() {
             variantNames,
           },
           authorization()
-        )
-        .then((res) => {
-          toast.success("Thêm thành công");
-          setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          toast.error("Thêm thất bại");
-        });
+        );
+        toast.success("Thêm thành công");
+        setLoading(false);
+        dispatch(fetchProduct());
+        navigate("/admin?tab=product");
+      } catch (error) {
+        setLoading(false);
+        toast.error("Thêm thất bại");
+      }
     }
   };
   const onHandleAddVariant = () => {
@@ -424,3 +435,27 @@ export default function AddProduct() {
     </div>
   );
 }
+const getVariants = (variantNames, productVariants) => {
+  // console.log(variantNames, productVariants);
+  let variants = {};
+  variantNames.forEach((variantName) => {
+    productVariants.forEach((productVariant) => {
+      if (variants[variantName]) {
+        if (
+          !variants[variantName].some(
+            (variant) => variant === productVariant[variantName]
+          )
+        ) {
+          variants[variantName] = [
+            ...variants[variantName],
+            productVariant[variantName],
+          ];
+        }
+      } else {
+        variants[variantName] = [productVariant[variantName]];
+      }
+    });
+  });
+  console.log(variants);
+  return variants;
+};

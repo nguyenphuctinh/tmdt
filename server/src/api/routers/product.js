@@ -271,7 +271,7 @@ const addProductVariant = async (productId, productVariant, variantNames) => {
       }
     );
   });
-
+  // let imgSrcList = [];
   for (const img of productVariant.imgSrcList) {
     await new Promise((resolve, reject) => {
       const sql = "insert into product_variant_img values(default,?,?)";

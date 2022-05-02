@@ -194,7 +194,7 @@ export default function UpdateProduct() {
     }
   };
   if (deleted) {
-    return <Navigate to="/admin/product" />;
+    return <Navigate to="/admin?tab=product" />;
   }
   return (
     <div

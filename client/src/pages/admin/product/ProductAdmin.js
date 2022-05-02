@@ -102,8 +102,13 @@ export default function ProductAdmin() {
                     placeholder="Tìm kiếm sản phẩm..."
                     inputProps={{ "aria-label": "search products" }}
                   />
-                  <IconButton type="submit" sx={{}} aria-label="search">
-                    <SearchIcon onClick={onHandleSearch} />
+                  <IconButton
+                    onClick={onHandleSearch}
+                    type="submit"
+                    sx={{}}
+                    aria-label="search"
+                  >
+                    <SearchIcon />
                   </IconButton>
                 </Paper>
               </div>

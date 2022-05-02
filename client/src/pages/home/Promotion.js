@@ -33,7 +33,6 @@ export default function Promotion({ promotion }) {
     };
   }, [promotion]);
   useEffect(() => {
-    console.log(promotion);
     if (
       promotion &&
       promotion.saledProducts.length > 0 &&
