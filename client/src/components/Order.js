@@ -63,7 +63,6 @@ export default function Order({ order, type }) {
                 <MenuItem value="Chờ lấy hàng">Chờ lấy hàng</MenuItem>
                 <MenuItem value="Đang giao">Đang giao</MenuItem>
                 <MenuItem value="Đã giao">Đã giao</MenuItem>
-                <MenuItem value="Từ chối">Từ chối</MenuItem>
               </Select>
             </FormControl>
           ) : (

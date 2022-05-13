@@ -109,9 +109,9 @@ export default function Promotion({ promotion }) {
                 </div>
               </div>
             </div>
-            <div className="container-fluid promotion__slider ">
+            <div className="container-fluid  promotion__slider ">
               <div className="row">
-                <div className="col-12">
+                <div className="col-12 p-0">
                   <Slider saledProducts={saledProducts} />
                 </div>
               </div>

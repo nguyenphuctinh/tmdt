@@ -69,7 +69,7 @@ export default function CategoryPage() {
           <span>{capitalizeFirstLetter(category)}</span>
         </div>
       </div>
-      <div className="row">
+      <div className="row d-flex flex-row-reverse">
         <div className="col-sm-3 ">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Xếp theo</InputLabel>

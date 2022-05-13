@@ -90,7 +90,7 @@ export default function InfoOrderForm({
         `${process.env.REACT_APP_API_URL}/api/orders`,
         {
           productVariants,
-          coupons,
+          coupons: !coupons ? 0 : coupons,
           userId,
         }
       );

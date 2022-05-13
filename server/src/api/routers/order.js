@@ -165,6 +165,7 @@ router.get("/management", authenAdminToken, async (req, res) => {
           resolve(JSON.parse(JSON.stringify(result)));
         });
       });
+      console.log(order.coupons);
       data.push({
         user: user[0],
         orderId: order.order_id,
@@ -276,6 +277,7 @@ router.get("/:userId", authenToken, async (req, res) => {
         orderId: order.order_id,
         orderDate: order.order_date,
         orderStatus: order.status,
+        coupons: order.coupons,
         orderItems: [],
       });
       for (const item of rows) {
