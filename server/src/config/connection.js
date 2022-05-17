@@ -1,11 +1,5 @@
 import mysql from "mysql";
-// var db_config = {
-//   host: "us-cdbr-east-05.cleardb.net",
-//   user: "bcfc9b7ab00c04",
-//   port: "3306",
-//   password: "bd6dc0ce",
-//   database: "heroku_fdea9aba84c6f63",
-// };
+
 /*
 heroku logs --tail
 git push heroku master
