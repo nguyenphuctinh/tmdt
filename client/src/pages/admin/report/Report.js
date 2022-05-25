@@ -31,22 +31,13 @@ export default function Report() {
 
   const dispatch = useDispatch();
 
-  const [startTime, setStartTime] = useState(decreaseDays(new Date(), 30));
+  const [startTime, setStartTime] = useState(decreaseDays(new Date(), 60));
   const [startTimeError, setStartTimeError] = useState("");
   const [endTime, setEndTime] = useState(new Date());
   const [endTimeError, setEndTimeError] = useState("");
   const [categoryReport, setCategoryReport] = useState();
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
-  const data = [
-    {
-      name: "Tháng 1",
-      revenue: 11111,
-    },
-    {
-      name: "Tháng 2",
-      revenue: 111122,
-    },
-  ];
+
   useEffect(() => {
     setCategoryReport([
       {
@@ -229,17 +220,7 @@ export default function Report() {
               />
             </AreaChart>
           </div>
-          {/* <BarChart width={320} height={250} data={monthlyRevenue}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="phone" fill="#DD6E42" />
-            <Bar dataKey="laptop" fill="#E8DAB2" />
-            <Bar dataKey="tablet" fill="#4F6D7A" />
-            <Bar dataKey="watch" fill="#C0D6DF" />
-          </BarChart> */}
+
           <BarChart width={320} height={250} data={categoryReport}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />

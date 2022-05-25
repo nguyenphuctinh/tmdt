@@ -67,7 +67,18 @@ export default function Prize() {
         <div className="col-12">
           <p>Số lượt quay còn lại:{parseInt(user.data?.points / 1000)}</p>
           {prizes.data && (
-            <Wheel onHandleSpin={onHandleSpin} segments={prizes.data} />
+            <div>
+              {" "}
+              <div
+                style={{
+                  zIndex: parseInt(user.data?.points / 1000) > 0 ? "-1" : "10",
+                  width: "1000px",
+                  height: "800px",
+                  position: "absolute",
+                }}
+              ></div>
+              <Wheel onHandleSpin={onHandleSpin} segments={prizes.data} />
+            </div>
           )}
           <p> Lịch sử quay</p>
 
