@@ -1,7 +1,7 @@
 import { Stack, TextField } from "@mui/material";
 import React, { useState, useRef } from "react";
 import isNumber from "../../../helpers/isNumber";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MyTable from "../../../components/MyTable";
 import addImg from "../../../assets/images/addimg.png";
 import { toast } from "react-toastify";
@@ -9,7 +9,9 @@ import axios from "axios";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { createPromotion } from "../../../redux/slices/promotionSlice";
 export default function AddPromotion() {
+  const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
   const inputEl = useRef(null);
   const [ten, setTen] = useState("");
@@ -67,6 +69,7 @@ export default function AddPromotion() {
         }
       );
       toast.success("Tạo sự kiện thành công");
+      dispatch(createPromotion({ promotion: res.data }));
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.err);

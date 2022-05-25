@@ -36,6 +36,21 @@ const promotionSlice = createSlice({
       );
       promotion.saledProducts = newProducts;
     },
+    createPromotion(state, action) {
+      const { promotion } = action.payload;
+      // console.log(promotion);
+      state.data.push(promotion);
+    },
+    deletePromotion(state, action) {
+      // console.log(action.payload);
+      const { promotionId } = action.payload;
+      // console.log(promotionId);
+      const newData = state.data.filter(
+        (item) => item.promotionId !== parseInt(promotionId)
+      );
+      console.log(newData);
+      state.data = newData;
+    },
   },
   extraReducers: {
     [fetchPromotion.pending]: (state) => {
@@ -54,6 +69,7 @@ const promotionSlice = createSlice({
   },
 });
 const { actions, reducer } = promotionSlice;
-export const { deleteProduct } = promotionSlice.actions;
+export const { deleteProduct, createPromotion, deletePromotion } =
+  promotionSlice.actions;
 
 export default reducer;

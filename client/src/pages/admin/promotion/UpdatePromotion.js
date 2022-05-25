@@ -1,7 +1,7 @@
 import { Stack, TextField } from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
 import isNumber from "../../../helpers/isNumber";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MyTable from "../../../components/MyTable";
 import addImg from "../../../assets/images/addimg.png";
 import { toast } from "react-toastify";
@@ -14,8 +14,10 @@ import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import UpdateProductPromotionTable from "./UpdateProductPromotionTable";
 import { authorization } from "../../../auth/auth";
+import { deletePromotion } from "../../../redux/slices/promotionSlice";
 
 export default function UpdatePromotion() {
+  const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
   const promotions = useSelector((state) => state.promotions);
   const [promotion, setPromotion] = useState(null);
@@ -68,6 +70,7 @@ export default function UpdatePromotion() {
       await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/promotions/${promotionId}`
       );
+      dispatch(deletePromotion({ promotionId }));
       navigate("/admin?tab=promotion");
       toast.success("Xóa thành công!");
     } catch (error) {

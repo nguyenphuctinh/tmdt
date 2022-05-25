@@ -48,7 +48,6 @@ router.get("/", async (req, res) => {
   }
 });
 router.post("/", async (req, res) => {
-  // neu expTime > startTime thi se dien ra
   if (new Date(req.body.endTime) < new Date(req.body.startTime)) {
     res.status(400).json({
       err: "Ngay bat dau khong the hon ngay ket thuc",
@@ -95,7 +94,7 @@ router.post("/", async (req, res) => {
         }
       );
     });
-    const newOrderId = await new Promise((resolve, reject) => {
+    const newPromotionId = await new Promise((resolve, reject) => {
       const stm = "insert into promotion values(default,?,?,?,?)";
       con.query(
         stm,
@@ -120,7 +119,7 @@ router.post("/", async (req, res) => {
         const stm = "insert into promotion_product   values(default,?,?,?)";
         con.query(
           stm,
-          [newOrderId, product.productId, parseFloat(product.sale)],
+          [newPromotionId, product.productId, parseFloat(product.sale)],
           (err, result) => {
             if (err) {
               console.log(err);
@@ -131,7 +130,14 @@ router.post("/", async (req, res) => {
         );
       });
     }
-    res.send("Thanh cong");
+    res.send({
+      promotionId: newPromotionId,
+      promotionName: req.body.ten,
+      promotionStartTime: req.body.startTime,
+      promotionExpTime: req.body.endTime,
+      promotionImg: req.body.imgSrc,
+      saledProducts: req.body.saledProducts,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
