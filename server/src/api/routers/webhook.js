@@ -144,7 +144,6 @@ async function handlePostback(sender_psid, received_postback) {
       ...newProductTemplateList,
     };
   }
-  // console.log(response.attachment.payload.elements);
   await callSendAPI(sender_psid, response);
 }
 async function handleMessage(sender_psid, received_message) {
@@ -165,11 +164,30 @@ async function handleMessage(sender_psid, received_message) {
         await callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
         if (wit.entities["product:name"]) {
           const names = wit.entities["product:name"];
-          reply = await productTemplateList(
-            products,
-            transfer(names[0].value.toLowerCase()),
-            "name"
+          let productsFilteredByName = products.filter((product) =>
+            product.productName
+              .toLowerCase()
+              .includes(transfer(names[0].value.toLowerCase()))
           );
+          if (wit.entities["color:color"]) {
+            const colors = wit.entities["color:color"];
+            let productsFilteredByColorAndName = await productTemplateList(
+              productsFilteredByName.filter((product) => {
+                console.log(
+                  product.productVariants.map((productVariant) =>
+                    productVariant.color.toLowerCase()
+                  ),
+                  colors[0].value.toLowerCase()
+                );
+                return product.productVariants
+                  .map((productVariant) => productVariant.color.toLowerCase())
+                  .includes(colors[0].value.toLowerCase());
+              })
+            );
+            reply = productsFilteredByColorAndName;
+          } else {
+            reply = await productTemplateList(productsFilteredByName);
+          }
         } else {
           const categories =
             wit.entities["product:category"] || wit.entities["product:name"];
@@ -178,9 +196,11 @@ async function handleMessage(sender_psid, received_message) {
             reply = { text: "Xin lỗi bạn, hiện tại không có sản phẩm nào" };
           } else {
             reply = await productTemplateList(
-              products,
-              transfer(categories[0].value.toLowerCase()),
-              "category"
+              products.filter(
+                (product) =>
+                  product.category.toLowerCase() ===
+                  transfer(categories[0].value.toLowerCase())
+              )
             );
           }
         }
@@ -292,7 +312,7 @@ const responses = {
   ],
 };
 
-const productTemplateList = async (products, filterValue, type) => {
+const productTemplateList = async (products) => {
   let newArrivals = {
     attachment: {
       type: "template",
@@ -302,53 +322,23 @@ const productTemplateList = async (products, filterValue, type) => {
       },
     },
   };
-  if (type === "name") {
-    for (let index = 0; index < products.length; index++) {
-      const product = { ...products[index] };
-      if (
-        product.productName.toLowerCase().includes(filterValue.toLowerCase())
-      ) {
-        newArrivals.attachment.payload.elements = [
-          ...newArrivals.attachment.payload.elements,
+  for (let index = 0; index < products.length; index++) {
+    const product = { ...products[index] };
+    newArrivals.attachment.payload.elements = [
+      ...newArrivals.attachment.payload.elements,
+      {
+        title: product.productName,
+        subtitle: "Tap a button to answer.",
+        image_url: product.productVariants[0].imgSrcList[0].img,
+        buttons: [
           {
-            title: product.productName,
-            subtitle: "Tap a button to answer.",
-            image_url: product.productVariants[0].imgSrcList[0].img,
-            buttons: [
-              {
-                type: "web_url",
-                title: "Xem chi tiết",
-                url: `https://ttcs-npt.web.app/product/${product.productName}`,
-              },
-            ],
+            type: "web_url",
+            title: "Xem chi tiết",
+            url: `https://ttcs-npt.web.app/product/${product.productName}`,
           },
-        ];
-      }
-    }
-  } else if (type === "category") {
-    for (let index = 0; index < products.length; index++) {
-      const product = { ...products[index] };
-      if (product.category === filterValue) {
-        if (newArrivals.attachment.payload.elements.length === 3) {
-          break;
-        }
-        newArrivals.attachment.payload.elements = [
-          ...newArrivals.attachment.payload.elements,
-          {
-            title: product.productName,
-            subtitle: "Tap a button to answer.",
-            image_url: product.productVariants[0].imgSrcList[0].img,
-            buttons: [
-              {
-                type: "web_url",
-                title: "Xem chi tiết",
-                url: `https://ttcs-npt.web.app/product/${product.productName}`,
-              },
-            ],
-          },
-        ];
-      }
-    }
+        ],
+      },
+    ];
   }
   return newArrivals;
 };

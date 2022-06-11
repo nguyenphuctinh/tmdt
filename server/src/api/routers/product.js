@@ -295,7 +295,6 @@ const addProductVariant = async (productId, productVariant, variantNames) => {
         }
       );
     });
-    // nếu như không tồn tại variant_value này thì mới insert vào
     let value_id = await new Promise((resolve, reject) => {
       const sql = `SELECT * FROM variant_value
                     join variant

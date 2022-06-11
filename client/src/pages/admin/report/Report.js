@@ -30,7 +30,6 @@ export default function Report() {
   const products = useSelector((state) => state.products);
 
   const dispatch = useDispatch();
-
   const [startTime, setStartTime] = useState(decreaseDays(new Date(), 60));
   const [startTimeError, setStartTimeError] = useState("");
   const [endTime, setEndTime] = useState(new Date());
@@ -62,6 +61,7 @@ export default function Report() {
             });
             return [...acc, ...productsInOrder];
           }, [])
+
           .reduce((acc, curr) => {
             let ok = 0;
             acc.forEach((element) => {
