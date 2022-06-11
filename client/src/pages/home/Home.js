@@ -8,6 +8,9 @@ import { Carousel } from "react-responsive-carousel";
 import sliderImg1 from "../../assets/images/top-mac-2880-800-1920x533-2.png";
 import sliderImg2 from "../../assets/images/2880-800-1920x533-2.png";
 import sliderImg3 from "../../assets/images/2880-800-1920x533-6.png";
+import mobileSliderImg1 from "../../assets/images/w7-720-720-720x720-2.png";
+import mobileSliderImg2 from "../../assets/images/720-720-720x720-5.png";
+import mobileSliderImg3 from "../../assets/images/720-720-720x720-7.png";
 import Product from "../../components/Product";
 import Promotion from "./Promotion";
 import { fetchPromotion } from "../../redux/slices/promotionSlice";
@@ -15,7 +18,6 @@ function Home() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
   const promotions = useSelector((state) => state.promotions);
-
   const [phones, setPhones] = useState([]);
   const [laptops, setLaptops] = useState([]);
   const [tablets, setTablets] = useState([]);
@@ -43,7 +45,7 @@ function Home() {
     <div className="App home">
       <div className="container-fluid ">
         <div className="row p-0">
-          <div className="p-0 col-12 slider">
+          <div className="p-0 col-12 slider d-none d-md-block">
             <Carousel
               infiniteLoop={true}
               autoPlay={true}
@@ -53,6 +55,18 @@ function Home() {
               <img src={sliderImg1} alt="" />
               <img src={sliderImg2} alt="" />
               <img src={sliderImg3} alt="" />
+            </Carousel>
+          </div>
+          <div className="p-0 col-12 slider d-block d-md-none">
+            <Carousel
+              infiniteLoop={true}
+              autoPlay={true}
+              showStatus={false}
+              showThumbs={false}
+            >
+              <img src={mobileSliderImg1} alt="" />
+              <img src={mobileSliderImg2} alt="" />
+              <img src={mobileSliderImg3} alt="" />
             </Carousel>
           </div>
         </div>
