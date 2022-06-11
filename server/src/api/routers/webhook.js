@@ -164,10 +164,9 @@ async function handleMessage(sender_psid, received_message) {
         await callSendAPI(sender_psid, { text: "Bạn đợi mình chút nhé!" });
         if (wit.entities["product:name"]) {
           const names = wit.entities["product:name"];
-          let productsFilteredByName = products.filter((product) =>
-            product.productName
-              .toLowerCase()
-              .includes(transfer(names[0].value.toLowerCase()))
+          let productsFilteredByName = filterProductsByName(
+            products,
+            transfer(names[0].value.toLowerCase())
           );
           if (wit.entities["color:color"]) {
             const colors = wit.entities["color:color"];
@@ -342,4 +341,19 @@ const productTemplateList = async (products) => {
   }
   return newArrivals;
 };
+function filterProductsByName(arr, q) {
+  return arr.filter((product) => {
+    let ok = 1;
+    const words = q.split(" ");
+    words.forEach((word) => {
+      if (
+        product.productName.toLowerCase().indexOf(word.toLowerCase()) === -1
+      ) {
+        ok = 0;
+      }
+    });
+    return ok;
+  });
+}
+
 export default router;
