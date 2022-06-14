@@ -1,10 +1,5 @@
 import mysql from "mysql";
 
-/*
-heroku logs --tail
-git push heroku master
-*/
-
 var db_config = {
   host: "localhost",
   user: "root",
