@@ -81,9 +81,10 @@ export default function Promotion({ promotion }) {
               </p>
             </div>
           </div>
-          <div className="promotion__btn myBtn">
-            <Link to={`/promotion/${promotion.promotionId}`}> Chi tiết</Link>
-          </div>
+          <Link to={`/promotion/${promotion.promotionId}`}>
+            {" "}
+            <div className="promotion__btn myBtn text-light"> Chi tiết</div>
+          </Link>
         </div>
       ) : new Date() > new Date(promotion?.promotionStartTime) &&
         new Date() < new Date(promotion?.promotionExpTime) ? (
@@ -116,9 +117,11 @@ export default function Promotion({ promotion }) {
                 </div>
               </div>
             </div>
-            <div className="promotion__btn myBtn">
-              <Link to={`/promotion/${promotion.promotionId}`}> Chi tiết</Link>
-            </div>
+
+            <Link to={`/promotion/${promotion.promotionId}`}>
+              {" "}
+              <div className="promotion__btn myBtn text-light"> Chi tiết</div>
+            </Link>
           </div>
         </>
       ) : (

@@ -28,13 +28,29 @@ export default function AddPromotion() {
   const handleSubmit = async () => {
     if (
       tenError !== "" ||
-      saleError !== "" ||
       startTimeError !== "" ||
       endTimeError !== "" ||
       saledProducts.length === 0 ||
       !img
     ) {
-      toast.error("Vui lòng nhập đầy đủ và chính xác thông tin");
+      if (tenError !== "") {
+        toast.error(tenError);
+      }
+      if (saleError !== "") {
+        toast.error(saleError);
+      }
+      if (startTimeError !== "") {
+        toast.error(startTimeError);
+      }
+      if (endTimeError !== "") {
+        toast.error(endTimeError);
+      }
+      if (saledProducts.length === 0) {
+        toast.error("Sự kiện cần ít nhất 1 sản phẩm được sale");
+      }
+      if (!img) {
+        toast.error("Chưa chọn ảnh");
+      }
       return;
     }
     try {
@@ -142,7 +158,7 @@ export default function AddPromotion() {
                     newValue.toString() === "Invalid Date"
                   ) {
                     console.log("invalid");
-                    setStartTimeError("Ngày  không hợp lệ");
+                    setStartTimeError("Ngày bắt đầu không hợp lệ");
                   } else {
                     setStartTime(newValue);
                     setStartTimeError("");
@@ -163,7 +179,7 @@ export default function AddPromotion() {
                     newValue.toString() === "Invalid Date"
                   ) {
                     console.log("invalid");
-                    setEndTimeError("Ngày  không hợp lệ");
+                    setEndTimeError("Ngày  kết thúc không hợp lệ");
                   } else {
                     setEndTime(newValue);
                     setEndTimeError("");
