@@ -8,7 +8,6 @@ import {
   addPrizeUser,
   fetchPrizesUserById,
 } from "../../redux/slices/prizesUserSlice";
-import { generateEntityId } from "../../helpers/generateId";
 import { decreasePoints } from "../../redux/slices/userSlice";
 export default function Prize() {
   const user = useSelector((state) => state.user);
@@ -19,7 +18,7 @@ export default function Prize() {
 
   useEffect(() => {
     dispatch(fetchPrizes());
-    dispatch(fetchPrizesUserById(user.data.id));
+    dispatch(fetchPrizesUserById(user.data?.id));
   }, []);
   const onHandleSpin = async (prizeName) => {
     console.log(prizeName);

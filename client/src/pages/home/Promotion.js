@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { countdown } from "../../helpers/dateCalculation";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Product from "../../components/Product";
 import Slider from "./Slider";
 
 export default function Promotion({ promotion }) {

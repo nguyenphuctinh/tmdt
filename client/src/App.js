@@ -40,7 +40,6 @@ function App() {
   useEffect(() => {
     document.title =
       " Cửa hàng điện thoại, máy tính, máy tính bảng, đồng hô chính hãng";
-
     setRendered(true);
     dispatch(fetchProduct());
     dispatch(fetchUser());
@@ -60,149 +59,187 @@ function App() {
   }, [user]);
   return (
     <>
-      {user.loading || products.loading || !rendered ? (
-        <Loading />
-      ) : (
-        <Router>
-          <ScrollToTop />
-          <ToastContainer />
-          <NavBar />
-          {loading.value ? <Loading /> : ""}
-          <Routes>
-            <Route
-              path="/"
-              element={
-                !user.data || user.data.role !== "admin" ? (
-                  <Home />
-                ) : (
-                  <Navigate to="/admin?tab=product" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/category/:category"
-              element={
-                !user.data || user.data.role !== "admin" ? (
-                  <CategoryPage />
-                ) : (
-                  <Navigate to="/admin?tab=product" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/search"
-              element={
-                !user.data || user.data.role !== "admin" ? (
-                  <Search />
-                ) : (
-                  <Navigate to="/admin?tab=product" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/product/:productName"
-              element={
-                !user.data || user.data.role !== "admin" ? (
-                  <ProductDetail />
-                ) : (
-                  <Navigate to="/admin?tab=product" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/account"
-              element={user.data ? <Account /> : <Navigate to="/login" />}
-            ></Route>
-            <Route
-              path="/cart"
-              element={
-                !user.data || user.data.role !== "admin" ? (
-                  <Cart />
-                ) : (
-                  <Navigate to="/admin?tab=product" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <Admin />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin/product/add"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <AddProduct />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin/promotion/add"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <AddPromotion />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin/promotion/update/:promotionId"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <UpdatePromotion />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin/product/update/:productId"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <UpdateProduct />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin/product"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <ProductAdmin />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route
-              path="/admin/order"
-              element={
-                user.data && user.data.role === "admin" ? (
-                  <OrderAdmin />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            ></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route
-              path="/promotion/:promotionId"
-              element={<PromotionDetail />}
-            ></Route>
-            <Route path="/register" element={<Register />}></Route>
-            <Route path="/*" element={<NotFound />}></Route>
-          </Routes>
-        </Router>
-      )}
+      <Router>
+        <ScrollToTop />
+        <ToastContainer />
+        {loading.value ||
+        user.loading === "pending" ||
+        products.loading ||
+        !rendered ? (
+          <Loading />
+        ) : (
+          ""
+        )}
+        <NavBar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !user.data || user.data.role !== "admin" ? (
+                <Home />
+              ) : (
+                <Navigate to="/admin?tab=product" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/category/:category"
+            element={
+              !user.data || user.data.role !== "admin" ? (
+                <CategoryPage />
+              ) : (
+                <Navigate to="/admin?tab=product" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/search"
+            element={
+              !user.data || user.data.role !== "admin" ? (
+                <Search />
+              ) : (
+                <Navigate to="/admin?tab=product" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/product/:productName"
+            element={
+              !user.data || user.data.role !== "admin" ? (
+                <ProductDetail />
+              ) : (
+                <Navigate to="/admin?tab=product" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/account"
+            element={
+              user.data ||
+              loading.value ||
+              user.loading === "pending" ||
+              products.loading ||
+              !rendered ? (
+                <Account />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/cart"
+            element={
+              !user.data || user.data.role !== "admin" ? (
+                <Cart />
+              ) : (
+                <Navigate to="/admin?tab=product" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <Admin />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin/product/add"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <AddProduct />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin/promotion/add"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <AddPromotion />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin/promotion/update/:promotionId"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <UpdatePromotion />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin/product/update/:productId"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <UpdateProduct />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin/product"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <ProductAdmin />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/admin/order"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data && user.data.role === "admin" ? (
+                <OrderAdmin />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/login"
+            element={
+              user.loading === "idle" || user.loading == "pending" ? (
+                ""
+              ) : user.data ? (
+                <Navigate to="/" />
+              ) : (
+                <Login />
+              )
+            }
+          ></Route>
+          <Route
+            path="/promotion/:promotionId"
+            element={<PromotionDetail />}
+          ></Route>
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/*" element={<NotFound />}></Route>
+        </Routes>
+      </Router>
     </>
   );
 }

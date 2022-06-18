@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import { useTheme } from "@mui/material/styles";
@@ -20,7 +19,6 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { dict } from "../helpers/dict.js";
 import axios from "axios";
 import {
@@ -117,7 +115,7 @@ export default function ProductTable({ rows, userId, type }) {
   const onHandleIncrease = async (productVariantId, quantity) => {
     if (userId) {
       try {
-        const res = await axios.put(
+        await axios.put(
           `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
           {
             quantity: quantity + 1,
@@ -134,7 +132,7 @@ export default function ProductTable({ rows, userId, type }) {
   const onHandleDecrease = async (productVariantId, quantity) => {
     if (userId) {
       try {
-        const res = await axios.put(
+        await axios.put(
           `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`,
           {
             quantity: quantity - 1,
@@ -151,7 +149,7 @@ export default function ProductTable({ rows, userId, type }) {
   const handleRemove = async (productVariantId) => {
     if (userId) {
       try {
-        const res = await axios.delete(
+        await axios.delete(
           `${process.env.REACT_APP_API_URL}/api/carts/${userId}/${productVariantId}`
         );
         dispatch(removeItem({ productVariantId }));

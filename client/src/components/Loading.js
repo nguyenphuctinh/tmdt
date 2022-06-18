@@ -1,5 +1,5 @@
 import React from "react";
-import { TailSpin } from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 export default function Loading({
@@ -8,7 +8,7 @@ export default function Loading({
   heightContainer = "100vh",
 }) {
   return (
-    <div style={{ position: "fixed" }} className="container-fluid">
+    <div style={{ position: "fixed", zIndex: 4 }} className="container-fluid">
       <div className="row">
         <div className="col-12 p-0">
           <div
@@ -19,12 +19,20 @@ export default function Loading({
             }}
             className="grid"
           >
-            <TailSpin
-              type="TailSpin"
+            <Oval
+              ariaLabel="loading-indicator"
+              height={height}
+              width={width}
+              strokeWidth={3}
+              color="white"
+              secondaryColor="black"
+            />
+            {/* <TailSpin
+              type="BallTriangle"
               color="#00BFFF"
               height={height}
               width={width}
-            />
+            /> */}
           </div>
         </div>
       </div>

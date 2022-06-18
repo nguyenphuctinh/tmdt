@@ -13,8 +13,6 @@ export default function UpdatePw() {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const user = useSelector((state) => state.user);
   const onHandleClick = async () => {
-    console.log("ok");
-
     if (newPassword !== confirmPassword || newPassword.length === 0) {
       return;
     }
@@ -29,7 +27,6 @@ export default function UpdatePw() {
         },
         authorization()
       );
-      console.log(res);
       toast.success("Đổi mật khẩu thành công");
       setNewPassword("");
       setPassword("");

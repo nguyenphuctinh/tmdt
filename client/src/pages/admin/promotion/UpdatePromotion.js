@@ -1,9 +1,7 @@
 import { Stack, TextField } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import isNumber from "../../../helpers/isNumber";
 import { useSelector, useDispatch } from "react-redux";
-import MyTable from "../../../components/MyTable";
-import addImg from "../../../assets/images/addimg.png";
 import { toast } from "react-toastify";
 import axios from "axios";
 import NotFound from "../../notfound/NotFound";
@@ -13,7 +11,6 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import UpdateProductPromotionTable from "./UpdateProductPromotionTable";
-import { authorization } from "../../../auth/auth";
 import { deletePromotion } from "../../../redux/slices/promotionSlice";
 
 export default function UpdatePromotion() {
@@ -21,7 +18,6 @@ export default function UpdatePromotion() {
   const products = useSelector((state) => state.products);
   const promotions = useSelector((state) => state.promotions);
   const [promotion, setPromotion] = useState(null);
-  const inputEl = useRef(null);
   const [ten, setTen] = useState("");
   const [tenError, setTenError] = useState("");
   const [sale, setSale] = useState("");
@@ -32,7 +28,6 @@ export default function UpdatePromotion() {
   const [startTimeError, setStartTimeError] = useState("");
   const [endTime, setEndTime] = useState(null);
   const [endTimeError, setEndTimeError] = useState("");
-  const [img, setImg] = useState(null);
   const { promotionId } = useParams();
   const navigate = useNavigate();
   const handleAddProduct = async () => {

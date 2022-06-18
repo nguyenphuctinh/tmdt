@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../redux/slices/userSlice";
+import { changeNavbar } from "../../redux/slices/navbarSlice";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  function login() {
+  const login = (e) => {
+    e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_API_URL}/login`, {
         username: username,
@@ -22,7 +24,7 @@ export default function Login() {
           "token",
           JSON.stringify(response.data.accessToken)
         );
-        toast(response.data.message);
+        // toast(response.data.message);
         dispatch(fetchUser());
       })
       .catch(function (error) {
@@ -35,42 +37,41 @@ export default function Login() {
           toast("Error", error.message);
         }
       });
-  }
+  };
   if (user.data) {
     return <Navigate to="/" />;
   }
+
   return (
     <div className="container w-50">
       <div className="row ">
         <div className="col-12 ">
           <div className="">
-            <div className="">
+            <form onSubmit={(e) => login(e)} className="">
               <h1>Đăng nhập</h1>
               <input
                 onChange={(event) => setUsername(event.target.value)}
                 value={username}
                 type="text"
                 className="form-control"
-                placeholder="usename"
+                placeholder="Tài khoản"
               />
+              <br />
               <input
                 onChange={(event) => setPassword(event.target.value)}
                 value={password}
                 type="password"
                 className="form-control"
-                placeholder="pass"
+                placeholder="Mật khẩu"
               />
-              <button
-                onClick={() => login()}
-                type="button"
-                className="btn btn-primary"
-              >
+              <br />
+              <button type="submit" className="btn btn-primary">
                 Đăng nhập
               </button>
               <Link className="text-success" to="/register">
                 Đăng ký
               </Link>
-            </div>
+            </form>
           </div>
         </div>
       </div>

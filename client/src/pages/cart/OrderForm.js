@@ -29,7 +29,7 @@ export default function OrderForm({ items }) {
 
   useEffect(() => {
     if (user.data) dispatch(fetchPrizesUserById(user.data.id));
-  }, []);
+  }, [user.data]);
   const handleChangeCoupons = (e) => {
     console.log(e.target.value);
     setCoupons(e.target.value);

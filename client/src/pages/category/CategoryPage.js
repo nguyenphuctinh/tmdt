@@ -3,12 +3,9 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
-
 import Product from "../../components/Product";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import NotFound from "../notfound/NotFound";
-import Slider from "../home/Slider";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 export default function CategoryPage() {
   const category = useParams().category;

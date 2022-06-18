@@ -19,7 +19,7 @@ export const fetchUser = createAsyncThunk("user/fecthUser", async () => {
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    loading: false,
+    loading: "idle",
     data: null,
     error: null,
   },
@@ -33,15 +33,15 @@ const userSlice = createSlice({
   },
   extraReducers: {
     [fetchUser.pending]: (state) => {
-      state.loading = true;
+      state.loading = "pending";
     },
     [fetchUser.rejected]: (state, action) => {
-      state.loading = false;
+      state.loading = "loaded";
       state.error = action.error.message;
     },
     [fetchUser.fulfilled]: (state, action) => {
       // console.log(action);
-      state.loading = false;
+      state.loading = "loaded";
       state.data = action.payload;
       state.error = null;
     },

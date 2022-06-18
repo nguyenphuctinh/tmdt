@@ -15,6 +15,7 @@ import { changeNavbar } from "../../redux/slices/navbarSlice";
 export default function ProductDetail() {
   let user = useSelector((state) => state.user);
   let cart = useSelector((state) => state.cart);
+  let loading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
   const [variantValues, setVariantValues] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -29,12 +30,13 @@ export default function ProductDetail() {
     useState(false);
   useEffect(() => {
     dispatch(changeNavbar("others"));
-    console.log(productName);
-    setProduct(
-      products?.data.find((item) => {
-        return item.productName === productName;
-      })
-    );
+    if (products.data.length > 0) {
+      setProduct(
+        products.data.find((item) => {
+          return item.productName === productName;
+        })
+      );
+    }
   }, [products]);
   useEffect(() => {
     setSelectedProductVariant(product?.productVariants[0]);
@@ -91,16 +93,13 @@ export default function ProductDetail() {
       );
     } else {
       try {
-        const res = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/carts`,
-          {
-            productVariantId: selectedProductVariant.productVariantId,
-            sale: product.sale,
-            price: selectedProductVariant.price,
-            quantity,
-            userId: user.data.id,
-          }
-        );
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/carts`, {
+          productVariantId: selectedProductVariant.productVariantId,
+          sale: product.sale,
+          price: selectedProductVariant.price,
+          quantity,
+          userId: user.data.id,
+        });
 
         dispatch(
           addItem({
@@ -118,7 +117,12 @@ export default function ProductDetail() {
       }
     }
   };
-  if (product === undefined) {
+  if (
+    product === undefined &&
+    user.loading === "loaded" &&
+    !products.loading &&
+    !loading.value
+  ) {
     return <NotFound />;
   }
 

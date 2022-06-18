@@ -1,6 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
+import React from "react";
 import WheelComponent from "react-wheel-of-prizes";
-import { fetchPrizes } from "../../redux/slices/prizeSlice";
 
 export default function Wheel({ segments, onHandleSpin }) {
   const segColors = [

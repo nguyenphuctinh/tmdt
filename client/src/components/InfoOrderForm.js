@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -68,7 +67,7 @@ export default function InfoOrderForm({
         );
         userId = res.data.userId;
       } else {
-        const res = await axios.put(
+        await axios.put(
           `${process.env.REACT_APP_API_URL}/api/users/${user.data.id}`,
           {
             firstName,
@@ -86,14 +85,11 @@ export default function InfoOrderForm({
           authorization()
         );
       }
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/orders`,
-        {
-          productVariants,
-          coupons: !coupons ? 0 : coupons,
-          userId,
-        }
-      );
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/orders`, {
+        productVariants,
+        coupons: !coupons ? 0 : coupons,
+        userId,
+      });
 
       if (type === "orderFromCart") {
         await axios.delete(

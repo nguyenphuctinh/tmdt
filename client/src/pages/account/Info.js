@@ -1,9 +1,8 @@
 import { Stack, TextField } from "@mui/material";
 import { toast } from "react-toastify";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -12,14 +11,14 @@ import isPhoneNumber from "../../helpers/isPhoneNumber";
 
 export default function Info() {
   const user = useSelector((state) => state.user);
-  const [firstName, setFirstName] = useState(user.data.firstName);
+  const [firstName, setFirstName] = useState(user.data?.firstName);
   const [firstNameError, setFirstNameError] = useState("");
-  const [lastName, setLastName] = useState(user.data.lastName);
+  const [lastName, setLastName] = useState(user.data?.lastName);
   const [lastNameError, setLastNameError] = useState("");
-  const [phone, setPhone] = useState(user.data.phone || "");
-  const [dob, setDob] = useState(new Date(user.data.dob));
+  const [phone, setPhone] = useState(user.data?.phone || "");
+  const [dob, setDob] = useState(new Date(user.data?.dob));
   const [dobError, setDobError] = useState("");
-  const [address, setAddress] = useState(user.data.address || "");
+  const [address, setAddress] = useState(user.data?.address || "");
   const onHandleClick = async () => {
     console.log(firstNameError, lastNameError, dobError);
     if (!firstName || !lastName || dobError !== "") {
@@ -32,7 +31,7 @@ export default function Info() {
     }
     console.log(firstName, lastName, phone, typeof dob, address);
     try {
-      const res = await axios.put(
+      await axios.put(
         `${process.env.REACT_APP_API_URL}/api/users/${user.data.id}`,
         {
           firstName,
@@ -55,7 +54,14 @@ export default function Info() {
       toast.error("Cập nhật thất bại!");
     }
   };
-  return (
+  useEffect(() => {
+    setFirstName(user.data?.firstName);
+    setLastName(user.data?.lastName);
+    setPhone(user.data?.phone);
+    setDob(new Date(user.data?.dob));
+    setAddress(user.data?.address);
+  }, [user.data]);
+  return user.data ? (
     <div className="container updateInfo">
       <div className="row">
         <div className="col-12">
@@ -145,5 +151,7 @@ export default function Info() {
         </button>
       </div>
     </div>
+  ) : (
+    ""
   );
 }

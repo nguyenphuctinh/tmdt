@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchOrders, fetchAllOrders } from "../redux/slices/orderSlice";
 import Order from "./Order";
@@ -9,7 +9,7 @@ export default function OrderList({ tab, type = "normal" }) {
 
   useEffect(() => {
     if (type === "normal") {
-      dispatch(fetchOrders(user.data.id));
+      dispatch(fetchOrders(user.data?.id));
     } else {
       dispatch(fetchAllOrders());
     }

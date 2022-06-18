@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -19,8 +18,6 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { authorization } from "../../../auth/auth";
 import { updateUser } from "../../../redux/slices/userListSlice";
 import { generateEntityId } from "../../../helpers/generateId";

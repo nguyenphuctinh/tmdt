@@ -5,11 +5,9 @@ import { Stack, TextField } from "@mui/material";
 import { addMonths } from "date-fns/esm";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import {
-  LineChart,
-  Line,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -24,12 +22,10 @@ import {
   decreaseDays,
   getMonthDifference,
 } from "../../../helpers/dateCalculation";
-import { fetchAllOrders } from "../../../redux/slices/orderSlice";
 export default function Report() {
   const orders = useSelector((state) => state.orders);
   const products = useSelector((state) => state.products);
 
-  const dispatch = useDispatch();
   const [startTime, setStartTime] = useState(decreaseDays(new Date(), 60));
   const [startTimeError, setStartTimeError] = useState("");
   const [endTime, setEndTime] = useState(new Date());
@@ -38,90 +34,95 @@ export default function Report() {
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
 
   useEffect(() => {
-    setCategoryReport([
-      {
-        ...orders.data
+    if (products.data.length > 0) {
+      setCategoryReport([
+        {
+          ...orders.data
+            ?.filter((order) => {
+              return (
+                new Date(order.orderDate) >= startTime &&
+                new Date(order.orderDate) <= endTime &&
+                order.orderStatus.toLowerCase() === "đã giao"
+              );
+            })
+            .reduce((acc, curr) => {
+              const productsInOrder = curr.orderItems.map((item) => {
+                return {
+                  category: products.data.find((product) => {
+                    console.log(product.productVariants);
+                    return product.productVariants
+                      .map((productVariant) => productVariant.productVariantId)
+                      .includes(item.productVariantId);
+                  }).category,
+                  quantity: item.quantity,
+                };
+              });
+              return [...acc, ...productsInOrder];
+            }, [])
+            .reduce((acc, curr) => {
+              let ok = 0;
+              acc.forEach((element) => {
+                if (element.category === curr.category) {
+                  element.quantity += curr.quantity;
+                  ok = 1;
+                }
+              });
+              if (acc.length === 0) {
+                return [curr];
+              }
+              if (ok === 0) {
+                return [...acc, curr];
+              }
+              return acc;
+            }, [])
+            .map((element) => {
+              return { [element.category]: element.quantity };
+            })
+            .reduce(
+              (acc, curr) => {
+                return { ...acc, ...curr };
+              },
+              { name: "Số sản phẩm đã bán" }
+            ),
+        },
+      ]);
+      let monthCount = getMonthDifference(
+        new Date(startTime),
+        new Date(endTime)
+      );
+      let data = [];
+
+      for (let i = 0; i <= monthCount; i++) {
+        let revenue = orders.data
           ?.filter((order) => {
             return (
-              new Date(order.orderDate) >= startTime &&
-              new Date(order.orderDate) <= endTime &&
+              new Date(order.orderDate).getMonth() ==
+                addMonths(startTime, i).getMonth() &&
               order.orderStatus.toLowerCase() === "đã giao"
             );
           })
-          .reduce((acc, curr) => {
-            const productsInOrder = curr.orderItems.map((item) => {
-              return {
-                category: products.data.find((product) => {
-                  return product.productVariants
-                    .map((productVariant) => productVariant.productVariantId)
-                    .includes(item.productVariantId);
-                }).category,
-                quantity: item.quantity,
-              };
-            });
-            return [...acc, ...productsInOrder];
-          }, [])
-
-          .reduce((acc, curr) => {
-            let ok = 0;
-            acc.forEach((element) => {
-              if (element.category === curr.category) {
-                element.quantity += curr.quantity;
-                ok = 1;
-              }
-            });
-            if (acc.length === 0) {
-              return [curr];
-            }
-            if (ok === 0) {
-              return [...acc, curr];
-            }
-            return acc;
-          }, [])
-          .map((element) => {
-            return { [element.category]: element.quantity };
+          .map((order) => {
+            return order.orderItems.reduce((acc, curr) => {
+              return acc + curr.quantity * curr.price * (1 - curr.sale);
+            }, 0);
           })
-          .reduce(
-            (acc, curr) => {
-              return { ...acc, ...curr };
-            },
-            { name: "Số sản phẩm đã bán" }
-          ),
-      },
-    ]);
-    let monthCount = getMonthDifference(new Date(startTime), new Date(endTime));
-    let data = [];
-
-    for (let i = 0; i <= monthCount; i++) {
-      let revenue = orders.data
-        ?.filter((order) => {
-          return (
-            new Date(order.orderDate).getMonth() ==
-              addMonths(startTime, i).getMonth() &&
-            order.orderStatus.toLowerCase() === "đã giao"
-          );
-        })
-        .map((order) => {
-          return order.orderItems.reduce((acc, curr) => {
-            return acc + curr.quantity * curr.price * (1 - curr.sale);
+          .reduce((acc, curr) => {
+            return acc + curr;
           }, 0);
-        })
-        .reduce((acc, curr) => {
-          return acc + curr;
-        }, 0);
-      data = [
-        ...data,
-        {
-          name: ` ${addMonths(startTime, i).getMonth() + 1}/${addMonths(
-            startTime,
-            i
-          ).getFullYear()}`,
-          revenue: revenue / 1000000,
-        },
-      ];
+        data = [
+          ...data,
+          {
+            name: ` ${addMonths(startTime, i).getMonth() + 1}/${addMonths(
+              startTime,
+              i
+            ).getFullYear()}`,
+            revenue: revenue / 1000000,
+          },
+        ];
+      }
+      setMonthlyRevenue(data);
     }
-    setMonthlyRevenue(data);
-  }, [orders.data, startTime, endTime]);
+  }, [orders.data, startTime, endTime, products.data]);
   return (
     <div>
       <p>Thống kê doanh thu</p>
@@ -171,7 +172,6 @@ export default function Report() {
                       newValue === null ||
                       newValue.toString() === "Invalid Date"
                     ) {
-                      console.log("invalid");
                       setEndTimeError("Ngày không hợp lệ");
                     } else {
                       setEndTime(newValue);
@@ -187,7 +187,7 @@ export default function Report() {
           </div>
         </div>
       </div>
-      {orders && orders.data && (
+      {orders.data && products.data.length > 0 && (
         <div>
           <div className="pb-3">
             {" "}

@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { logoutAction } from "../../redux/slices/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Link,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { changeNavbar } from "../../redux/slices/navbarSlice.js";
 import UpdatePw from "./UpdatePw.js";
@@ -30,7 +25,7 @@ export default function Account() {
     <div className="container-fluid">
       <div className="row">
         <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-3">
-          {user.data.role !== "admin" ? (
+          {user.data?.role !== "admin" ? (
             <>
               <p>
                 <Link to="/account?tab=info"> Cập nhật thông tin</Link>
