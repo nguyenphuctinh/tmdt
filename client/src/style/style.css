@@ -85,36 +85,9 @@ a:hover {
 .myNavbar img {
   width: 60%;
 }
-.menu .bg {
-  height: 2.5rem;
-  position: relative;
-  width: 2.5rem;
-  background-color: #2f3033;
-  border-radius: 50%;
-}
-.menu i {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-weight: 300;
-  transform: translate(-50%, -50%);
-}
-.menu .bg:hover {
-  background-color: #4f5155;
-}
-.menu a {
-  display: inline;
-  padding: 0;
-}
 
-.searchInput {
-  padding: 1rem 2rem;
-  background-color: transparent;
-  width: 100%;
-  border: none;
-  color: white;
-  transition: all 1s;
-}
+
+
 input:focus {
   outline: none !important;
 }

@@ -2,9 +2,7 @@
   html {
     font-size: 12px;
   }
-  .space {
-    padding-top: 4.5rem;
-  }
+  
   .addtocart,
   .installment {
     display: block;
@@ -35,9 +33,7 @@
   html {
     font-size: 13px;
   }
-  .space {
-    padding-top: 4.5rem;
-  }
+  
   .addtocart,
   .installment {
     display: block;
@@ -60,9 +56,7 @@
   html {
     font-size: 14px;
   }
-  .space {
-    padding-top: 2.5rem;
-  }
+ 
   .addtocart,
   .installment {
     display: block;
@@ -79,9 +73,7 @@
   html {
     font-size: 15px;
   }
-  .space {
-    padding-top: 2.5rem;
-  }
+ 
   .addtocart,
   .installment {
     padding: 1rem 2rem;
@@ -99,9 +91,7 @@
     padding: 1rem 1.5rem;
   }
 
-  .space {
-    padding-top: 3.5rem;
-  }
+ 
   .padding-lg {
     padding-right: 1rem;
     padding-left: 1rem;
@@ -119,9 +109,7 @@
   .main a {
     padding: 1rem 1.5rem;
   }
-  .space {
-    padding-top: 3.5rem;
-  }
+ 
 
   .padding-lg {
     padding-right: 4rem;
@@ -136,9 +124,7 @@
   .main a {
     padding: 1rem 1.5rem;
   }
-  .space {
-    padding-top: 3.5rem;
-  }
+ 
 
   .padding-lg {
     padding-right: 4rem;
@@ -153,9 +139,7 @@
   .main a {
     padding: 1rem 1.5rem;
   }
-  .space {
-    padding-top: 3.5rem;
-  }
+ 
 
   .padding-lg {
     padding-right: 4rem;
