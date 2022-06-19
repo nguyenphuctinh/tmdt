@@ -24,7 +24,10 @@ export default function Account() {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-3">
+        <div
+          style={{ backgroundColor: "#424B54" }}
+          className="col-12 col-sm-3 p-3"
+        >
           {user.data?.role !== "admin" ? (
             <>
               <p>

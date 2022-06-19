@@ -8,7 +8,7 @@ export const StyledLoading = styled(Loading)`
 export const StyledDiv = styled.div`
   height: ${(props) => props.heightContainer};
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: grid;
   place-items: center;
 `;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Grid } from "@mui/material";
+import { Grid, List } from "@mui/material";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,7 +15,7 @@ export const NavbarWrapper = styled(Grid)`
 `;
 
 export const NavbarLogo = styled.img`
-  width: 60%;
+  width: ${(props) => props.width};
 `;
 
 export const Cart = styled.div`
@@ -63,8 +63,9 @@ export const StyledSearchIcon = styled(SearchIcon)`
   color: white;
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: ${(props) => props.right};
+
+  transform: translate(50%, -50%);
 `;
 export const StyledCloseIcon = styled(CloseIcon)`
   color: white;
@@ -94,13 +95,13 @@ export const StyledMenuIcon = styled(MenuIcon)`
 `;
 export const Space = styled.div`
   @media (max-width: 349.99px) {
-    padding-top: 4.5rem;
+    padding-top: 2.7rem;
   }
   @media (min-width: 350px) and (max-width: 575.99px) {
-    padding-top: 4.5rem;
+    padding-top: 2.8rem;
   }
   @media (min-width: 576px) and (max-width: 767.98px) {
-    padding-top: 2.5rem;
+    padding-top: 3rem;
   }
   @media (min-width: 768px) and (max-width: 991.98px) {
     padding-top: 2.5rem;
@@ -117,4 +118,12 @@ export const Space = styled.div`
   @media (min-width: 2506px) {
     padding-top: 3.5rem;
   }
+`;
+
+export const DrawerLink = styled(Link)`
+  width: 100%;
+`;
+export const StyledList = styled(List)`
+  display: flex;
+  justify-content: center;
 `;

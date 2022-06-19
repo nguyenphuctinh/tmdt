@@ -18,7 +18,7 @@ export default function Loading({
             height={height}
             width={width}
             strokeWidth={3}
-            color="white"
+            color="gray"
             secondaryColor="black"
           />
         </StyledDiv>

@@ -27,6 +27,8 @@ import {
   Space,
   SearchInput,
   StyledMenuIcon,
+  DrawerLink,
+  StyledList,
 } from "./NavBar.style";
 
 import { Box } from "@mui/system";
@@ -38,6 +40,7 @@ function NavBar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const inputEl = useRef(null);
+  const inputMobileEl = useRef(null);
   let user = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -53,6 +56,8 @@ function NavBar() {
         search: "?q=" + q,
       });
       setFinding(false);
+      inputMobileEl.current.value = "";
+      inputMobileEl.current.blur();
     }
   };
   const handleDrawerOpen = () => {
@@ -61,58 +66,104 @@ function NavBar() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
   return (
     <>
       <Drawer
         sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-          },
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
         }}
-        variant="persistent"
-        anchor="right"
+        variant="temporary"
         open={open}
+        anchor="right"
+        onClose={handleDrawerClose}
+        ModalProps={{
+          keepMounted: true,
+        }}
       >
-        <IconButton onClick={handleDrawerClose}>
-          <ChevronLeftIcon />
-        </IconButton>
+        <StyledList>
+          <Box
+            sx={{ width: "75%" }}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            px={2}
+          >
+            {!user.data || user.data.role !== "admin" ? (
+              <>
+                <Box onClick={handleDrawerClose}>
+                  <Link to="/cart">
+                    <Bg>
+                      <Cart>
+                        <Quantity>
+                          {cart.data.cartItems.reduce((a, b) => {
+                            return a + b.quantity;
+                          }, 0)}
+                        </Quantity>
+                      </Cart>
+                      <StyledShoppingBagOutlinedIcon />
+                    </Bg>
+                  </Link>
+                </Box>
+              </>
+            ) : (
+              ""
+            )}
+            <Box onClick={handleDrawerClose}>
+              <Link to="/account?tab=security">
+                <Bg>
+                  <StyledPersonOutlineOutlinedIcon />
+                </Bg>
+              </Link>
+            </Box>
+          </Box>
+        </StyledList>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          {["Phone", "Laptop", "Tablet", "Watch"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
+              <DrawerLink
+                onClick={handleDrawerClose}
+                to={`/category/${text.toLowerCase()}`}
+              >
+                <ListItemButton>
+                  <ListItemText
+                    primaryTypographyProps={{ style: { color: "black" } }}
+                    primary={text}
+                  />
+                </ListItemButton>
+              </DrawerLink>
             </ListItem>
           ))}
         </List>
       </Drawer>
       <NavbarWrapper>
         <Grid container sx={{ display: { xs: "flex", md: "none" } }}>
-          <Grid item xs={2}>
-            <NavbarLogo src={logo} alt="logo" />
+          <Grid py={1} display="flex" alignItems={"center"} item xs={3}>
+            <Link to="/">
+              <NavbarLogo width={"100%"} src={logo} alt="logo" />
+            </Link>
           </Grid>
 
-          <Grid item xs={8}>
-            <input type="text" />
+          <Grid
+            position={"relative"}
+            display={"flex"}
+            justifyContent="space-between"
+            item
+            xs={7}
+          >
+            <SearchInput
+              onBlur={() => setFinding(false)}
+              ref={inputMobileEl}
+              onKeyDown={handleKeyDown}
+              id="search"
+              autoComplete="off"
+              type="search"
+              placeholder="Bạn tìm gì..."
+              aria-label="Search"
+            />
+            <StyledSearchIcon right="0rem" />
           </Grid>
           <Grid justifyContent={"center"} display="flex" item xs={2}>
             <IconButton
@@ -120,7 +171,7 @@ function NavBar() {
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerOpen}
-              sx={{ ...(open && { display: "none" }) }}
+              sx={{ ...(open && { display: "none" }), p: 0 }}
             >
               <StyledMenuIcon />
             </IconButton>
@@ -195,7 +246,7 @@ function NavBar() {
           <Grid item xs={4} alignItems="center">
             <div onClick={() => setFinding(false)}>
               <Link to="/">
-                <NavbarLogo src={logo} alt="" />
+                <NavbarLogo width={"60%"} src={logo} alt="" />
               </Link>
             </div>
           </Grid>
@@ -216,7 +267,7 @@ function NavBar() {
                   }}
                 >
                   <Bg>
-                    <StyledSearchIcon />
+                    <StyledSearchIcon right="50%" />
                   </Bg>
                 </Box>
                 <Box onClick={() => setFinding(false)}>
