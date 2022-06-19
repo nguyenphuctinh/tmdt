@@ -154,7 +154,6 @@ function NavBar() {
             xs={7}
           >
             <SearchInput
-              onBlur={() => setFinding(false)}
               ref={inputMobileEl}
               onKeyDown={handleKeyDown}
               id="search"
