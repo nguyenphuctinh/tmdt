@@ -110,6 +110,7 @@ function NavBar() {
             ) : (
               ""
             )}
+
             <Box onClick={handleDrawerClose}>
               <Link to="/account?tab=security">
                 <Bg>
@@ -120,38 +121,53 @@ function NavBar() {
           </Box>
         </StyledList>
         <Divider />
-        <List>
-          {["Phone", "Laptop", "Tablet", "Watch"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <DrawerLink
-                onClick={handleDrawerClose}
-                to={`/category/${text.toLowerCase()}`}
-              >
+        {!user.data || user.data.role !== "admin" ? (
+          <List>
+            {["Phone", "Laptop", "Tablet", "Watch"].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <DrawerLink
+                  onClick={handleDrawerClose}
+                  to={`/category/${text.toLowerCase()}`}
+                >
+                  <ListItemButton>
+                    <ListItemText
+                      primaryTypographyProps={{ style: { color: "black" } }}
+                      primary={text}
+                    />
+                  </ListItemButton>
+                </DrawerLink>
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <List>
+            <ListItem disablePadding>
+              <DrawerLink onClick={handleDrawerClose} to={`/admin`}>
                 <ListItemButton>
                   <ListItemText
                     primaryTypographyProps={{ style: { color: "black" } }}
-                    primary={text}
+                    primary={"Admin"}
                   />
                 </ListItemButton>
               </DrawerLink>
             </ListItem>
-          ))}
-        </List>
+          </List>
+        )}
       </Drawer>
       <NavbarWrapper>
         <Grid container sx={{ display: { xs: "flex", md: "none" } }}>
-          <Grid py={1} display="flex" alignItems={"center"} item xs={3}>
+          <Grid py={1} display="flex" alignItems={"center"} item xs={3} sm={2}>
             <Link to="/">
               <NavbarLogo width={"100%"} src={logo} alt="logo" />
             </Link>
           </Grid>
-
           <Grid
             position={"relative"}
             display={"flex"}
             justifyContent="space-between"
             item
             xs={7}
+            sm={8}
           >
             <SearchInput
               ref={inputMobileEl}
@@ -164,7 +180,7 @@ function NavBar() {
             />
             <StyledSearchIcon right="0rem" />
           </Grid>
-          <Grid justifyContent={"center"} display="flex" item xs={2}>
+          <Grid justifyContent={"center"} display="flex" item xs={2} md={2}>
             <IconButton
               color="inherit"
               aria-label="open drawer"

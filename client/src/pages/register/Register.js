@@ -68,7 +68,7 @@ export default function Register() {
     }
   };
   return (
-    <div className="container w-50">
+    <div className="container w-50 pt-1">
       <div className="row">
         <div className="col-12">
           <ToastContainer /> <h1>Đăng ký</h1>

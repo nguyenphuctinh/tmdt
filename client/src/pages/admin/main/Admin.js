@@ -28,9 +28,12 @@ export default function Admin() {
     dispatch(fetchAllOrders());
   }, []);
   return (
-    <div className="container-fluid">
+    <div className="container-fluid ">
       <div className="row">
-        <div style={{ backgroundColor: "#424B54" }} className="col-12 col-sm-2">
+        <div
+          style={{ backgroundColor: "#424B54" }}
+          className="col-12 col-sm-2 pt-2 pb-2"
+        >
           <Link to="/admin?tab=product">Quản lý sản phẩm</Link>
           <br />
           <Link to="/admin?tab=user">Quản lý người dùng</Link>
