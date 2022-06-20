@@ -22,9 +22,7 @@
   .cart .productName {
     display: block;
   }
-  .orderFormContainer {
-    width: 75%;
-  }
+  
   .promotion__name{
     font-size: 1rem;
   }
@@ -47,9 +45,7 @@
   .updateForm {
     width: 75%;
   }
-  .orderFormContainer{
-    width: 75%;
-  }
+  
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -64,9 +60,7 @@
   .product .productPrice--sale {
     font-size: 0.8rem;
   }
-  .orderFormContainer {
-    width: 75%;
-  }
+ 
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {

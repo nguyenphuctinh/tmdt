@@ -17,6 +17,8 @@ import {
   OptionActiveBg,
   OptionBg,
   OptionValue,
+  OrderFormBg,
+  OrderFormContainer,
   ProductName,
   ProductPrice,
   SaledProductPrice,
@@ -140,28 +142,10 @@ export default function ProductDetail() {
       <Grid p={1} container>
         {updateInfoOrderFormOpened ? (
           <>
-            <div
+            <OrderFormBg
               onClick={() => setUpdateInfoOrderFormOpened(false)}
-              style={{
-                position: "fixed",
-                height: "100vh",
-                width: "100vw",
-                zIndex: "2",
-                left: 0,
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
-            ></div>
-            <div
-              className="orderFormContainer"
-              style={{
-                position: "fixed",
-                left: "50%",
-                overflowY: "auto",
-                height: "400px",
-                transform: "translate(-50%, 0)",
-                zIndex: "3",
-              }}
-            >
+            ></OrderFormBg>
+            <OrderFormContainer>
               <InfoOrderForm
                 productVariants={[
                   {
@@ -172,7 +156,7 @@ export default function ProductDetail() {
                   },
                 ]}
               />
-            </div>
+            </OrderFormContainer>
           </>
         ) : (
           ""

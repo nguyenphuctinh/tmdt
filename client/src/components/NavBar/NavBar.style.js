@@ -77,7 +77,7 @@ export const CategoryNavLink = styled(Link)`
   text-align: center;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.bgcolor};
   &:hover {
     background-color: #2f3033;
   }

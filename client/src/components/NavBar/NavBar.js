@@ -232,25 +232,25 @@ function NavBar() {
               <>
                 <CategoryNavLink
                   to="/category/phone"
-                  backgroundColor={navbar.value === "phone" ? "#2f3033" : ""}
+                  bgcolor={navbar.value === "phone" ? "#2f3033" : ""}
                 >
                   Phone
                 </CategoryNavLink>
                 <CategoryNavLink
                   to="/category/laptop"
-                  backgroundColor={navbar.value === "laptop" ? "#2f3033" : ""}
+                  bgcolor={navbar.value === "laptop" ? "#2f3033" : ""}
                 >
                   Laptop
                 </CategoryNavLink>
                 <CategoryNavLink
                   to="/category/tablet"
-                  backgroundColor={navbar.value === "tablet" ? "#2f3033" : ""}
+                  bgcolor={navbar.value === "tablet" ? "#2f3033" : ""}
                 >
                   Tablet
                 </CategoryNavLink>
                 <CategoryNavLink
                   to="/category/watch"
-                  backgroundColor={navbar.value === "watch" ? "#2f3033" : ""}
+                  bgcolor={navbar.value === "watch" ? "#2f3033" : ""}
                 >
                   Watch
                 </CategoryNavLink>
@@ -258,7 +258,7 @@ function NavBar() {
             ) : (
               <CategoryNavLink
                 to="/admin?tab=product"
-                backgroundColor={navbar.value === "admin" ? "#2f3033" : ""}
+                bgcolor={navbar.value === "admin" ? "#2f3033" : ""}
               >
                 Admin
               </CategoryNavLink>

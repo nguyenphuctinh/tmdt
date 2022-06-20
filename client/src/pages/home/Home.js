@@ -68,7 +68,7 @@ function Home() {
           <div className="p-0 col-12 slider d-block d-md-none">
             <Carousel
               infiniteLoop={true}
-              // autoPlay={true}
+              autoPlay={true}
               showStatus={false}
               showThumbs={false}
             >
@@ -87,7 +87,7 @@ function Home() {
         <div className="row">
           {promotions.data &&
             promotions.data.map((promotion) => (
-              <Promotion promotion={promotion} />
+              <Promotion key={promotion.promotionId} promotion={promotion} />
             ))}
         </div>
       </div>
