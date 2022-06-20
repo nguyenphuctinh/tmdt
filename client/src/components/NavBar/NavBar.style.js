@@ -95,7 +95,7 @@ export const StyledMenuIcon = styled(MenuIcon)`
 `;
 export const Space = styled.div`
   @media (max-width: 349.99px) {
-    padding-top: 2.5rem;
+    padding-top: 2.8rem;
   }
   @media (min-width: 350px) and (max-width: 575.99px) {
     padding-top: 2.8rem;

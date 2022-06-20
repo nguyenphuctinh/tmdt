@@ -14,6 +14,8 @@ import mobileSliderImg3 from "../../assets/images/720-720-720x720-7.png";
 import Product from "../../components/Product";
 import Promotion from "./Promotion";
 import { fetchPromotion } from "../../redux/slices/promotionSlice";
+import { Link } from "react-router-dom";
+import { StyledLink } from "./Home.style";
 function Home() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
@@ -52,21 +54,33 @@ function Home() {
               showStatus={false}
               showThumbs={false}
             >
-              <img src={sliderImg1} alt="" />
-              <img src={sliderImg2} alt="" />
-              <img src={sliderImg3} alt="" />
+              <StyledLink to="category/watch">
+                <img src={sliderImg1} alt="" />
+              </StyledLink>
+              <StyledLink to="category/tablet">
+                <img src={sliderImg2} alt="" />
+              </StyledLink>
+              <StyledLink to="category/laptop">
+                <img src={sliderImg3} alt="" />
+              </StyledLink>
             </Carousel>
           </div>
           <div className="p-0 col-12 slider d-block d-md-none">
             <Carousel
               infiniteLoop={true}
-              autoPlay={true}
+              // autoPlay={true}
               showStatus={false}
               showThumbs={false}
             >
-              <img src={mobileSliderImg1} alt="" />
-              <img src={mobileSliderImg2} alt="" />
-              <img src={mobileSliderImg3} alt="" />
+              <StyledLink to="category/watch">
+                <img src={mobileSliderImg1} alt="" />
+              </StyledLink>
+              <StyledLink to="category/laptop">
+                <img src={mobileSliderImg2} alt="" />
+              </StyledLink>
+              <StyledLink to="category/tablet">
+                <img src={mobileSliderImg3} alt="" />
+              </StyledLink>
             </Carousel>
           </div>
         </div>

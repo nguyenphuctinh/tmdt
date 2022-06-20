@@ -12,6 +12,15 @@ import NotFound from "../notfound/NotFound";
 import InfoOrderForm from "../../components/InfoOrderForm";
 import { addItem } from "../../redux/slices/cartSlice";
 import { changeNavbar } from "../../redux/slices/navbarSlice";
+import { Box, Grid } from "@mui/material";
+import {
+  OptionActiveBg,
+  OptionBg,
+  OptionValue,
+  ProductName,
+  ProductPrice,
+  SaledProductPrice,
+} from "./ProductDetail.style";
 export default function ProductDetail() {
   let user = useSelector((state) => state.user);
   let cart = useSelector((state) => state.cart);
@@ -128,7 +137,7 @@ export default function ProductDetail() {
 
   return product ? (
     <>
-      <div className="container">
+      <Grid p={1} container>
         {updateInfoOrderFormOpened ? (
           <>
             <div
@@ -139,7 +148,6 @@ export default function ProductDetail() {
                 width: "100vw",
                 zIndex: "2",
                 left: 0,
-                // top: 0,
                 backgroundColor: "rgba(0,0,0,0.5)",
               }}
             ></div>
@@ -147,7 +155,6 @@ export default function ProductDetail() {
               className="orderFormContainer"
               style={{
                 position: "fixed",
-
                 left: "50%",
                 overflowY: "auto",
                 height: "400px",
@@ -170,54 +177,58 @@ export default function ProductDetail() {
         ) : (
           ""
         )}
-        <div className="row productDetail pt-2 pb-5">
-          <div className="col-sm-6">
-            <Carousel
-              showStatus={false}
-              showThumbs={imgLoaded}
-              showIndicators={imgLoaded}
-            >
-              {selectedProductVariant?.imgSrcList.map(({ img }) => {
-                return (
-                  <img
-                    onLoad={() => setImgLoaded(true)}
-                    key={img}
-                    className="productImg"
-                    width="100%"
-                    src={img}
-                    alt=""
-                  />
-                );
-              })}
-            </Carousel>
-          </div>
-          <div className="col-sm-6 pt-5">
-            <p className="productName">{product.productName}</p>
-            <div className="d-flex ">
-              <p className="productPrice mr-2">
-                {selectedProductVariant &&
-                  parseInt(
-                    selectedProductVariant.price * (1 - product.sale)
-                  ).toLocaleString()}
-                ₫
-              </p>
-              <p className="productPrice--sale">
-                {selectedProductVariant &&
-                  product.sale > 0 &&
-                  selectedProductVariant.price.toLocaleString() + "₫"}
-              </p>
-            </div>
-
-            {variantNames?.map((variantName) => {
+        <Grid px={{ xs: 0, sm: 2 }} xs={12} sm={6}>
+          <Carousel
+            showStatus={false}
+            showThumbs={imgLoaded}
+            showIndicators={imgLoaded}
+          >
+            {selectedProductVariant?.imgSrcList.map(({ img }) => {
               return (
-                <div key={variantName}>
-                  <p>{capitalizeFirstLetter(dict[variantName])}</p>
-                  {variantValues[variantName] &&
-                    [...sortByIntValues(variantValues[variantName])].map(
-                      (value) => {
-                        return (
-                          <span key={value}>
-                            <div
+                <img
+                  onLoad={() => setImgLoaded(true)}
+                  key={img}
+                  width="100%"
+                  src={img}
+                  alt=""
+                />
+              );
+            })}
+          </Carousel>
+        </Grid>
+        <Grid pt={3} xs={12} sm={6}>
+          <ProductName>{product.productName}</ProductName>
+
+          <Grid display={"flex"}>
+            <ProductPrice>
+              {selectedProductVariant &&
+                parseInt(
+                  selectedProductVariant.price * (1 - product.sale)
+                ).toLocaleString()}
+              ₫
+            </ProductPrice>
+            <SaledProductPrice>
+              {selectedProductVariant &&
+                product.sale > 0 &&
+                selectedProductVariant.price.toLocaleString() + "₫"}
+            </SaledProductPrice>
+          </Grid>
+
+          {variantNames?.map((variantName) => {
+            return (
+              <div key={variantName}>
+                <p>{capitalizeFirstLetter(dict[variantName])}</p>
+                {variantValues[variantName] &&
+                  [...sortByIntValues(variantValues[variantName])].map(
+                    (value) => {
+                      return (
+                        <span key={value}>
+                          {selectedProductVariant[variantName] === value ? (
+                            <OptionActiveBg>
+                              <OptionValue>{value.toUpperCase()}</OptionValue>
+                            </OptionActiveBg>
+                          ) : (
+                            <OptionBg
                               onClick={() => {
                                 if (
                                   selectedProductVariant &&
@@ -235,71 +246,76 @@ export default function ProductDetail() {
                                   );
                                 }
                               }}
-                              className={`option ${
-                                selectedProductVariant &&
-                                selectedProductVariant[variantName] === value
-                                  ? "option--active "
-                                  : ""
-                              }`}
                             >
-                              <p className="option__name">
-                                {value.toUpperCase()}
-                              </p>
-                            </div>
-                          </span>
-                        );
-                      }
-                    )}
-                </div>
-              );
-            })}
-            <p>Mô tả</p>
-            <textarea
-              disabled
-              className="productDetailDescription"
-              name=""
-              id=""
-              value={product.description}
-              spellCheck="false"
-            ></textarea>
-            <p className="mt-3"></p>
-            <div style={{ width: "100%" }}>
+                              <OptionValue>{value.toUpperCase()}</OptionValue>
+                            </OptionBg>
+                          )}
+
+                          {/* <div
+                            className={`option ${
+                              selectedProductVariant &&
+                              selectedProductVariant[variantName] === value
+                                ? "option--active "
+                                : ""
+                            }`}
+                          >
+                            <p className="option__name">
+                              {value.toUpperCase()}
+                            </p>
+                          </div> */}
+                        </span>
+                      );
+                    }
+                  )}
+              </div>
+            );
+          })}
+          <p>Mô tả</p>
+          <textarea
+            disabled
+            className="productDetailDescription"
+            name=""
+            id=""
+            value={product.description}
+            spellCheck="false"
+          ></textarea>
+          <p className="mt-3"></p>
+          <div style={{ width: "100%" }}>
+            <div className="d-flex">
               <div className="d-flex">
-                <div className="d-flex">
-                  <button
-                    onClick={() => {
-                      if (quantity === 1) return quantity;
-                      return setQuantity(quantity - 1);
-                    }}
-                    className="quantity__increase d-flex align-items-center"
-                  >
-                    -
-                  </button>
-                  <div className="quantity__value d-flex align-items-center">
-                    {quantity}
-                  </div>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="quantity__decrease d-flex align-items-center"
-                  >
-                    +
-                  </button>
+                <button
+                  onClick={() => {
+                    if (quantity === 1) return quantity;
+                    return setQuantity(quantity - 1);
+                  }}
+                  className="quantity__increase d-flex align-items-center"
+                >
+                  -
+                </button>
+                <div className="quantity__value d-flex align-items-center">
+                  {quantity}
                 </div>
-                <button onClick={onHandleBuyNow} className="btn buynow">
-                  MUA NGAY
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="quantity__decrease d-flex align-items-center"
+                >
+                  +
                 </button>
               </div>
-
-              <button
-                onClick={onHandleAddToCart}
-                className="btn mt-3   mr-lg-3  addtocart text-white"
-              >
-                Thêm vào giỏ
+              <button onClick={onHandleBuyNow} className="btn buynow">
+                MUA NGAY
               </button>
             </div>
+
+            <button
+              onClick={onHandleAddToCart}
+              className="btn mt-3   mr-lg-3  addtocart text-white"
+            >
+              Thêm vào giỏ
+            </button>
           </div>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </>
   ) : (
     ""
