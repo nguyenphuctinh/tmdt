@@ -169,16 +169,22 @@ function NavBar() {
             xs={7}
             sm={8}
           >
-            <SearchInput
-              ref={inputMobileEl}
-              onKeyDown={handleKeyDown}
-              id="search"
-              autoComplete="off"
-              type="search"
-              placeholder="Bạn tìm gì..."
-              aria-label="Search"
-            />
-            <StyledSearchIcon right="0rem" />
+            <Box
+              display={
+                !user.data || user.data.role !== "admin" ? "flex" : "none"
+              }
+            >
+              <SearchInput
+                ref={inputMobileEl}
+                onKeyDown={handleKeyDown}
+                id="search"
+                autoComplete="off"
+                type="search"
+                placeholder="Bạn tìm gì..."
+                aria-label="Search"
+              />
+              <StyledSearchIcon right="0rem" />
+            </Box>
           </Grid>
           <Grid justifyContent={"center"} display="flex" item xs={2} md={2}>
             <IconButton
@@ -268,7 +274,9 @@ function NavBar() {
 
           <Grid
             display="flex"
-            justifyContent="space-between"
+            justifyContent={
+              user.data?.role === "admin" ? "flex-end" : "space-between"
+            }
             alignItems="center"
             item
             px={2}

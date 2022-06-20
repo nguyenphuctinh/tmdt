@@ -107,7 +107,7 @@ export const Space = styled.div`
     padding-top: 2.5rem;
   }
   @media (min-width: 992px) and (max-width: 1340.98px) {
-    padding-top: 2.5rem;
+    padding-top: 3rem;
   }
   @media (min-width: 1341px) and (max-width: 1999px) {
     padding-top: 2.5rem;

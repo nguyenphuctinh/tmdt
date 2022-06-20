@@ -49,7 +49,6 @@ export default function Report() {
               const productsInOrder = curr.orderItems.map((item) => {
                 return {
                   category: products.data.find((product) => {
-                    console.log(product.productVariants);
                     return product.productVariants
                       .map((productVariant) => productVariant.productVariantId)
                       .includes(item.productVariantId);

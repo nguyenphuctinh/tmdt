@@ -18,9 +18,8 @@ export default function Account() {
   useEffect(() => {
     dispatch(changeNavbar("others"));
     document.title = "Tài khoản";
-    navigate("/account?tab=" + tab);
   }, []);
-  useEffect(() => {}, [tab]);
+
   return (
     <div className="container-fluid">
       <div className="row">

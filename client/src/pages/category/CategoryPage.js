@@ -6,7 +6,10 @@ import { useSelector } from "react-redux";
 import Product from "../../components/Product";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import NotFound from "../notfound/NotFound";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import phoneImg from "../../assets/images/2400-600-1920x480-7.png";
+// import watchImg from "../../assets/images/2400-600-1920x480-5.png";
+import { CategoryPageImg } from "./CategoryPage.style";
 export default function CategoryPage() {
   const category = useParams().category;
   const [sort, setSort] = useState("mới nhất");
@@ -60,48 +63,45 @@ export default function CategoryPage() {
     return <NotFound />;
   }
   return (
-    <div className="container pb-3">
-      <div className="row">
+    <Grid container display={"flex"} justifyContent="end">
+      <Grid item xs={12}>
         <div className="col-sm-12 sessionTitle">
           <span>{capitalizeFirstLetter(category)}</span>
         </div>
-      </div>
-      <div className="row d-flex flex-row-reverse">
-        <div className="col-sm-3 ">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Xếp theo</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={sort}
-              label="Xếp theo"
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <MenuItem value="mới nhất">mới nhất</MenuItem>
-              <MenuItem value="cũ nhất">cũ nhất</MenuItem>
-              <MenuItem value="giá giảm dần">giá giảm dần</MenuItem>
-              <MenuItem value="giá tăng dần">giá tăng dần</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-      </div>
-      <div className="row">
-        {" "}
-        {filteredProducts?.map((item) => {
-          return (
-            <Product
-              displayedAt="category"
-              key={item.productId}
-              product={item}
-            />
-          );
-        })}
-        <div className="col-9">
-          <div className="container-fluid">
-            <div className="row"> </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </Grid>
+      <Grid item xs={12}>
+        <CategoryPageImg width={"100%"} src={phoneImg} alt="" />
+      </Grid>
+      <Grid xs={3}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Xếp theo</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={sort}
+            label="Xếp theo"
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <MenuItem value="mới nhất">mới nhất</MenuItem>
+            <MenuItem value="cũ nhất">cũ nhất</MenuItem>
+            <MenuItem value="giá giảm dần">giá giảm dần</MenuItem>
+            <MenuItem value="giá tăng dần">giá tăng dần</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid xs={12}>
+        <Grid container>
+          {filteredProducts?.map((item) => {
+            return (
+              <Product
+                displayedAt="category"
+                key={item.productId}
+                product={item}
+              />
+            );
+          })}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }

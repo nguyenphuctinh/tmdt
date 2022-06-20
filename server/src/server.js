@@ -15,7 +15,7 @@ import authenToken from "./api/middlewares/authenToken.js";
 import passwordHash from "password-hash";
 dotenv.config();
 const app = express();
-app.use(cors()); // cho phép client access
+app.use(cors());
 app.use(express.json()); // for parsing application/json
 app.use(
   express.urlencoded({

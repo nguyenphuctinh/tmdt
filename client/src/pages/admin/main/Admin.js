@@ -20,10 +20,10 @@ export default function Admin() {
   useEffect(() => {
     dispatch(changeNavbar("admin"));
     document.title = "Quản lý";
-    if (!tab) navigate("/admin?tab=product");
-    else navigate("/admin?tab=" + tab);
+    // if (!tab) navigate("/admin?tab=product");
+    // else navigate("/admin?tab=" + tab);
   }, []);
-  useEffect(() => {}, [tab]);
+  // useEffect(() => {}, [tab]);
   useEffect(() => {
     dispatch(fetchAllOrders());
   }, []);
